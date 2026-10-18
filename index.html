@@ -554,7 +554,18 @@ mc("g5","achteruit","Je moet achteruit inparkeren in een vak. Wat doe je eerst?"
 const KEY="beDrill.v1";
 let ST=load();
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items)return s}catch(e){}return{items:{},n:0,log:[],settings:{},focus:[]}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
+function save(){ST.bewaard=Date.now();try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
+// Vraag de browser de opslag niet zelf op te ruimen.
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+/* Voortgangscode: alle bolletjes als tekst, om te bewaren en terug te zetten. */
+function maakCode(){const it={};Object.entries(ST.items).forEach(([id,r])=>{if(r.seen)it[id]=[r.box,r.seen,r.ok,r.fout,r.dueN,r.dueT,r.last||0]});
+ return "BE1."+btoa(JSON.stringify({n:ST.n,it}))}
+function leesCode(code){const m=String(code).trim().match(/BE1\.([A-Za-z0-9+\/=]+)/);if(!m)throw new Error("Dit is geen voortgangscode.");
+ const d=JSON.parse(atob(m[1]));let nieuw=0;
+ Object.entries(d.it||{}).forEach(([id,a])=>{const r=rec(id);const x={box:a[0],seen:a[1],ok:a[2],fout:a[3],dueN:a[4],dueT:a[5],last:a[6]};
+  // Samenvoegen: wat het meest geoefend is, wint.
+  if(x.seen>r.seen||(x.seen===r.seen&&x.box>r.box)){Object.assign(r,x);nieuw++}});
+ ST.n=Math.max(ST.n,d.n||0);save();return nieuw}
 function rec(id){return ST.items[id]||(ST.items[id]={box:0,seen:0,ok:0,fout:0,dueN:0,dueT:0})}
 
 /* Gemini-sleutel via link (#gk=...) */
@@ -562,9 +573,9 @@ function rec(id){return ST.items[id]||(ST.items[id]={box:0,seen:0,ok:0,fout:0,du
 
 /* ============ ADAPTIEF SCHEMA ============ */
 const MIN=60e3,UUR=60*MIN,DAG=24*UUR;
-const BEHEERST=3; // bakje 3+ = je snapt het
+const BEHEERST=2; // 2 keer goed na elkaar = je snapt het (Jaap, 18 okt)
 function grade(id,goed){const r=rec(id),nu=Date.now(),nieuw=r.seen===0;r.seen++;ST.n++;
- if(goed){r.ok++;r.box=nieuw?2:Math.min(5,r.box+1);
+ if(goed){r.ok++;r.box=Math.min(5,r.box+1);
   if(r.box===1){r.dueN=ST.n+5;r.dueT=0}
   else if(r.box===2){r.dueN=ST.n+12;r.dueT=nu+10*MIN}
   else if(r.box===3){r.dueN=ST.n+20;r.dueT=nu+3*UUR}
@@ -709,7 +720,7 @@ function startExamen(){const open=shuffle(ITEMS.filter(i=>i.type==="speak"));exa
 function toonExamenUitslag(){const g=examen.uitslag.filter(x=>x.g).length;app.innerHTML=`<div class="kaart"><h2 style="margin-top:0">Examinatorvragen: ${g} van ${examen.uitslag.length} goed</h2><ul>${examen.uitslag.map(x=>`<li style="color:${x.g?"var(--goed)":"var(--rood)"}">${x.g?"✓":"✗"} ${esc(x.q)}</li>`).join("")}</ul><button class="knop" id="terug">Verder drillen</button></div>`;examen=null;$("#terug").onclick=toonOefenen;kopBalk()}
 
 function toonStand(){stopSpraak();kopBalk();const t=totaal();const vandaag=new Date().toDateString();const lv=ST.log.filter(l=>new Date(l.t).toDateString()===vandaag);const okv=lv.filter(l=>l.g).length;
- let h=`<div class="kaart"><div class="vraag" style="margin:0">Examenklaar: ${t.pct}%</div><div class="klein">${t.beheerst} van ${t.tot} vragen beheerst (3 keer goed, met tijd ertussen). Vandaag ${lv.length} antwoorden, ${lv.length?Math.round(100*okv/lv.length):0}% goed.</div></div>`;
+ let h=`<div class="kaart"><div class="vraag" style="margin:0">Examenklaar: ${t.pct}%</div><div class="klein">${t.beheerst} van ${t.tot} vragen beheerst (2 keer goed na elkaar). Vandaag ${lv.length} antwoorden, ${lv.length?Math.round(100*okv/lv.length):0}% goed.</div></div>`;
  h+=`<div class="kaart"><div class="meta"><b style="color:var(--tekst)">Onderwerpen</b><span>tik om alleen dat te oefenen</span></div>`;
  TOPICS.forEach(tp=>{const s=topicStats(tp.id);const aan=ST.focus.includes(tp.id);h+=`<div class="onderwerp"><div class="naam">${esc(tp.naam)}<small>${s.beheerst}/${s.tot} beheerst · ${s.gezien} gezien</small></div><div class="mini"><i style="width:${s.pct}%"></i></div><button class="chip ${aan?"aan":""}" data-f="${tp.id}">${aan?"✓ focus":"focus"}</button></div>`});
  h+=`<div class="knoppen"><button class="knop" id="oefenFocus">${ST.focus.length?"Oefen selectie":"Oefen alles"}</button>${ST.focus.length?`<button class="knop licht" id="wisF">Selectie wissen</button>`:""}</div></div>`;
@@ -726,8 +737,12 @@ function toonMeer(){stopSpraak();const ai=!!ST.settings.gk;
  app.innerHTML=`<div class="kaart"><b>Inspreken</b><p class="klein">${SR?"Je browser ondersteunt inspreken met de knop 🎤.":"Deze browser heeft geen inspreek-functie in de app. Gebruik de microfoon op je toetsenbord in het tekstvak."}</p></div>
  <div class="kaart"><b>AI-nakijken van open vragen</b><p class="klein">${ai?"Staat aan (Gemini). Je ingesproken antwoord gaat naar Google om na te kijken.":"Staat uit. De app kijkt dan zelf na op kernwoorden en volgorde."}</p>
  ${ai?`<button class="knop klein" id="aiTest">Test AI</button><button class="knop licht klein" id="aiUit">Zet uit</button>`:""}<div id="aiRes" class="klein"></div></div>
- <div class="kaart"><b>Hoe werkt het drillen?</b><p class="klein">Elke vraag heeft vijf bolletjes. Goed = een bolletje erbij en de vraag komt later pas terug; fout = terug naar nul en hij komt binnen een paar vragen terug. Bij drie bolletjes (drie keer goed, met tijd ertussen) telt een vraag als beheerst. Nieuwe vragen komen er pas bij als de wankele vragen weer staan. Rekensommen krijgen steeds nieuwe getallen.</p></div>
- <div class="kaart"><b>Voortgang</b><p class="klein">Wordt bewaard op dit toestel, in deze browser.</p><button class="knop oranje klein" id="reset">Alles op nul zetten</button></div>`;
+ <div class="kaart"><b>Hoe werkt het drillen?</b><p class="klein">Elke vraag heeft vijf bolletjes. Goed = een bolletje erbij en de vraag komt later pas terug; fout = terug naar nul en hij komt binnen een paar vragen terug. Bij twee bolletjes (twee keer goed na elkaar) telt een vraag als beheerst; daarna komt hij af en toe nog terug om te herhalen. Nieuwe vragen komen er pas bij als de wankele vragen weer staan. Rekensommen krijgen steeds nieuwe getallen.</p></div>
+ <div class="kaart"><b>Voortgang bewaren</b><p class="klein">Je voortgang staat in deze browser. Opent je telefoon de app in een ander venster (bijvoorbeeld vanuit een link in een chat), dan begint die leeg. Bewaar daarom af en toe je voortgangscode, bijvoorbeeld in Notities of in een chat. Plak hem hier terug om verder te gaan; er gaat niets verloren, het meest geoefende telt.</p>
+ <button class="knop klein" id="kopieer">Kopieer voortgangscode</button><textarea id="codeVak" style="min-height:70px;margin-top:8px" placeholder="Plak hier een voortgangscode"></textarea><button class="knop licht klein" id="plak">Zet voortgang terug</button><div id="codeRes" class="klein"></div></div>
+ <div class="kaart"><b>Opnieuw beginnen</b><p class="klein">Laatst bewaard: ${ST.bewaard?new Date(ST.bewaard).toLocaleString("nl-NL"):"nog niet"}.</p><button class="knop oranje klein" id="reset">Alles op nul zetten</button></div>`;
+ $("#kopieer").onclick=async()=>{const c=maakCode();$("#codeVak").value=c;try{await navigator.clipboard.writeText(c);$("#codeRes").textContent="Gekopieerd. Plak hem in Notities of een chat."}catch(e){const v=$("#codeVak"),r=$("#codeRes");if(v)v.select();if(r)r.textContent="Selecteer de code in het vak en kopieer hem."}};
+ $("#plak").onclick=()=>{try{const n=leesCode($("#codeVak").value);$("#codeRes").textContent=`Teruggezet: ${n} vragen bijgewerkt.`;kopBalk()}catch(e){$("#codeRes").textContent=e.message}};
  const t=$("#aiTest");if(t)t.onclick=async()=>{$("#aiRes").textContent="Bezig…";const it=ITEMS.find(i=>i.id==="f2");const r=await aiNakijken(it,"motor uit en verlichting uit, aanhanger naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit, losbreekkabel eraf en dan van de kogel tillen");$("#aiRes").textContent=r&&!r.fout?`Werkt. Oordeel: ${r.goed?"goed":"fout"}. ${r.feedback||""}`:(r?r.fout:"geen sleutel")};
  const u=$("#aiUit");if(u)u.onclick=()=>{delete ST.settings.gk;save();toonMeer()};
  $("#reset").onclick=()=>{if(confirm("Alle voortgang wissen?")){ST={items:{},n:0,log:[],settings:ST.settings,focus:[]};save();toonMeer();kopBalk()}}}
