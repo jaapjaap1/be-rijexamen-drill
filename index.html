@@ -574,6 +574,9 @@ function rec(id){return ST.items[id]||(ST.items[id]={box:0,seen:0,ok:0,fout:0,du
 /* ============ ADAPTIEF SCHEMA ============ */
 const MIN=60e3,UUR=60*MIN,DAG=24*UUR;
 const BEHEERST=2; // 2 keer goed na elkaar = je snapt het (Jaap, 18 okt)
+// Beheerst = 2 keer goed en het laatste antwoord goed; zo'n vraag komt niet meer terug (Jaap, 18 okt)
+const beheerst=r=>!!r&&(r.box>=BEHEERST||(r.ok>=BEHEERST&&r.box>=1));
+let herhaal=false;
 function grade(id,goed){const r=rec(id),nu=Date.now(),nieuw=r.seen===0;r.seen++;ST.n++;
  if(goed){r.ok++;r.box=Math.min(5,r.box+1);
   if(r.box===1){r.dueN=ST.n+5;r.dueT=0}
@@ -584,10 +587,10 @@ function grade(id,goed){const r=rec(id),nu=Date.now(),nieuw=r.seen===0;r.seen++;
  else{r.fout++;r.box=0;r.dueN=ST.n+3;r.dueT=0}
  r.last=nu;ST.log.push({t:nu,id,g:goed?1:0});if(ST.log.length>3000)ST.log=ST.log.slice(-3000);save();}
 function pool(){return ITEMS.filter(i=>!ST.focus.length||ST.focus.includes(i.t))}
-function topicStats(tid){const its=ITEMS.filter(i=>i.t===tid);let m=0,s=0,pts=0;its.forEach(i=>{const r=ST.items[i.id];if(r&&r.seen){s++;pts+=Math.min(r.box,BEHEERST);if(r.box>=BEHEERST)m++}});return{tot:its.length,beheerst:m,gezien:s,pct:Math.round(100*pts/(its.length*BEHEERST))}}
-function totaal(){let pts=0,m=0;ITEMS.forEach(i=>{const r=ST.items[i.id];if(r){pts+=Math.min(r.box,BEHEERST);if(r.box>=BEHEERST)m++}});return{pct:Math.round(100*pts/(ITEMS.length*BEHEERST)),beheerst:m,tot:ITEMS.length}}
+function topicStats(tid){const its=ITEMS.filter(i=>i.t===tid);let m=0,s=0,pts=0;its.forEach(i=>{const r=ST.items[i.id];if(r&&r.seen){s++;pts+=beheerst(r)?BEHEERST:Math.min(r.box,BEHEERST);if(beheerst(r))m++}});return{tot:its.length,beheerst:m,gezien:s,pct:Math.round(100*pts/(its.length*BEHEERST))}}
+function totaal(){let pts=0,m=0;ITEMS.forEach(i=>{const r=ST.items[i.id];if(r){pts+=beheerst(r)?BEHEERST:Math.min(r.box,BEHEERST);if(beheerst(r))m++}});return{pct:Math.round(100*pts/(ITEMS.length*BEHEERST)),beheerst:m,tot:ITEMS.length}}
 let vorige=null;
-function kiesVolgende(){const P=pool(),nu=Date.now();
+function kiesVolgende(){const nu=Date.now(),P=pool().filter(i=>herhaal||!beheerst(ST.items[i.id]));if(!P.length)return null;
  const due=P.filter(i=>{const r=ST.items[i.id];return r&&r.seen&&ST.n>=r.dueN&&nu>=r.dueT&&i.id!==vorige});
  const wankel=P.filter(i=>{const r=ST.items[i.id];return r&&r.seen&&r.box<2});
  const pick=a=>{a.sort((x,y)=>{const rx=ST.items[x.id],ry=ST.items[y.id];return rx.box-ry.box||rx.dueN-ry.dueN||Math.random()-.5});return a[0]};
@@ -677,7 +680,9 @@ function maakConcreet(item){if(item.type!=="gen")return{...item,base:item};const
 function toonOefenen(){stopSpraak();kopBalk();
  if(examen&&examen.i>=examen.lijst.length)return toonExamenUitslag();
  const basis=examen?examen.lijst[examen.i]:kiesVolgende();vorige=basis?basis.id:null;
- if(!basis){app.innerHTML=`<div class="leeg">Geen vragen in deze selectie.</div>`;return}
+ if(!basis){if(!pool().length){app.innerHTML=`<div class="leeg">Geen vragen in deze selectie.</div>`;return}
+  app.innerHTML=`<div class="leeg"><b>Alles beheerst!</b><br>Je hebt elke vraag ${ST.focus.length?"in deze selectie ":""}twee keer goed beantwoord. Die komen niet meer terug.<br><br><button class="knop" id="herhaalKnop">Toch nog eens herhalen</button></div>`;
+  const hk=document.getElementById("herhaalKnop");if(hk)hk.onclick=()=>{herhaal=true;toonOefenen()};return}
  huidig=maakConcreet(basis);renderVraag(huidig)}
 function focusBalk(){if(examen)return`<div class="klein" style="margin-bottom:8px">Examinatorvragen: vraag ${examen.i+1} van ${examen.lijst.length} · <a href="#" id="stopEx">stoppen</a></div>`;
  return ST.focus.length?`<div class="klein" style="margin-bottom:8px">Alleen: ${ST.focus.map(f=>esc(TNAAM[f])).join(", ")} · <a href="#" id="wisFocus">alles oefenen</a></div>`:""}
