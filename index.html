@@ -554,7 +554,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
 function rec(id){return ST.items[id]||(ST.items[id]={box:0,seen:0,ok:0,fout:0,dueN:0,dueT:0})}
 
 /* Gemini-sleutel via link (#gk=...) */
-(function(){const m=location.hash.match(/gk=([A-Za-z0-9_\-]+)/);if(m){ST.settings.gk=m[1];save();history.replaceState(null,"",location.pathname+location.search)}})();
+(function(){const m=location.hash.match(/gk=([A-Za-z0-9_.\-]+)/);if(m){ST.settings.gk=m[1];save();history.replaceState(null,"",location.pathname+location.search)}})();
 
 /* ============ ADAPTIEF SCHEMA ============ */
 const MIN=60e3,UUR=60*MIN,DAG=24*UUR;
