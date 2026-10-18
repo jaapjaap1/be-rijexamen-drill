@@ -34,6 +34,8 @@ main{max-width:760px;margin:0 auto;padding:6px 8px}
 #coach .uitleg1{font-size:13px;color:#333;margin:2px 0}
 #coach .doe{font-size:14px}
 #coach .doe b{color:var(--oranje)}
+#coach .waarom{font-size:15px;margin-top:3px;padding:4px 8px;background:#f1f5ee;border-radius:8px}
+#coach .waarom b{color:var(--groen)}
 .knoppen{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;touch-action:none;user-select:none;-webkit-user-select:none}
 .k{border:0;border-radius:14px;padding:14px 4px;font-size:16px;font-weight:700;background:#e7ece5;color:var(--groen);touch-action:none;user-select:none;-webkit-user-select:none}
 .k.gas{background:var(--groen);color:#fff}
@@ -92,6 +94,7 @@ a{color:var(--groen)}
   <button class="chip" id="tOpdracht">&#128203; Opdracht</button>
   <button class="chip" id="tOpnieuw">&#8634; Opnieuw</button>
   <button class="chip" id="tBoven">Bovenaanzicht aan</button>
+  <button class="chip" id="tLijnen" style="display:none">Hulplijnen uit</button>
  </div>
  <p class="klein">Bediening. Telefoon: knoppen. Pc: pijltjes links/rechts = sturen, omlaag = achteruit, omhoog = vooruit, spatie = stuur recht, Enter = klaar, R = opnieuw. Eén klik op sturen = 0,05 slag; vasthouden = rustig doordraaien. Het stuur blijft staan waar je het laat. Gas loslaten = stilstaan.</p>
  <details class="uitleg"><summary>Welke kant stuur je op bij achteruit?</summary>
@@ -138,7 +141,7 @@ const MODI={kijk:"Voordoen",samen:"Samen doen",zelf:"Zelf doen"};
 const MODUSUITLEG={
  kijk:"Ik doe het eerst voor. Jij hoeft niets te doen: kijk naar het stuur, de spiegels en de uitleg per stap. Met &#9193; gaat het twee keer zo snel.",
  samen:"Jij rijdt, ik zeg per stap wat je doet en waarom. Op het stuur staat een <b>groene ring</b>: draai het stuur tot de <b>oranje stip</b> in de ring staat. De groene stippellijn is de route, de oranje lijn laat zien waar de kar heen gaat als je zo doorrijdt.",
- zelf:"Jij rijdt, zonder hulp: geen coach, geen ring, geen lijnen. Na afloop zie je wat goed ging en wat beter kan. Wil je het echt als op het examen, zet dan het bovenaanzicht uit en rijd alleen op je spiegels."};
+ zelf:"Jij rijdt, zonder coach en zonder ring op het stuur. Wil je de denkbeeldige lijnen toch zien (de route en waar de kar heen gaat), zet dan onder het plaatje <b>Hulplijnen</b> aan. Na afloop zie je wat goed ging en wat beter kan. Wil je het echt als op het examen, zet dan het bovenaanzicht uit en rijd alleen op je spiegels."};
 /* ===== De drie oefeningen ===== */
 const SC={};
 {const b=padBouw();b.lijn(5.25,-14,5.25,20);const i1=b.merk();b.s(5.25,20,8.25,26);const i2=b.merk();b.boog(3.5,26,4.75,0,Math.PI);const i3=b.merk();b.s(-1.25,26,1.75,19);b.lijn(1.75,19,1.75,-35);
@@ -184,25 +187,26 @@ const afstHek=D=>Math.min(...D.aanh.map(p=>p[1]))-SC.recht.hek.y;
 {const R=5,b=padBouw();b.lijn(2,48,2,31);const iA=b.merk();b.boog(-5,31,7,0,-Math.PI/2);b.lijn(-5,24,-35,24);
  SC.bocht={naam:"Achteruit de hoek om",richting:-1,pad:b.p,
   blokken:[rh(7,-60,40,80),[[-40,-60],[0,-60],...boog(-R,20-R,R,0,Math.PI/2),[-40,20]],[[-40,27],...boog(-R,27+R,R,1.5*Math.PI,2*Math.PI),[0,80],[-40,80]]],
-  strepen:[[3.5,-60,80]],palen:[...palenV(8.2,-55,78),...palenV(-1.2,-55,13),...palenV(-1.2,35,78),...palenH(18.8,-37,-10),...palenH(28.2,-37,-10)],
+  strepen:[[3.5,-60,80]],palen:[...palenV(8.2,-55,78),...palenV(-1.2,-55,13),...palenV(-1.2,35,78),...palenH(18.8,-37,-10),...palenH(28.2,-37,-10)],pionnen:[[-16,19.5],[-16,27.5]],eindX:-16,
   start(){return{ax:2.0,ay:41,phi:Math.PI/2,theta:Math.PI/2}},
   startTekst:"Je bent over het kruispunt naar de linkerweghelft gereden, voorbij de zijstraat links van je. Je staat stil op ongeveer 1 meter van de stoeprand.",
-  opdracht:"Keer met een bocht achteruit: rij achteruit linksom de zijstraat in en houd de kar op ongeveer 1 meter van de stoeprand. Stop als auto en kar recht in de zijstraat staan.",
-  kort:"Achteruit linksom de zijstraat in; stop als alles recht in de straat staat.",
+  opdracht:"Keer met een bocht achteruit: rij achteruit linksom de zijstraat in en houd de kar op ongeveer 1 meter van de stoeprand. Rij door tot de achterkant van de kar voorbij de twee pionnen is, zo'n 16 meter de straat in, en stop met auto en kar recht in de straat.",
+  kort:"Achteruit linksom de zijstraat in, door tot voorbij de pionnen; stop met alles recht in de straat.",
   stappen:[
    ["Recht achteruit tot de bocht","Houd &#9660; Achteruit ingedrukt en rij recht. Nog niet sturen: wacht tot de achterkant van de kar bij het begin van de bocht is, waar de stoeprand wegdraait."],
    ["Inzetten","Stuur naar rechts. Achteruit werkt het andersom: stuur je naar rechts, dan draait de achterkant van de kar naar links, de straat in."],
    ["Meesturen","De kar draait de straat in. Stuur nu terug en naar links, zodat de auto achter de kar aan gaat. Doe je dat niet, dan schaart hij. Komt de kar te dicht bij de stoeprand: stuur naar het gevaar toe (naar links)."],
    ["Rechttrekken","De kar staat bijna recht in de straat. Blijf licht naar links sturen tot ook de auto recht achter de kar staat. Daarna het stuur terug, zodat auto en kar op één lijn komen."],
+   ["Recht door de straat in","Auto en kar staan recht. Rij recht door achteruit tot de achterkant van de kar voorbij de twee pionnen is. Kleine stuurbewegingen, net als bij recht achteruit."],
    ["Stilstaan en melden","Laat &#9660; los. Sta je stil, druk dan op &#10003; Klaar."]],
-  fase(D){if(bochtKlaar(D))return 4;const d=Math.max(0,Math.PI/2-S.phi);if(S.padIdx<iA-15&&d<8*G)return 0;if(d<60*G){if(!S.mee&&advies().dDoel<0.02)return 1;S.mee=true;return 2}return 3},
-  stopVoordoen(D){return bochtKlaar(D)||D.as[0]<-20},
+  fase(D){if(bochtKlaar(D))return 5;const d=Math.max(0,Math.PI/2-S.phi);if(S.padIdx<iA-15&&d<8*G)return 0;if(d<60*G){if(!S.mee&&advies().dDoel<0.02)return 1;S.mee=true;return 2}if(S.rechtIn||(D.as[0]<-6&&Math.abs(hoekNorm(S.theta))<15*G&&Math.abs(knik(S))<12*G)){S.rechtIn=true;return 4}return 3},
+  stopVoordoen(D){return bochtKlaar(D)||D.as[0]<-28},
   tipBotsing:"Kwam de kar te dicht bij de stoep? Stuur dan naar het gevaar toe (stap 3). Raakte de auto voorin de stoep? Dan stuurde je te lang naar rechts: ga eerder meesturen.",
-  beoordeel(D){const inStraat=D.as[0]<-6,r=Math.abs(hoekNorm(S.theta))/G,k=Math.abs(knik(S))/G;
-   return[[inStraat,"Kar in de zijstraat","Rij verder achteruit tot de hele combinatie de straat in staat (stap 3 en 4)."],
+  beoordeel(D){const inStraat=D.achter[0]<-16,r=Math.abs(hoekNorm(S.theta))/G,k=Math.abs(knik(S))/G;
+   return[[inStraat,`Ver genoeg de straat in (kar voorbij de pionnen)${inStraat?"":`, nog ${komma(D.achter[0]+16)} m`}`,"Rij recht door tot de achterkant van de kar voorbij de pionnen is (stap 5)."],
     [r<=15,`Auto recht in de straat${r>15?` (nog ${r.toFixed(0)}° scheef)`:""}`,"Blijf meesturen tot de auto achter de kar staat (stap 4)."],
     [k<=12,`Auto en kar op één lijn${k>12?` (knik ${k.toFixed(0)}°)`:""}`,"Draai het stuur op het eind terug, dan trekt de combinatie recht (stap 4)."]]}};}
-const bochtKlaar=D=>D.as[0]<-6&&Math.abs(hoekNorm(S.theta))<15*G&&Math.abs(knik(S))<12*G;
+const bochtKlaar=D=>D.achter[0]<-16&&Math.abs(hoekNorm(S.theta))<15*G&&Math.abs(knik(S))<12*G;
 /* ===== Voortgang ===== */
 const OPSLAG="beSim.v2";let stats={};try{stats=JSON.parse(localStorage.getItem(OPSLAG))||{}}catch(e){}
 const st=(s=sc)=>stats[s]||(stats[s]={kijk:0,samen:[0,0],zelf:[0,0]});
@@ -266,13 +270,13 @@ function coachBijwerken(){const s_=SC[sc],c=$("#coach");
  else{const doel=slagTekst(A.dDoel),klik=Math.max(1,Math.round(Math.abs(slag(dd))/0.05));
   if(modus==="kijk")nu=Math.abs(dd)<3*G?`ik houd het stuur op <b>${doel}</b>`:`ik draai het stuur naar <b>${doel}</b>`;
   else nu=Math.abs(dd)<3*G?(Math.abs(slag(A.dDoel))<0.03?"stuur <b>recht</b> houden":`stuur zo vasthouden (<b>${doel}</b>)`):`<b>${klik} klik${klik===1?"":"ken"} naar ${dd>0?"links":"rechts"}</b>, tot de oranje stip in de groene ring staat`;
-  nu+=`. <span class="klein">Waarom: ${waarom(A,dd)}.</span>`;
+  nu+=`.<div class="waarom"><b>Waarom:</b> ${waarom(A,dd)}.</div>`;
   if(modus==="samen"&&S.v===0&&!keys.vooruit&&!keys.achteruit)nu=`houd <b>${s_.richting<0?"&#9660; Achteruit":"&#9650; Vooruit"}</b> ingedrukt, en ${nu}`}
  c.innerHTML=`<div class="fase">Stap ${f+1} van ${s_.stappen.length} · ${titel}</div><div class="uitleg1">${uitleg}</div><div class="doe">${modus==="kijk"?"Nu: ":"Nu jij: "}${nu}</div>`}
 /* ===== Tekenen: bovenaanzicht ===== */
 const DPR=Math.min(2,window.devicePixelRatio||1);
 const cv=$("#boven"),cx=cv.getContext("2d");
-function bovenaanzicht(){cx.setTransform(DPR,0,0,DPR,0,0);const W=cv.width/DPR,H=cv.height/DPR,D=delen(),s_=SC[sc],hulp=modus!=="zelf";
+function bovenaanzicht(){cx.setTransform(DPR,0,0,DPR,0,0);const W=cv.width/DPR,H=cv.height/DPR,D=delen(),s_=SC[sc],hulp=hulpAan();
  const mx=(S.x+D.as[0])/2,my=(S.y+D.as[1])/2,sch=Math.min(W,H)/(sc==="draai"?30:26);
  const P=(x,y)=>[W/2+(x-mx)*sch,H/2-(y-my)*sch];
  const lijn=pl=>{cx.beginPath();pl.forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)})};
@@ -281,6 +285,8 @@ function bovenaanzicht(){cx.setTransform(DPR,0,0,DPR,0,0);const W=cv.width/DPR,H
  cx.strokeStyle="#fff";cx.lineWidth=2;cx.setLineDash([3*sch,3*sch]);for(const[x,y1,y2]of s_.strepen){lijn([[x,y1],[x,y2]]);cx.stroke()}cx.setLineDash([]);
  if(s_.hek){const h=s_.hek,[a1,b1]=P(h.x1,h.y),[a2]=P(h.x2,h.y);cx.fillStyle="#c0392b";cx.fillRect(a1,b1-4,a2-a1,8);cx.fillStyle="#fff";for(let i=h.x1;i<h.x2;i+=1.4){const[q]=P(i,0);cx.fillRect(q,b1-4,0.7*sch,8)}
   if(hulp){cx.strokeStyle="#6cbf84";cx.lineWidth=3;lijn([[h.x1+.2,h.y+1],[h.x2-.2,h.y+1]]);cx.stroke();cx.fillStyle="#fff";cx.font="11px sans-serif";const[q,r]=P(h.x1+.3,h.y+1.4);cx.fillText("1 m voor het hek",q,r)}}
+ if(s_.pionnen){if(hulp){const[p1,p2]=s_.pionnen;cx.strokeStyle="#6cbf84";cx.lineWidth=3;cx.setLineDash([5,4]);lijn([p1,p2]);cx.stroke();cx.setLineDash([])}
+  for(const[x,y]of s_.pionnen){const[a,c]=P(x,y);cx.fillStyle="#E8895F";cx.beginPath();cx.arc(a,c,Math.max(4,0.35*sch),0,7);cx.fill()}}
  if(hulp){cx.strokeStyle="rgba(166,194,132,.95)";cx.lineWidth=2;cx.setLineDash([6,6]);lijn(s_.pad.filter(([x,y])=>!s_.hek||y>=s_.hek.y));cx.stroke();cx.setLineDash([]);
   const v=s_.richting<0?V_ACHTER:V_VOOR,g={...S,v},n=Math.round(6/Math.abs(v)/0.05),pts=[delen(g).achter];
   for(let i=0;i<n;i++){stap(g,0.05);if(Math.abs(knik(g))>SCHAAR)break;if(i%3==2)pts.push(delen(g).achter)}
@@ -313,9 +319,10 @@ function spiegel(canvas,kant){const g=canvas.getContext("2d");g.setTransform(DPR
  const hor=H/2-F*Math.tan(-pitch);g.fillStyle="#bcd3e6";g.fillRect(0,0,W,H);g.fillStyle="#8f968e";g.fillRect(0,hor,W,H-hor);
  for(const b of s_.blokken)vul(b.map(([x,y])=>[x,y,0]),"#d8d2c2","#777");
  for(const[x,y1,y2]of s_.strepen)for(let y=y1;y<y2;y+=6)vul([[x-.1,y,0],[x+.1,y,0],[x+.1,y+3,0],[x-.1,y+3,0]],"#f4f4f4");
- if(s_.hek&&modus!=="zelf"){const h=s_.hek;vul([[h.x1+.2,h.y+.95,0],[h.x2-.2,h.y+.95,0],[h.x2-.2,h.y+1.05,0],[h.x1+.2,h.y+1.05,0]],"#6cbf84")}
+ if(s_.hek&&hulpAan()){const h=s_.hek;vul([[h.x1+.2,h.y+.95,0],[h.x2-.2,h.y+.95,0],[h.x2-.2,h.y+1.05,0],[h.x1+.2,h.y+1.05,0]],"#6cbf84")}
  const dozen=[],doos=(pl,z1,z2,zijkleur,topkleur)=>dozen.push({pl,z1,z2,zijkleur,topkleur});
  if(s_.hek){const h=s_.hek;doos([[h.x1,h.y-0.15],[h.x2,h.y-0.15],[h.x2,h.y],[h.x1,h.y]],0,1.1,"#c0392b","#e57373")}
+ if(s_.pionnen)for(const[x,y]of s_.pionnen)dozen.push({pl:[[x-.25,y-.25],[x+.25,y-.25],[x+.25,y+.25],[x-.25,y+.25]],z1:0,z2:0.75,zijkleur:"#E8895F",topkleur:"#f3b08f"});
  for(const[x,y]of s_.palen)doos([[x-.12,y-.12],[x+.12,y-.12],[x+.12,y+.12],[x-.12,y+.12]],0,3.2,"#555","#555");
  doos(D.aanh,0.45,2.2,"#e9e9e4","#fafafa");
  const vk=[D.as[0]+D.px*BAK_HALF,D.as[1]+D.py*BAK_HALF];
@@ -329,6 +336,7 @@ function spiegel(canvas,kant){const g=canvas.getContext("2d");g.setTransform(DPR
  const[ax2,ay2]=D.achter,nx=-D.py,ny=D.px;[1,-1].forEach(s=>vul([[ax2+nx*s*0.95,ay2+ny*s*0.95,0.6],[ax2+nx*s*0.6,ay2+ny*s*0.6,0.6],[ax2+nx*s*0.6,ay2+ny*s*0.6,0.85],[ax2+nx*s*0.95,ay2+ny*s*0.95,0.85]],"#d32f2f"));
  g.fillStyle="#3b6ea5";const bw=W*0.13;if(kant==="L")g.fillRect(W-bw,H*0.25,bw,H*0.75);else g.fillRect(0,H*0.25,bw,H*0.75)}
 /* ===== Uitslag en schermen ===== */
+let lijnen=false;const hulpAan=()=>modus!=="zelf"||lijnen;
 const open=s=>$(s).classList.add("open"),sluit=s=>$(s).classList.remove("open");
 function volgendeStap(ok){const volg={draai:"recht",recht:"bocht",bocht:"draai"}[sc];
  if(modus==="kijk")return{tekst:"Nu samen doen →",doe:()=>kies(sc,"samen")};
@@ -349,7 +357,7 @@ function beoordeel(){const s_=SC[sc],regels=s_.beoordeel(delen()),ok=regels.ever
 function toonKaart(){const s_=SC[sc];$("#kTitel").textContent=`${s_.naam} · ${MODI[modus]}`;
  $("#kTekst").innerHTML=`<p><b>Startpositie:</b> ${s_.startTekst}</p><p><b>Opdracht van de examinator:</b> "${s_.opdracht}"</p><p><b>${MODI[modus]}:</b> ${MODUSUITLEG[modus]}</p><p><b>De stappen:</b></p><ol>${s_.stappen.map(([t,u])=>`<li><b>${t}.</b> ${u}</li>`).join("")}</ol>`;
  $("#kStart").textContent=S.loopt?"Verder":"Start";if(S.loopt)S.pauze=true;open("#kaart")}
-function kies(s,m){sc=s;modus=m||standaardModus(s);ladder();
+function kies(s,m){sc=s;modus=m||standaardModus(s);ladder();$("#tLijnen").style.display=modus==="zelf"?"":"none";
  $("#rijKnoppen").style.display=modus==="kijk"?"none":"";$("#kijkKnoppen").style.display=modus==="kijk"?"":"none";
  $("#doelring").style.display=modus==="zelf"?"none":"";nieuw();toonKaart()}
 /* ===== Lus ===== */
@@ -401,6 +409,7 @@ $("#tOpdracht").onclick=toonKaart;
 $("#kPauze").onclick=()=>{S.pauze=!S.pauze;$("#kPauze").innerHTML=S.pauze?"&#9654; Verder":"&#10074;&#10074; Pauze"};
 $("#kTempo").onclick=()=>{tempo=tempo===1?2:1;$("#kTempo").innerHTML=tempo===1?"&#9193; 2&times; sneller":"&#9654; Gewone snelheid"};
 $("#tBoven").onclick=()=>{boven=!boven;$("#boven").style.display=boven?"block":"none";$("#tBoven").textContent=boven?"Bovenaanzicht aan":"Alleen spiegels (zoals op het examen)"};
+$("#tLijnen").onclick=()=>{lijnen=!lijnen;$("#tLijnen").textContent=lijnen?"Hulplijnen aan":"Hulplijnen uit"};
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>kies(t.dataset.sc));
 document.querySelectorAll(".modus").forEach(t=>t.onclick=()=>kies(sc,t.dataset.m));
 function maatvoering(){const z=(c,h)=>{const r=c.getBoundingClientRect();if(r.width){c.width=Math.round(r.width*DPR);c.height=Math.round((h||r.height)*DPR)}};z(cv);z($("#spL"),92);z($("#spR"),92)}
