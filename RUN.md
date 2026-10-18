@@ -47,3 +47,4 @@ Een adaptieve oefen-app (één html-bestand, werkt op telefoon) waarmee Jaap vó
 - 18-10-2026, 16:10 app gebouwd en getest; lokaal gecommit; online zetten wacht op akkoord
 - 18-10-2026, 16:20 stand: app af en getest (index.html, lokaal gecommit). Er lopen geen agents. Bij Jaap: a = openbare GitHub Pages (advies) of b = Tailscale. Volgende stap na zijn keuze: online zetten, testen op telefoonformaat, Gemini-instellink (#gk=) sturen, kopie in de resultatenmap waar mogelijk.
 - 18-10-2026, 16:35 Jaap koos a; repo jaapjaap1/be-rijexamen-drill openbaar, Pages live, Gemini-nakijken live getest; sleutel niet in repo
+- 18-10-2026, 17:25 Jaap: losbreekkabel en stekker zijn uitwisselbaar bij aan- en afkoppelen; verwerkt in volgordevragen, inspreekcontrole, AI-prompt, spiekbrief en vraag f6; getest

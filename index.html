@@ -157,7 +157,7 @@ const TOPICS=[
   "2. Neuswiel laten zakken tot de koppeling op de kogel valt: <b>klik</b>.",
   "3. Controle: neuswiel terugdraaien (omhoog). Komt de auto mee omhoog, dan zit hij vast. Indicator op groen. Groen maar geen klik? Op de dissel drukken/staan tot hij klikt.",
   "4. <b>Losbreekkabel</b> om: gaat er daarna iets mis, dan trekt hij de handrem aan.",
-  "5. Stekker erin en verlichting controleren (algemeen).",
+  "5. Stekker erin en verlichting controleren (algemeen). Stap 4 en 5 mogen in willekeurige volgorde.",
   "6. Neuswiel helemaal omhoog: gleufje naar de zijkant, wiel recht omhoog, met je voet tegenhouden (anders tegen de stang).",
   "7. Handrem eraf en controleren dat hij echt los is.",
   "Bewijs aan de examinator dat hij vastzit: auto kwam mee omhoog, indicator groen, handgreep vergrendeld."]},
@@ -167,7 +167,7 @@ const TOPICS=[
   "3. <b>Handrem erop</b>: nu kan hij niet wegrollen. <b>Vergeet je dit: gezakt.</b>",
   "4. Neuswiel laten zakken tot op de grond, met je voet tegenhouden.",
   "5. Stekker (stroom) eruit.",
-  "6. Losbreekkabel eraf.",
+  "6. Losbreekkabel eraf. Stap 5 en 6 mogen in willekeurige volgorde.",
   "7. Koppeling ontgrendelen en van de kogel halen."]},
  {id:"spiegelen",naam:"Spiegelen, bochten en uitzwaai",v:["9yvkQriHuXE","nA4JQGroLbU"],leer:[
   "Rechtsaf: <b>linkerspiegel, rechterspiegel, rechts naast je, richting aan</b>. Linksaf: rechterspiegel, linkerspiegel, links naast je, richting aan. (Eerst de andere kant, dan de kant waar je heen gaat.)",
@@ -399,7 +399,7 @@ mc("c11","controle","Waar let de examinator op als hij bij een bijzondere verric
 
 /* --- Aankoppelen --- */
 const AANK=["Ramen omlaag, alarmlichten aan, rustig achteruit naar de dissel","Slot van de koppeling eraf","Neuswiel laten zakken tot de koppeling op de kogel klikt","Controle: neuswiel terugdraaien, auto moet mee omhoog komen","Losbreekkabel om","Stekker erin en verlichting controleren","Neuswiel helemaal omhoog en vastzetten","Handrem eraf en controleren dat hij los is"];
-ord("a1","aankoppelen","Zet de stappen van het aankoppelen in de goede volgorde.",AANK,"Eerst vastklikken en controleren (auto komt mee omhoog), dan de losbreekkabel, stekker, neuswiel omhoog en als laatste de handrem eraf.",{src:V("cBME75Arkis","neuswiel zakken",62)});
+ord("a1","aankoppelen","Zet de stappen van het aankoppelen in de goede volgorde.",AANK,"Eerst vastklikken en controleren (auto komt mee omhoog), dan losbreekkabel en stekker (die twee in willekeurige volgorde), neuswiel omhoog en als laatste de handrem eraf.",{vrij:[[4,5]],src:V("cBME75Arkis","neuswiel zakken",62)});
 sp("a2","aankoppelen","Vertel hardop hoe je aankoppelt, stap voor stap, vanaf het moment dat je achteruit naar de aanhanger rijdt.",[
  ["Ramen omlaag / alarmlichten / rustig achteruit",["raam","ramen","alarm","achteruit","rustig"]],
  ["Slot eraf",["slot","lok"]],
@@ -409,7 +409,7 @@ sp("a2","aankoppelen","Vertel hardop hoe je aankoppelt, stap voor stap, vanaf he
  ["Stekker erin",["stekker","stroom"]],
  ["Neuswiel omhoog en vastzetten",["neuswiel omhoog","wiel omhoog","vastzetten","klem"]],
  ["Handrem eraf",["handrem"]]],
- "Achteruit (ramen omlaag, alarmlichten), slot eraf, neuswiel laten zakken tot klik, controleren door terug te draaien (auto komt mee omhoog), losbreekkabel om, stekker erin, neuswiel omhoog en vast, handrem eraf.",{ordered:true,min:7,src:V("cBME75Arkis","neuswiel zakken",62)});
+ "Achteruit (ramen omlaag, alarmlichten), slot eraf, neuswiel laten zakken tot klik, controleren door terug te draaien (auto komt mee omhoog), losbreekkabel om en stekker erin (die twee in willekeurige volgorde), neuswiel omhoog en vast, handrem eraf.",{ordered:true,vrij:[[4,5]],min:7,src:V("cBME75Arkis","neuswiel zakken",62)});
 mc("a3","aankoppelen","De examinator vraagt: 'Zit hij vast? Hoe weet je dat?'",["Ik heb het neuswiel teruggedraaid en de auto kwam mee omhoog; de indicator staat op groen","Ik hoorde een klik","De lampen doen het","De losbreekkabel zit om"],"Het bewijs: je draaide het neuswiel terug en de auto ging mee omhoog. Plus de indicator op groen en de handgreep vergrendeld.",{src:V("cBME75Arkis","zit hij vast",120)});
 mc("a4","aankoppelen","De indicator op de koppeling staat op groen, maar je hoorde geen klik. Wat doe je?",["Op de dissel drukken/gaan staan tot hij klikt","Niets, groen is goed","Wegrijden en kijken of het goed gaat","De losbreekkabel strakker zetten"],"Groen maar niet geklikt: druk erop (ga erop staan), dan komt de klik alsnog.",{src:V("XNkuVIdhvXY","niet geklikt",0)});
 mc("a5","aankoppelen","Waarom doe je de losbreekkabel om vóór je het neuswiel omhoog draait en de handrem eraf haalt?",["Gaat er daarna iets mis, dan trekt hij de handrem aan","Omdat het neuswiel anders niet omhoog kan","Voor de stroom","Dat maakt niet uit"],"Zit de kabel om en schiet de aanhanger los, dan gaat de handrem erop.",{src:V("cBME75Arkis","losbreekreminrichting erop",90)});
@@ -419,7 +419,7 @@ tf("a8","aankoppelen","Bij het achteruitrijden naar de aanhanger mag je de koppe
 
 /* --- Afkoppelen --- */
 const AFK=["Verlichting uit en motor uit","Aanhanger naar achteren duwen tot de oploopremstang uit is","Handrem erop","Neuswiel laten zakken tot op de grond","Stekker eruit","Losbreekkabel eraf","Koppeling ontgrendelen en van de kogel halen"];
-ord("f1","afkoppelen","Zet de stappen van het afkoppelen in de goede volgorde.",AFK,"Verlichting en motor uit, naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit, losbreekkabel eraf, koppeling los.",{src:V("cBME75Arkis","officiële volgorde",169)});
+ord("f1","afkoppelen","Zet de stappen van het afkoppelen in de goede volgorde.",AFK,"Verlichting en motor uit, naar achteren duwen, handrem erop, neuswiel omlaag, stekker en losbreekkabel eraf (die twee in willekeurige volgorde), koppeling los.",{vrij:[[4,5]],src:V("cBME75Arkis","officiële volgorde",169)});
 sp("f2","afkoppelen","Vertel hardop hoe je afkoppelt, stap voor stap.",[
  ["Verlichting uit / motor uit",["verlichting","licht","motor uit"]],
  ["Naar achteren duwen (oploopremstang uit)",["achter","duw","oploop","bumper"]],
@@ -428,11 +428,11 @@ sp("f2","afkoppelen","Vertel hardop hoe je afkoppelt, stap voor stap.",[
  ["Stekker eruit",["stekker","stroom"]],
  ["Losbreekkabel eraf",["losbreek","breekkabel"]],
  ["Koppeling los en van de kogel",["ontgrendel","van de kogel","koppeling los","los","til"]]],
- "Verlichting uit en motor uit, aanhanger naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit, losbreekkabel eraf, koppeling ontgrendelen en van de kogel.",{ordered:true,min:6,src:V("cBME75Arkis","bumperschade",148)});
+ "Verlichting uit en motor uit, aanhanger naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit en losbreekkabel eraf (die twee in willekeurige volgorde), koppeling ontgrendelen en van de kogel.",{ordered:true,vrij:[[4,5]],min:6,src:V("cBME75Arkis","bumperschade",148)});
 mc("f3","afkoppelen","Welke twee stappen zijn zo belangrijk dat je zakt als je ze vergeet?",["Aanhanger naar achteren duwen en de handrem erop","Stekker eruit en losbreekkabel eraf","Neuswiel omlaag en motor uit","Verlichting uit en ramen omlaag"],"Naar achteren duwen (anders bumperschade) en de handrem erop (anders rolt hij weg).",{src:V("cBME75Arkis","ben je gezakt",166)});
 mc("f4","afkoppelen","Waarom zet je de verlichting uit voordat je de stekker eruit haalt?",["Om kortsluiting te voorkomen","Om de accu te sparen","Omdat het verplicht is in het donker","Zodat de examinator het ziet"],"Verlichting uit voorkomt kortsluiting.",{src:V("cBME75Arkis","kortsluiting",144)});
 mc("f5","afkoppelen","Waarom duw je de aanhanger eerst naar achteren?",["Zodat de oploopremstang uit is en de aanhanger niet tegen je bumper komt","Om de handrem te testen","Om de lading te verschuiven","Zodat het neuswiel beter draait"],"Je houdt hem vast tot de oploopremstang helemaal uit is. Zo voorkom je bumperschade.",{src:V("cBME75Arkis","bumperschade",148)});
-mc("f6","afkoppelen","Wat is de laatste stap voordat je de koppeling ontgrendelt en van de kogel haalt?",["Losbreekkabel eraf","Handrem erop","Verlichting uit","Naar achteren duwen"],"Als laatste gaat de losbreekkabel eraf, dan ontgrendel je de koppeling.",{src:V("cBME75Arkis","stroom eraf",180)});
+mc("f6","afkoppelen","Welke twee stappen doe je vlak voordat je de koppeling ontgrendelt en van de kogel haalt?",["Stekker eruit en losbreekkabel eraf, in willekeurige volgorde","Handrem erop en verlichting uit","Neuswiel omhoog en handrem eraf","Naar achteren duwen en motor uit"],"Eerst gaan de stekker en de losbreekkabel eraf; welke van de twee eerst maakt niet uit. Daarna ontgrendel je de koppeling.",{src:V("cBME75Arkis","stroom eraf",180)});
 
 /* --- Spiegelen --- */
 ord("s1","spiegelen","Je gaat rechtsaf. Zet in de goede volgorde.",["Linkerspiegel","Rechterspiegel","Rechts naast je kijken (dode hoek)","Richting aan naar rechts","Vlak vóór het insturen: buitenkant (links) kijken","In de bocht: binnenkant (rechts) meekijken"],"Linkerspiegel, rechterspiegel, rechts naast je, richting aan. Vóór de bocht de buitenkant, in de bocht de binnenkant.",{src:V("9yvkQriHuXE","rechts naast je",0)});
@@ -598,8 +598,12 @@ function zoek(tekst,alt,van=0){const sq=norm(tekst).replace(/ /g,""),p0=norm(alt
   if(ok)return i;from=i+1}}
 function eerste(tekst,alts,van=0){let pos=-1;alts.forEach(a=>{const p=zoek(tekst,a,van);if(p>=0&&(pos<0||p<pos))pos=p});return pos}
 function lokaalNakijken(item,tekst){let res,volgordeOk=true,omgedraaid=[];
- if(item.ordered){let laatst=-1;res=item.points.map(([label,alts])=>{const p=eerste(tekst,alts,laatst+1);if(p>=0){laatst=p;return{label,pos:p}}
-   const ergens=eerste(tekst,alts,0);if(ergens>=0){volgordeOk=false;omgedraaid.push(label)}return{label,pos:ergens}})}
+ if(item.ordered){let laatst=-1;res=[];
+   // Stappen in dezelfde vrij-groep mogen onderling wisselen: ze zoeken allemaal vanaf hetzelfde startpunt.
+   const blokken=[];item.points.forEach((_,i)=>{const g=(item.vrij||[]).find(g=>g.includes(i));if(g&&g[0]!==i)return;blokken.push(g||[i])});
+   blokken.forEach(blok=>{const start=laatst+1;let hoogste=laatst;blok.forEach(i=>{const [label,alts]=item.points[i];const p=eerste(tekst,alts,start);
+    if(p>=0){hoogste=Math.max(hoogste,p);res[i]={label,pos:p};return}
+    const ergens=eerste(tekst,alts,0);if(ergens>=0){volgordeOk=false;omgedraaid.push(label)}res[i]={label,pos:ergens}});laatst=hoogste})}
  else res=item.points.map(([label,alts])=>({label,pos:eerste(tekst,alts,0)}));
  const gevonden=res.filter(r=>r.pos>=0).length,min=item.min||item.points.length;
  const goed=gevonden>=min&&volgordeOk;const bijna=!goed&&gevonden>=Math.ceil(min*0.6);
@@ -611,7 +615,7 @@ async function aiNakijken(item,tekst){const key=ST.settings.gk;if(!key)return nu
 Vraag: ${item.q}
 Kernpunten van het modelantwoord${item.ordered?" (de VOLGORDE telt)":""}:
 ${item.points.map((p,i)=>`${i+1}. ${p[0]}`).join("\n")}
-Er moeten minstens ${item.min||item.points.length} van de ${item.points.length} kernpunten in staan${item.ordered?", in de goede volgorde":""}.
+Er moeten minstens ${item.min||item.points.length} van de ${item.points.length} kernpunten in staan${item.ordered?", in de goede volgorde":""}.${(item.vrij||[]).map(g=>` Kernpunten ${g.map(i=>i+1).join(" en ")} mogen onderling in willekeurige volgorde.`).join("")}
 Toelichting modelantwoord: ${item.why}
 
 Antwoord van de kandidaat: """${tekst}"""
@@ -672,16 +676,16 @@ function renderVraag(it){const r=ST.items[it.id];const nieuw=!r||!r.seen;
  else if(it.type==="order"){const mix=shuffle(it.steps.map((s,i)=>({s,i})));let gekozen=[];
   const teken=()=>{inv.innerHTML=`<div class="klein">Tik de stappen aan in de goede volgorde.</div><div class="opties" style="margin-top:8px">${mix.map((x,k)=>{const pos=gekozen.indexOf(k);return`<button class="opt ${pos>=0?"gekozen":""}" data-k="${k}" ${pos>=0?"disabled":""}>${pos>=0?`<span class="nr">${pos+1}</span>`:""}${esc(x.s)}</button>`}).join("")}</div><div class="knoppen"><button class="knop licht" id="opnieuw">Opnieuw</button><button class="knop" id="ordOk" ${gekozen.length<mix.length?"disabled":""}>Controleer</button></div>`;
    inv.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{gekozen.push(+b.dataset.k);teken()});$("#opnieuw").onclick=()=>{gekozen=[];teken()};
-   $("#ordOk").onclick=()=>{const seq=gekozen.map(k=>mix[k].i);const goed=seq.every((v,i)=>v===i);
-    inv.querySelectorAll(".opt").forEach(b=>{const k=+b.dataset.k,pos=gekozen.indexOf(k);b.disabled=true;b.classList.remove("gekozen");b.classList.add(mix[k].i===pos?"goed":"fout")});$("#ordOk").disabled=true;$("#opnieuw").disabled=true;
-    klaar(it,goed,`Goede volgorde:<ol>${it.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>`)}};teken()}
+   $("#ordOk").onclick=()=>{const rang=i=>{const g=(it.vrij||[]).find(g=>g.includes(i));return g?Math.min(...g):i};const seq=gekozen.map(k=>mix[k].i);const goed=seq.every((v,i)=>rang(v)===rang(i));
+    inv.querySelectorAll(".opt").forEach(b=>{const k=+b.dataset.k,pos=gekozen.indexOf(k);b.disabled=true;b.classList.remove("gekozen");b.classList.add(rang(mix[k].i)===rang(pos)?"goed":"fout")});$("#ordOk").disabled=true;$("#opnieuw").disabled=true;
+    klaar(it,goed,`Goede volgorde:<ol>${it.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${(it.vrij||[]).map(g=>`<div class="klein">Stap ${g.map(i=>i+1).join(" en ")} mogen in willekeurige volgorde.</div>`).join("")}`)}};teken()}
  else if(it.type==="speak"){inv.innerHTML=`<textarea id="spIn" placeholder="Spreek in of typ je antwoord. Op de iPhone kan ook de microfoon van het toetsenbord."></textarea><div class="knoppen"><button class="knop mic" id="micKnop">🎤 Inspreken</button><button class="knop" id="spOk">Nakijken</button><button class="knop licht" id="weetNiet">Weet ik niet</button></div><div class="klein">${item_hint(it)}</div>`;
   const ta=$("#spIn");$("#micKnop").onclick=()=>startSpraak(ta,$("#micKnop"));
   $("#spOk").onclick=()=>{if(!ta.value.trim()){ta.focus();return}nakijkenSpraak(it,ta.value)};
   $("#weetNiet").onclick=()=>{stopSpraak($("#micKnop"));ta.disabled=true;["spOk","micKnop","weetNiet"].forEach(i=>$("#"+i).disabled=true);klaar(it,false,modelAntwoord(it))}}
  window.scrollTo(0,0)}
 function item_hint(it){return`${it.ordered?"Volgorde telt. ":""}Nodig: ${it.min||it.points.length} van ${it.points.length} kernpunten.${ST.settings.gk?" AI kijkt mee.":""}`}
-function modelAntwoord(it){return`<b>Modelantwoord:</b><ol>${it.points.map(p=>`<li>${esc(p[0])}</li>`).join("")}</ol>`}
+function modelAntwoord(it){return`<b>Modelantwoord:</b><ol>${it.points.map(p=>`<li>${esc(p[0])}</li>`).join("")}</ol>${(it.vrij||[]).map(g=>`<div class="klein">Stap ${g.map(i=>i+1).join(" en ")} mogen in willekeurige volgorde.</div>`).join("")}`}
 async function nakijkenSpraak(it,tekst){stopSpraak($("#micKnop"));$("#spIn").disabled=true;["spOk","micKnop","weetNiet"].forEach(i=>$("#"+i).disabled=true);
  const L=lokaalNakijken(it,tekst);
  const lijst=`<ul>${L.res.map(r=>`<li class="${r.pos>=0?"ok":"mis"}">${r.pos>=0?"✓":"✗"} ${esc(r.label)}</li>`).join("")}</ul>`+(it.ordered&&!L.volgordeOk?`<div>Volgorde klopt niet bij: ${L.omgedraaid.map(esc).join(", ")}</div>`:"");
