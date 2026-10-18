@@ -45,3 +45,4 @@ Een adaptieve oefen-app (één html-bestand, werkt op telefoon) waarmee Jaap vó
 - 18-10-2026, 15:45 gestart (claim)
 - 18-10-2026, 16:00 video's en transcripten binnen
 - 18-10-2026, 16:10 app gebouwd en getest; lokaal gecommit; online zetten wacht op akkoord
+- 18-10-2026, 16:20 stand: app af en getest (index.html, lokaal gecommit). Er lopen geen agents. Bij Jaap: a = openbare GitHub Pages (advies) of b = Tailscale. Volgende stap na zijn keuze: online zetten, testen op telefoonformaat, Gemini-instellink (#gk=) sturen, kopie in de resultatenmap waar mogelijk.
