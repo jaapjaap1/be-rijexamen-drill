@@ -577,34 +577,37 @@ const BEHEERST=2; // 2 keer goed na elkaar = je snapt het (Jaap, 18 okt)
 // Beheerst = 2 keer goed en het laatste antwoord goed; zo'n vraag komt niet meer terug (Jaap, 18 okt)
 const beheerst=r=>!!r&&(r.box>=BEHEERST||(r.ok>=BEHEERST&&r.box>=1));
 let herhaal=false;
+// Herhaling gespreid en wisselend: fout na 6-9 vragen en minstens 1-3 min, 1 keer goed na 10-16 vragen en minstens 4-8 min (Jaap, 18 okt)
+const tussen=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function grade(id,goed){const r=rec(id),nu=Date.now(),nieuw=r.seen===0;r.seen++;ST.n++;
  if(goed){r.ok++;r.box=Math.min(5,r.box+1);
-  if(r.box===1){r.dueN=ST.n+5;r.dueT=0}
+  if(r.box===1){r.dueN=ST.n+tussen(10,16);r.dueT=nu+tussen(4,8)*MIN}
   else if(r.box===2){r.dueN=ST.n+12;r.dueT=nu+10*MIN}
   else if(r.box===3){r.dueN=ST.n+20;r.dueT=nu+3*UUR}
   else if(r.box===4){r.dueN=0;r.dueT=nu+DAG}
   else{r.dueN=0;r.dueT=nu+2*DAG}}
- else{r.fout++;r.box=0;r.dueN=ST.n+3;r.dueT=0}
+ else{r.fout++;r.box=0;r.dueN=ST.n+tussen(6,9);r.dueT=nu+tussen(1,3)*MIN}
  r.last=nu;ST.log.push({t:nu,id,g:goed?1:0});if(ST.log.length>3000)ST.log=ST.log.slice(-3000);save();}
 function pool(){return ITEMS.filter(i=>!ST.focus.length||ST.focus.includes(i.t))}
 function topicStats(tid){const its=ITEMS.filter(i=>i.t===tid);let m=0,s=0,pts=0;its.forEach(i=>{const r=ST.items[i.id];if(r&&r.seen){s++;pts+=beheerst(r)?BEHEERST:Math.min(r.box,BEHEERST);if(beheerst(r))m++}});return{tot:its.length,beheerst:m,gezien:s,pct:Math.round(100*pts/(its.length*BEHEERST))}}
 function totaal(){let pts=0,m=0;ITEMS.forEach(i=>{const r=ST.items[i.id];if(r){pts+=beheerst(r)?BEHEERST:Math.min(r.box,BEHEERST);if(beheerst(r))m++}});return{pct:Math.round(100*pts/(ITEMS.length*BEHEERST)),beheerst:m,tot:ITEMS.length}}
 let vorige=null;
 function kiesVolgende(){const nu=Date.now(),P=pool().filter(i=>herhaal||!beheerst(ST.items[i.id]));if(!P.length)return null;
- const due=P.filter(i=>{const r=ST.items[i.id];return r&&r.seen&&ST.n>=r.dueN&&nu>=r.dueT&&i.id!==vorige});
- const wankel=P.filter(i=>{const r=ST.items[i.id];return r&&r.seen&&r.box<2});
- const pick=a=>{a.sort((x,y)=>{const rx=ST.items[x.id],ry=ST.items[y.id];return rx.box-ry.box||rx.dueN-ry.dueN||Math.random()-.5});return a[0]};
- if(due.length)return pick(due);
- const nieuw=P.filter(i=>!ST.items[i.id]||!ST.items[i.id].seen);
- if(nieuw.length&&wankel.length<6){
+ const recent=new Set(ST.log.slice(-5).map(l=>l.id));if(vorige)recent.add(vorige); // nooit binnen 5 vragen terug
+ const r_=i=>ST.items[i.id],gezien=i=>r_(i)&&r_(i).seen;
+ const due=P.filter(i=>gezien(i)&&ST.n>=r_(i).dueN&&nu>=r_(i).dueT&&!recent.has(i.id));
+ const wankel=P.filter(i=>gezien(i)&&!beheerst(r_(i)));
+ const meng=a=>a[Math.floor(Math.random()*Math.min(3,a.length))]; // niet steeds dezelfde volgorde
+ if(due.length){due.sort((x,y)=>r_(x).dueN-r_(y).dueN);return meng(due)}
+ const nieuw=P.filter(i=>!gezien(i));
+ if(nieuw.length&&wankel.length<15){
   const per={};nieuw.forEach(i=>{(per[i.t]=per[i.t]||[]).push(i)});
   const tids=Object.keys(per).sort((a,b)=>{const sa=topicStats(a),sb=topicStats(b);return sa.gezien/sa.tot-sb.gezien/sb.tot||TOPICS.findIndex(t=>t.id===a)-TOPICS.findIndex(t=>t.id===b)});
   return per[tids[0]][0];}
- const rest=P.filter(i=>i.id!==vorige&&ST.items[i.id]&&ST.items[i.id].seen);
- if(wankel.length){const w=wankel.filter(i=>i.id!==vorige);if(w.length)return pick(w)}
- if(!rest.length)return P[0]||null;
- rest.sort((x,y)=>{const rx=ST.items[x.id],ry=ST.items[y.id];return rx.box-ry.box||(rx.dueT-ry.dueT)||Math.random()-.5});
- return rest[0];}
+ const wacht=wankel.filter(i=>!recent.has(i.id)).sort((x,y)=>Math.max(r_(x).dueN-ST.n,(r_(x).dueT-nu)/(20e3))-Math.max(r_(y).dueN-ST.n,(r_(y).dueT-nu)/(20e3)));
+ if(wacht.length)return wacht[0];
+ const rest=P.filter(i=>!recent.has(i.id));
+ return rest.length?meng(rest):P[0];}
 
 /* ============ NAKIJKEN SPRAAK ============ */
 function norm(s){return(" "+s+" ").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/(\d),(\d)/g,"$1 $2").replace(/[^a-z0-9]+/g," ").replace(/\s+/g," ")}
