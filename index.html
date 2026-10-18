@@ -271,18 +271,22 @@ const FIG={
   <g transform="translate(${ox+98} 112) rotate(${scheef?-28:0})"><rect x="-9" y="-26" width="18" height="24" rx="5" fill="#3b6ea5"/></g><rect x="${ox+88}" y="114" width="20" height="40" rx="2" fill="#eceee9" stroke="#666"/>`+
   T(ox+65,210,l,'text-anchor="middle" style="font-size:16px;font-weight:700;fill:#2E4A3C"');
   return S(300,220,pan(10,"A",true)+pan(160,"B",false)+T(150,14,"linksaf, wachten op tegenliggers",'text-anchor="middle"'))},
- koppeling(p){const n=(x,y,k)=>`<circle cx="${x}" cy="${y}" r="10" fill="${p&&p.vraag==k?"#c0392b":"#2E4A3C"}"/>${T(x,y+4,k,'text-anchor="middle" style="fill:#fff;font-weight:700;font-size:12px"')}`;
-  return S(340,170,`<rect x="0" y="15" width="58" height="110" fill="#eceee9" stroke="#666"/>`+T(4,140,"aanhanger")+
-  `<rect x="305" y="45" width="35" height="70" rx="4" fill="#3b6ea5"/>`+T(296,140,"auto")+
-  `<path d="M305 100 H285 V88" stroke="#333" stroke-width="5" fill="none"/><circle cx="285" cy="82" r="7" fill="#777"/>
-  <line x1="58" y1="80" x2="250" y2="80" stroke="#555" stroke-width="7"/>
-  <rect x="248" y="70" width="34" height="18" rx="5" fill="#666"/><line x1="262" y1="70" x2="270" y2="58" stroke="#333" stroke-width="4"/><circle cx="276" cy="66" r="4" fill="#3c3"/>
-  <path d="M200 74 l5 12 l5 -12 l5 12 l5 -12 l5 12 l5 -12 l5 12" stroke="#222" stroke-width="3" fill="none"/>
-  <line x1="180" y1="78" x2="168" y2="44" stroke="#333" stroke-width="5"/><circle cx="167" cy="42" r="5" fill="#c0392b"/>
-  <path d="M182 84 Q240 130 306 108" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
-  <path d="M110 84 Q200 150 312 92" stroke="#111" stroke-width="2" fill="none"/>
-  <line x1="138" y1="56" x2="138" y2="135" stroke="#555" stroke-width="5"/><circle cx="138" cy="142" r="10" fill="#333"/><line x1="130" y1="56" x2="146" y2="56" stroke="#333" stroke-width="4"/>`+
-  n(285,30,1)+n(262,108,2)+n(240,148,3)+n(205,158,4)+n(114,150,5)+n(150,28,6)+n(222,52,7))},
+ koppeling(p){const vr=p&&p.vraag;
+  // Nummer met lijntje naar het onderdeel; het gevraagde nummer wordt rood.
+  const n=(x,y,k,tx,ty)=>{const r=vr==k,c=r?"#c0392b":"#2E4A3C";return `<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="${c}" stroke-width="${r?2.5:1.5}"/>${r?`<circle cx="${tx}" cy="${ty}" r="12" fill="none" stroke="#c0392b" stroke-width="2.5"/>`:""}<circle cx="${tx}" cy="${ty}" r="4" fill="${c}"/><circle cx="${x}" cy="${y}" r="14" fill="${c}"/>${T(x,y+5,k,'text-anchor="middle" style="fill:#fff;font-weight:700;font-size:15px"')}`};
+  return S(480,260,`<rect x="0" y="20" width="60" height="180" fill="#eceee9" stroke="#666"/>`+T(6,40,"aanhanger")+
+  `<rect x="446" y="60" width="34" height="140" rx="6" fill="#3b6ea5"/>`+T(448,216,"auto")+
+  `<line x1="60" y1="128" x2="300" y2="128" stroke="#555" stroke-width="10"/>
+  <rect x="280" y="116" width="52" height="24" rx="3" fill="#777"/>
+  <line x1="330" y1="128" x2="372" y2="128" stroke="#888" stroke-width="6"/>
+  <path d="M333 118 l4 20 l4 -20 l4 20 l4 -20 l4 20 l4 -20 l4 20 l4 -20" stroke="#222" stroke-width="3" fill="none"/>
+  <path d="M408 155 V172 H446" stroke="#333" stroke-width="7" fill="none"/><circle cx="408" cy="148" r="9" fill="#999" stroke="#333" stroke-width="2"/>
+  <rect x="366" y="112" width="50" height="28" rx="8" fill="#666"/><line x1="386" y1="112" x2="373" y2="88" stroke="#333" stroke-width="5"/><circle cx="372" cy="86" r="4" fill="#333"/><rect x="398" y="104" width="12" height="7" rx="2" fill="#3c3"/>
+  <line x1="300" y1="116" x2="276" y2="70" stroke="#333" stroke-width="6"/><circle cx="274" cy="66" r="6" fill="#333"/>
+  <path d="M300 140 Q360 215 446 186" stroke="#c0392b" stroke-width="2" fill="none" stroke-dasharray="5 3"/>
+  <path d="M60 92 Q250 48 428 92" stroke="#111" stroke-width="2.5" fill="none"/><rect x="426" y="86" width="20" height="14" rx="2" fill="#222"/>
+  <line x1="170" y1="80" x2="170" y2="198" stroke="#555" stroke-width="8"/><line x1="160" y1="80" x2="184" y2="80" stroke="#333" stroke-width="5"/><rect x="160" y="120" width="20" height="16" fill="#444"/><circle cx="170" cy="212" r="16" fill="#333"/><circle cx="170" cy="212" r="5" fill="#888"/>`+
+  n(420,240,1,408,150)+n(400,30,2,392,114)+n(330,244,3,366,189)+n(462,30,4,436,93)+n(110,232,5,155,212)+n(230,36,6,275,68)+n(335,64,7,349,118))},
  stuur(){return S(320,150,pijl+`<circle cx="80" cy="72" r="52" fill="none" stroke="#333" stroke-width="9"/><circle cx="80" cy="72" r="10" fill="#333"/>
   <line x1="80" y1="72" x2="80" y2="124" stroke="#333" stroke-width="5"/><circle cx="80" cy="128" r="11" fill="#E8895F"/>
   <line x1="94" y1="134" x2="140" y2="134" stroke="#c0392b" stroke-width="3" marker-end="url(#pk)"/>`+
@@ -715,7 +719,7 @@ function toonStand(){stopSpraak();kopBalk();const t=totaal();const vandaag=new D
  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{const f=b.dataset.f;ST.focus=ST.focus.includes(f)?ST.focus.filter(x=>x!==f):[...ST.focus,f];save();toonStand()});
  $("#oefenFocus").onclick=()=>tab("oefen");const w=$("#wisF");if(w)w.onclick=()=>{ST.focus=[];save();toonStand()}}
 function toonLeer(){stopSpraak();let h=`<p class="klein">De kern per onderwerp, uit de video's van Verkeersopleider (instructeur Emre), aangevuld met de CBR-site en de wet. Tik een video aan om hem te bekijken.</p>`;
- TOPICS.forEach(tp=>{h+=`<details><summary>${esc(tp.naam)}</summary><ul>${tp.leer.map(l=>`<li>${l}</li>`).join("")}</ul>${tp.v.length?`<div class="bron">Video: ${tp.v.map(v=>`<a href="https://www.youtube.com/watch?v=${v}" target="_blank" rel="noopener">${esc(VIDS[v])}</a>`).join(" · ")}</div>`:""}<div class="knoppen" style="margin-bottom:12px"><button class="knop klein" data-oef="${tp.id}">Oefen dit onderwerp</button></div></details>`});
+ TOPICS.forEach(tp=>{h+=`<details><summary>${esc(tp.naam)}</summary><ul>${tp.leer.map(l=>`<li>${l}</li>`).join("")}</ul>${["aankoppelen","afkoppelen","remmen"].includes(tp.id)?`<b>De onderdelen bij de dissel</b>${FIG.koppeling({})}<ol>${ONDERDELEN.map(o=>`<li>${esc(o)}</li>`).join("")}</ol>`:""}${tp.v.length?`<div class="bron">Video: ${tp.v.map(v=>`<a href="https://www.youtube.com/watch?v=${v}" target="_blank" rel="noopener">${esc(VIDS[v])}</a>`).join(" · ")}</div>`:""}<div class="knoppen" style="margin-bottom:12px"><button class="knop klein" data-oef="${tp.id}">Oefen dit onderwerp</button></div></details>`});
  h+=`<details><summary>Alle BE-video's van het kanaal</summary><ul>${Object.entries(VIDS).map(([v,n])=>`<li><a href="https://www.youtube.com/watch?v=${v}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></details>`;
  app.innerHTML=h;app.querySelectorAll("[data-oef]").forEach(b=>b.onclick=()=>{ST.focus=[b.dataset.oef];save();tab("oefen")})}
 function toonMeer(){stopSpraak();const ai=!!ST.settings.gk;
