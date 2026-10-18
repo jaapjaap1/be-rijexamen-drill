@@ -406,13 +406,13 @@ const AANK=["Ramen omlaag, alarmlichten aan, rustig achteruit naar de dissel","S
 ord("a1","aankoppelen","Zet de stappen van het aankoppelen in de goede volgorde.",AANK,"Eerst vastklikken en controleren (auto komt mee omhoog), dan losbreekkabel en stekker (die twee in willekeurige volgorde), neuswiel omhoog en als laatste de handrem eraf.",{vrij:[[4,5]],src:V("cBME75Arkis","neuswiel zakken",62)});
 sp("a2","aankoppelen","Vertel hardop hoe je aankoppelt, stap voor stap, vanaf het moment dat je achteruit naar de aanhanger rijdt.",[
  ["Ramen omlaag / alarmlichten / rustig achteruit",["raam","ramen","alarm","achteruit","rustig"]],
- ["Slot eraf",["slot","lok"]],
- ["Neuswiel laten zakken tot klik op de kogel",["zakken","klik","op de kogel"]],
- ["Controle: terugdraaien, auto komt mee omhoog",["omhoog","mee omhoog","controle","terugdraai"]],
- ["Losbreekkabel om",["losbreek","breekkabel"]],
- ["Stekker erin",["stekker","stroom"]],
- ["Neuswiel omhoog en vastzetten",["neuswiel omhoog","wiel omhoog","vastzetten","klem"]],
- ["Handrem eraf",["handrem"]]],
+ ["Slot eraf / koppeling ontgrendelen of openen",["slot","lok","ontgrendel","vergrendel","hendel","handgreep","beveilig","diefstal","open"]],
+ ["Neuswiel laten zakken tot klik op de kogel",["zakken","zak","klik","op de kogel","omlaag","beneden","laten zakken"]],
+ ["Controle: terugdraaien, auto komt mee omhoog",["omhoog","mee omhoog","controle","controleer","terugdraai","check","test","vastzit","vast zit","groen","indicator"]],
+ ["Losbreekkabel om",["losbreek","breekkabel","breek kabel","remkabel","noodrem","noodkabel","breekrem"]],
+ ["Stekker erin",["stekker","stroom","elektr","verlichting","lampen","plug"]],
+ ["Neuswiel omhoog en vastzetten",["neuswiel omhoog","wiel omhoog","vastzetten","klem","opdraai","omhoog draai","wiel vast","wiel op","wiel weg","neuswiel"]],
+ ["Handrem eraf",["handrem","rem eraf","rem los","parkeerrem"]]],
  "Achteruit (ramen omlaag, alarmlichten), slot eraf, neuswiel laten zakken tot klik, controleren door terug te draaien (auto komt mee omhoog), losbreekkabel om en stekker erin (die twee in willekeurige volgorde), neuswiel omhoog en vast, handrem eraf.",{ordered:true,vrij:[[4,5]],min:7,src:V("cBME75Arkis","neuswiel zakken",62)});
 mc("a3","aankoppelen","De examinator vraagt: 'Zit hij vast? Hoe weet je dat?'",["Ik heb het neuswiel teruggedraaid en de auto kwam mee omhoog; de indicator staat op groen","Ik hoorde een klik","De lampen doen het","De losbreekkabel zit om"],"Het bewijs: je draaide het neuswiel terug en de auto ging mee omhoog. Plus de indicator op groen en de handgreep vergrendeld.",{src:V("cBME75Arkis","zit hij vast",120)});
 mc("a4","aankoppelen","De indicator op de koppeling staat op groen, maar je hoorde geen klik. Wat doe je?",["Op de dissel drukken/gaan staan tot hij klikt","Niets, groen is goed","Wegrijden en kijken of het goed gaat","De losbreekkabel strakker zetten"],"Groen maar niet geklikt: druk erop (ga erop staan), dan komt de klik alsnog.",{src:V("XNkuVIdhvXY","niet geklikt",0)});
@@ -425,13 +425,13 @@ tf("a8","aankoppelen","Bij het achteruitrijden naar de aanhanger mag je de koppe
 const AFK=["Verlichting uit en motor uit","Aanhanger naar achteren duwen tot de oploopremstang uit is","Handrem erop","Neuswiel laten zakken tot op de grond","Stekker eruit","Losbreekkabel eraf","Koppeling ontgrendelen en van de kogel halen"];
 ord("f1","afkoppelen","Zet de stappen van het afkoppelen in de goede volgorde.",AFK,"Verlichting en motor uit, naar achteren duwen, handrem erop, neuswiel omlaag, stekker en losbreekkabel eraf (die twee in willekeurige volgorde), koppeling los.",{vrij:[[4,5]],src:V("cBME75Arkis","officiële volgorde",169)});
 sp("f2","afkoppelen","Vertel hardop hoe je afkoppelt, stap voor stap.",[
- ["Verlichting uit / motor uit",["verlichting","licht","motor uit"]],
- ["Naar achteren duwen (oploopremstang uit)",["achter","duw","oploop","bumper"]],
- ["Handrem erop",["handrem"]],
- ["Neuswiel omlaag",["neuswiel","zakken","omlaag"]],
- ["Stekker eruit",["stekker","stroom"]],
- ["Losbreekkabel eraf",["losbreek","breekkabel"]],
- ["Koppeling los en van de kogel",["ontgrendel","van de kogel","koppeling los","los","til"]]],
+ ["Verlichting uit / motor uit",["verlichting","licht","lamp","motor uit","motor af","contact"]],
+ ["Naar achteren duwen (oploopremstang uit)",["achter","duw","oploop","bumper","terug","trek"]],
+ ["Handrem erop",["handrem","rem erop","rem aan","parkeerrem"]],
+ ["Neuswiel omlaag",["neuswiel","zakken","zak","omlaag","beneden","wiel"]],
+ ["Stekker eruit",["stekker","stroom","elektr","plug"]],
+ ["Losbreekkabel eraf",["losbreek","breekkabel","breek kabel","remkabel","noodrem","noodkabel","breekrem"]],
+ ["Koppeling los en van de kogel",["ontgrendel","van de kogel","koppeling los","koppeling open","los","til","open","hendel","eraf"]]],
  "Verlichting uit en motor uit, aanhanger naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit en losbreekkabel eraf (die twee in willekeurige volgorde), koppeling ontgrendelen en van de kogel.",{ordered:true,vrij:[[4,5]],min:6,src:V("cBME75Arkis","bumperschade",148)});
 mc("f3","afkoppelen","Welke twee stappen zijn zo belangrijk dat je zakt als je ze vergeet?",["Aanhanger naar achteren duwen en de handrem erop","Stekker eruit en losbreekkabel eraf","Neuswiel omlaag en motor uit","Verlichting uit en ramen omlaag"],"Naar achteren duwen (anders bumperschade) en de handrem erop (anders rolt hij weg).",{src:V("cBME75Arkis","ben je gezakt",166)});
 mc("f4","afkoppelen","Waarom zet je de verlichting uit voordat je de stekker eruit haalt?",["Om kortsluiting te voorkomen","Om de accu te sparen","Omdat het verplicht is in het donker","Zodat de examinator het ziet"],"Verlichting uit voorkomt kortsluiting.",{src:V("cBME75Arkis","kortsluiting",144)});
@@ -625,7 +625,14 @@ function lokaalNakijken(item,tekst){let res,volgordeOk=true,omgedraaid=[];
  return{res,gevonden,min,volgordeOk,omgedraaid,goed,bijna}}
 const MODEL="gemini-flash-latest";
 async function aiNakijken(item,tekst){const key=ST.settings.gk;if(!key)return null;
- const prompt=`Je bent een strenge maar redelijke rijinstructeur voor het Nederlandse BE-examen (auto met aanhangwagen, CBR). Een kandidaat beantwoordt mondeling een vraag. De tekst komt uit spraakherkenning en kan rare woorden of tikfouten bevatten: beoordeel op betekenis, niet op spelling.
+ const prompt=`Je bent een vriendelijke, redelijke rijinstructeur voor het Nederlandse BE-examen (auto met aanhangwagen, CBR). Een kandidaat beantwoordt mondeling een vraag. De tekst komt uit spraakherkenning en kan rare woorden, losse woorden of tikfouten bevatten.
+
+HOE JE NAKIJKT (belangrijk):
+- Beoordeel alleen of de kandidaat de HANDELING begrijpt. Eigen woorden, synoniemen en omschrijvingen tellen altijd als goed. Woordkeuze is NOOIT een reden om iets fout te rekenen.
+- Voorbeelden die allemaal goed zijn: 'koppeling ontgrendelen', 'hendel open', 'beveiliging eraf' = slot eraf / koppeling los; 'losbreekremkabel', 'breekkabel', 'noodremkabel' = losbreekkabel; 'stroom', 'elektriciteit', 'lampen aansluiten' = stekker; 'neuswiel opdraaien', 'wiel omhoog' = neuswiel omhoog; 'rem eraf' = handrem eraf; 'kijken of hij vastzit door omhoog te draaien' = controle.
+- Twijfel je of iets hetzelfde bedoelt? Reken het goed.
+- Reken alleen fout als er inhoudelijk te weinig stappen genoemd zijn, of als de volgorde echt gevaarlijk is (bijvoorbeeld de handrem pas helemaal aan het eind bij afkoppelen, of de losbreekkabel pas na het wegrijden).
+- Zeur niet over de officiële naam. Wil je een vakterm noemen, doe dat als tip, en het antwoord blijft goed.
 
 Vraag: ${item.q}
 Kernpunten van het modelantwoord${item.ordered?" (de VOLGORDE telt)":""}:
@@ -635,7 +642,7 @@ Toelichting modelantwoord: ${item.why}
 
 Antwoord van de kandidaat: """${tekst}"""
 
-Geef alleen JSON: {"goed": true/false, "gevonden": [nummers van de kernpunten die erin staan], "volgorde_ok": true/false, "feedback": "max 2 korte zinnen in het Nederlands, je-vorm, wat er ontbrak of fout was"}. Iets dat gevaarlijk fout is (bijv. handrem pas als laatste bij afkoppelen, of gas geven als je twijfelt) maakt het antwoord fout.`;
+Geef alleen JSON: {"goed": true/false, "gevonden": [nummers van de kernpunten die erin staan], "volgorde_ok": true/false, "feedback": "max 2 korte, vriendelijke zinnen in het Nederlands, je-vorm: bij fout welke stap inhoudelijk ontbrak, bij goed hooguit een tip"}.`;
  const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),20000);
  try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,{method:"POST",signal:ctl.signal,headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:0,responseMimeType:"application/json"}})});
   clearTimeout(to);if(!r.ok)return{fout:"AI gaf fout "+r.status};const d=await r.json();const txt=d.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
@@ -706,7 +713,7 @@ async function nakijkenSpraak(it,tekst){stopSpraak($("#micKnop"));$("#spIn").dis
  const lijst=`<ul>${L.res.map(r=>`<li class="${r.pos>=0?"ok":"mis"}">${r.pos>=0?"✓":"✗"} ${esc(r.label)}</li>`).join("")}</ul>`+(it.ordered&&!L.volgordeOk?`<div>Volgorde klopt niet bij: ${L.omgedraaid.map(esc).join(", ")}</div>`:"");
  let goed=L.goed,extra=`<div class="klein">Woordcontrole: ${L.gevonden} van ${it.points.length} kernpunten herkend.</div>`+lijst;
  if(ST.settings.gk){$("#uitslag").innerHTML=`<div class="ai">AI kijkt na…</div>`;const A=await aiNakijken(it,tekst);
-  if(A&&!A.fout&&typeof A.goed==="boolean"){goed=A.goed;extra=`<div class="ai"><b>AI:</b> ${esc(A.feedback||"")}</div>`+extra}
+  if(A&&!A.fout&&typeof A.goed==="boolean"){const telAI=Array.isArray(A.gevonden)?A.gevonden.length:0;goed=A.goed||L.goed||(telAI>=(it.min||it.points.length)&&A.volgorde_ok!==false);extra=`<div class="ai"><b>AI:</b> ${esc(A.feedback||"")}</div>`+extra}
   else if(A&&A.fout)extra=`<div class="ai">${esc(A.fout)}; woordcontrole telt.</div>`+extra}
  klaar(it,goed,extra+modelAntwoord(it),{bijna:!goed&&L.bijna,override:true})}
 function klaar(it,goed,extraHtml="",opt={}){let oordeel=goed;
