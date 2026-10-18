@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#2E4A3C">
+<link rel="icon" href="data:,">
+<title>Achteruit-simulator BE</title>
+<style>
+:root{--groen:#2E4A3C;--licht:#A6C284;--oranje:#E8895F;--bg:#FBFAF6;--tekst:#1f2a24;--grijs:#6b7570;--rood:#c0392b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tekst);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+header{background:var(--groen);color:#fff;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top))}
+header .rij{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+header h1{font-size:16px;margin:0 8px 0 0}
+.tab{border:0;border-radius:16px;padding:6px 10px;font-size:13px;background:rgba(255,255,255,.18);color:#fff}
+.tab.aan{background:#fff;color:var(--groen);font-weight:700}
+main{max-width:760px;margin:0 auto;padding:8px}
+.spiegels{display:flex;gap:8px;justify-content:space-between}
+.spiegel{flex:1;position:relative}
+.spiegel canvas{width:100%;height:118px;display:block;border:5px solid #222;border-radius:18px 6px 6px 18px;background:#bcd}
+.spiegel.r canvas{border-radius:6px 18px 18px 6px}
+.spiegel span{position:absolute;top:6px;left:12px;font-size:11px;color:#fff;background:rgba(0,0,0,.45);padding:1px 6px;border-radius:6px}
+#boven{width:100%;height:38vh;min-height:220px;display:block;margin-top:8px;border-radius:12px;background:#9aa39a}
+.status{display:flex;gap:10px;align-items:center;margin:8px 0}
+#stuurwiel{width:64px;height:64px;flex:none}
+#coach{flex:1;background:#fff;border-radius:10px;padding:8px 10px;min-height:58px;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:14px}
+#coach b{color:var(--groen)}
+.knoppen{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;touch-action:none;user-select:none;-webkit-user-select:none}
+.k{border:0;border-radius:14px;padding:16px 4px;font-size:16px;font-weight:700;background:#e7ece5;color:var(--groen);touch-action:none;user-select:none;-webkit-user-select:none}
+.k.gas{background:var(--groen);color:#fff}
+.k.terug{background:var(--oranje);color:#fff}
+.k.actief{filter:brightness(.8);transform:scale(.97)}
+.opties{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{border:1px solid #cfd8cc;background:#eef3ec;color:var(--groen);border-radius:16px;padding:5px 10px;font-size:13px}
+.chip.aan{background:var(--groen);color:#fff}
+#uitslag{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);width:min(92vw,420px);background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.3);padding:18px;display:none;z-index:9}
+#uitslag h2{margin:0 0 8px}
+#uitslag.goed h2{color:#2e7d4f}#uitslag.fout h2{color:var(--rood)}
+.uitleg{background:#fff;border-radius:12px;padding:4px 14px;margin-top:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.uitleg summary{padding:10px 0;font-weight:700}
+.klein{font-size:12px;color:var(--grijs)}
+a{color:var(--groen)}
+</style>
+</head>
+<body>
+<header><div class="rij"><h1>Achteruit-simulator</h1>
+<button class="tab aan" data-sc="recht">Recht achteruit</button><button class="tab" data-sc="bocht">Bocht achteruit (zijstraat)</button><button class="tab" data-sc="vrij">Vrij oefenen</button></div></header>
+<main>
+ <div class="spiegels">
+  <div class="spiegel"><canvas id="spL" width="360" height="236"></canvas><span>linkerspiegel</span></div>
+  <div class="spiegel r"><canvas id="spR" width="360" height="236"></canvas><span>rechterspiegel</span></div>
+ </div>
+ <canvas id="boven" width="760" height="500"></canvas>
+ <div class="opties">
+  <button class="chip aan" id="tHulp">Coach aan</button>
+  <button class="chip aan" id="tLijn">Voorspellingslijn aan</button>
+  <button class="chip aan" id="tBoven">Bovenaanzicht aan</button>
+  <button class="chip" id="tHand">Hand onderaan het stuur</button>
+  <span class="klein" id="score"></span>
+ </div>
+ <div class="status"><svg id="stuurwiel" viewBox="-50 -50 100 100"><g id="wiel"><circle r="42" fill="none" stroke="#333" stroke-width="9"/><circle r="9" fill="#333"/><line x1="-42" y1="0" x2="-9" y2="0" stroke="#333" stroke-width="6"/><line x1="9" y1="0" x2="42" y2="0" stroke="#333" stroke-width="6"/><line x1="0" y1="9" x2="0" y2="42" stroke="#333" stroke-width="6"/><circle cx="0" cy="-42" r="6" fill="#E8895F"/><circle id="hand" cx="0" cy="42" r="8" fill="#2E4A3C" style="display:none"/></g></svg><div id="coach"></div></div>
+ <div class="knoppen">
+  <button class="k" data-k="links">&#10226; Stuur links</button>
+  <button class="k" data-k="recht">Stuur recht</button>
+  <button class="k" data-k="rechts">Stuur rechts &#10227;</button>
+  <button class="k gas" data-k="vooruit">&#9650; Vooruit</button>
+  <button class="k" data-k="klaar">&#10003; Klaar</button>
+  <button class="k gas terug" data-k="achteruit">&#9660; Achteruit</button>
+ </div>
+ <p class="klein">Pc: pijltjes links/rechts = sturen, omlaag = achteruit, omhoog = vooruit, spatie = stuur recht, Enter = klaar, R = opnieuw. Loslaten = stilstaan. Het stuur blijft staan waar je het laat, net als echt.</p>
+ <details class="uitleg" open><summary>Welke kant stuur je op bij achteruit?</summary>
+ <ul>
+  <li><b>Achteruit stuurt de aanhanger andersom.</b> Stuur je naar links, dan gaat de achterkant van de aanhanger naar rechts. Stuur je naar rechts, dan gaat hij naar links.</li>
+  <li><b>Trucje: hand onderaan het stuur.</b> Beweeg je hand naar de kant waar de aanhanger heen moet. (Zet "Hand onderaan het stuur" aan om het te zien.)</li>
+  <li><b>In de spiegel:</b> zie je de aanhanger in je <i>rechter</i>spiegel groter worden, dan gaat hij naar rechts. Wil je hem terug, stuur dan naar rechts, <i>naar het gevaar toe</i>; dan komt hij ervan af.</li>
+  <li><b>Kort sturen, dan terug.</b> De aanhanger reageert een paar seconden later. Stuur een beetje, en zodra hij de goede kant op beweegt het stuur terug naar het midden, anders gaat hij "scharen".</li>
+  <li><b>Hoek te groot?</b> Rij een stukje vooruit om de combinatie recht te trekken. Dat mag.</li>
+ </ul></details>
+ <details class="uitleg"><summary>De oefeningen</summary>
+ <ul>
+  <li><b>Recht achteruit:</b> rij recht achteruit tot vlak voor het hek (zoals je caravan op de camping). Je staat op 1 m van de stoeprand en net niet helemaal recht. Druk op Klaar als je stilstaat: binnen 1 m van het hek, recht en op je lijn = geslaagd.</li>
+  <li><b>Bocht achteruit:</b> je staat op de linkerweghelft, voorbij de zijstraat, 1 m van de stoep. Rij achteruit linksom de zijstraat in tot de combinatie recht in de straat staat. Niet over de stoep.</li>
+  <li><b>Vrij oefenen:</b> een leeg plein om te voelen wat het stuur doet.</li>
+ </ul>
+ <p class="klein">Terug naar de <a href="./">vragen-drill</a>.</p></details>
+</main>
+<div id="uitslag"><h2 id="uTitel"></h2><div id="uTekst"></div><p style="display:flex;gap:8px"><button class="k" id="uVerder" style="flex:1;display:none">Verder rijden</button><button class="k gas" id="uOpnieuw" style="flex:1">Opnieuw</button></p></div>
+<script>
+"use strict";
+/* ===== Afmetingen (meter) ===== */
+const L=3.0,  // wielbasis auto
+ ACHTEROVERHANG=1.0, VOOROVERHANG=1.0, AUTO_B=1.9,
+ HAAK=1.1,    // trekhaak achter de achteras
+ DISSEL=2.9,  // trekhaak tot as aanhanger
+ BAK_HALF=1.7, AANH_B=2.0, MAXSTUUR=35*Math.PI/180, STUURSNEL=45*Math.PI/180,
+ V_ACHTER=-0.8, V_VOOR=1.2, SCHAAR=62*Math.PI/180;
+const R=5; // straal stoeprandhoek
+/* ===== Scenario's ===== */
+function blok(x1,y1,x2,y2,rc){return{x1,y1,x2,y2,rc}}
+const SC={
+ recht:{naam:"Recht achteruit",
+  blokken:[blok(7,-80,40,40),blok(-40,-80,0,40)],
+  start(){const a=(Math.random()<.5?-1:1)*(1.5+Math.random()*2)*Math.PI/180;return{ax:5.0,ay:1.7,phi:Math.PI/2+a*0.6,theta:Math.PI/2+a}},
+  hek:-18, lijnX:5.0,
+  pad(){const p=[];for(let y=12;y>=-18;y-=0.5)p.push([5.0,y]);return p},
+  strepen:{x:3.5,y1:-80,y2:40}},
+ bocht:{naam:"Bocht achteruit",
+  blokken:[blok(7,-60,40,80),
+   blok(-40,-60,0,20,{cx:-R,cy:20-R,R,sx:[-R,0],sy:[20-R,20],a1:0,a2:Math.PI/2}),
+   blok(-40,27,0,80,{cx:-R,cy:27+R,R,sx:[-R,0],sy:[27,27+R],a1:1.5*Math.PI,a2:2*Math.PI})],
+  start(){return{ax:2.0,ay:28.5+BAK_HALF+0.3,phi:Math.PI/2,theta:Math.PI/2}},
+  pad(){const p=[];for(let y=40;y>32;y-=0.5)p.push([2,y]);const cx=-R,cy=32,r=7;for(let a=0;a>=-Math.PI/2;a-=0.04)p.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);for(let x=-5;x>=-30;x-=0.5)p.push([x,25]);return p},
+  strepen:{x:3.5,y1:-60,y2:80}},
+ vrij:{naam:"Vrij oefenen",blokken:[blok(-60,-60,-30,60),blok(30,-60,60,60),blok(-30,40,30,60),blok(-30,-60,30,-40)],
+  start(){return{ax:0,ay:0,phi:Math.PI/2,theta:Math.PI/2}},pad(){return[]},kegels:[[-6,-12],[6,-12],[-6,-20],[6,-20]]}
+};
+/* ===== Toestand ===== */
+let sc="recht",S,keys={},klaarGedrukt=false,instellingen={hulp:true,lijn:true,boven:true,hand:false};
+const OPSLAG="beSim.v1";let stats={};try{stats=JSON.parse(localStorage.getItem(OPSLAG))||{}}catch(e){}
+function bewaar(){try{localStorage.setItem(OPSLAG,JSON.stringify(stats))}catch(e){}}
+function nieuw(){const s=SC[sc].start();
+ // achteras auto volgt uit aanhanger-as, dissel en hoeken
+ const hx=s.ax+DISSEL*Math.cos(s.phi),hy=s.ay+DISSEL*Math.sin(s.phi);
+ S={x:hx+HAAK*Math.cos(s.theta),y:hy+HAAK*Math.sin(s.theta),theta:s.theta,phi:s.phi,delta:0,v:0,t:0,vooruit:0,uit:false,afstand:0};
+ klaarGedrukt=false;vorigeRichting=0;$("#uitslag").style.display="none";}
+/* ===== Geometrie ===== */
+const dir=a=>[Math.cos(a),Math.sin(a)];
+function delen(st=S){const[cx,cy]=dir(st.theta),[px,py]=dir(st.phi);
+ const hx=st.x-HAAK*cx,hy=st.y-HAAK*cy,ax=hx-DISSEL*px,ay=hy-DISSEL*py;
+ const rect=(mx,my,ux,uy,lv,la,b)=>{const nx=-uy,ny=ux;return[[mx+ux*lv+nx*b/2,my+uy*lv+ny*b/2],[mx+ux*lv-nx*b/2,my+uy*lv-ny*b/2],[mx-ux*la-nx*b/2,my-uy*la-ny*b/2],[mx-ux*la+nx*b/2,my-uy*la+ny*b/2]]};
+ return{auto:rect(st.x,st.y,cx,cy,L+VOOROVERHANG,ACHTEROVERHANG,AUTO_B),aanh:rect(ax,ay,px,py,BAK_HALF,BAK_HALF,AANH_B),haak:[hx,hy],as:[ax,ay],
+  achter:[ax-BAK_HALF*px,ay-BAK_HALF*py],cx,cy,px,py}}
+function inBlok(b,x,y){if(x<b.x1||x>b.x2||y<b.y1||y>b.y2)return false;const r=b.rc;
+ if(r&&x>=r.sx[0]&&x<=r.sx[1]&&y>=r.sy[0]&&y<=r.sy[1])return Math.hypot(x-r.cx,y-r.cy)<=r.R;return true}
+function blokPoly(b){const r=b.rc;if(!r)return[[b.x1,b.y1],[b.x2,b.y1],[b.x2,b.y2],[b.x1,b.y2]];
+ const arc=[];for(let i=0;i<=12;i++){const a=r.a1+(r.a2-r.a1)*i/12;arc.push([r.cx+r.R*Math.cos(a),r.cy+r.R*Math.sin(a)])}
+ if(r.a1===0)return[[b.x1,b.y1],[b.x2,b.y1],...arc,[b.x1,b.y2]];
+ return[[b.x1,b.y1],...arc,[b.x2,b.y2],[b.x1,b.y2]]}
+function botsing(D){const pts=[...D.auto,...D.aanh];const sc_=SC[sc];
+ for(const b of sc_.blokken)for(const[x,y]of pts)if(inBlok(b,x,y))return"Over de stoeprand! In het echt had je de stoep of iets erop geraakt.";
+ if(sc_.hek!==undefined)for(const[x,y]of D.aanh)if(y<sc_.hek&&x>0&&x<7)return"Tegen het hek! Je bent te ver doorgereden.";
+ if(sc_.kegels)for(const[kx,ky]of sc_.kegels)if(inPoly([kx,ky],D.aanh)||inPoly([kx,ky],D.auto))return"Pion geraakt.";
+ return null}
+function inPoly(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,yi]=poly[i],[xj,yj]=poly[j];if(((yi>p[1])!==(yj>p[1]))&&(p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi))c=!c}return c}
+/* ===== Natuurkunde ===== */
+function stap(st,dt){const v=st.v,td=Math.tan(st.delta);const dth=v*td/L;
+ const rel=st.theta-st.phi;const dph=(v*Math.sin(rel)-HAAK*dth*Math.cos(rel))/DISSEL;
+ st.x+=v*Math.cos(st.theta)*dt;st.y+=v*Math.sin(st.theta)*dt;st.theta+=dth*dt;st.phi+=dph*dt;st.afstand+=Math.abs(v)*dt}
+const knik=st=>{let a=st.theta-st.phi;while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a};
+/* ===== Coach ===== */
+const CO={vk:6,k1:1.0,k2:1.6};
+function vooruitKijken(pad,px,py,afst){let bi=0,bd=1e9;pad.forEach(([x,y],i)=>{const d=Math.hypot(x-px,y-py);if(d<bd){bd=d;bi=i}});
+ let s=0,i=bi;while(i<pad.length-1&&s<afst){s+=Math.hypot(pad[i+1][0]-pad[i][0],pad[i+1][1]-pad[i][1]);i++}return pad[i]}
+// Welke stuurstand is nu nodig? (het rekenwerk dat een ervaren chauffeur op gevoel doet)
+function stuurAdvies(st=S){const D=delen(st),pad=SC[sc].pad();if(!pad.length)return null;
+ const[rx,ry]=D.achter,T=vooruitKijken(pad,rx,ry,CO.vk);
+ let wx=T[0]-rx,wy=T[1]-ry;const wl=Math.hypot(wx,wy)||1;wx/=wl;wy/=wl;
+ const mx=-D.px,my=-D.py; // rijrichting achterkant aanhanger bij achteruit
+ const fout=-Math.atan2(mx*wy-my*wx,mx*wx+my*wy); // >0: achterkant moet naar links (gezien vanaf de bestuurder)
+ const k=knik(st),kDoel=Math.max(-0.7,Math.min(0.7,CO.k1*fout));
+ const evenwicht=Math.atan(L*Math.sin(k)/(DISSEL+HAAK*Math.cos(k)));
+ const dDoel=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,evenwicht-CO.k2*(kDoel-k)));
+ return{fout,kDoel,dDoel}}
+function coach(){const k=knik(S),hand=instellingen.hand,G=Math.PI/180;
+ const tegen=r=>r==="links"?"rechts":"links";
+ const stuurTekst=r=>hand?`hand onderaan het stuur naar <b>${tegen(r)}</b>`:`stuur naar <b>${r}</b>`;
+ if(Math.abs(k)>50*G)return`<b>Hoek wordt te groot.</b> Rij een stukje vooruit om de combinatie recht te trekken.`;
+ const A=stuurAdvies();if(!A)return`Vrij oefenen. Probeer achteruit tussen de pionnen door te rijden. Kijk wat de aanhanger doet als je stuurt.`;
+ const dd=A.dDoel-S.delta,aanhKant=A.fout>3*G?"links":A.fout<-3*G?"rechts":null;
+ if(Math.abs(dd)<4*G)return Math.abs(A.dDoel)<4*G?`Goed zo. Stuur recht houden, de aanhanger gaat rechtdoor.`:`Goed zo. <b>Stuur zo vasthouden</b>, de aanhanger draait mooi mee.`;
+ const r=dd>0?"links":"rechts",veel=Math.abs(dd)>15*G?"":" een beetje";
+ if(aanhKant&&r!==aanhKant)return`Aanhanger moet naar <b>${aanhKant}</b> &#8594; ${stuurTekst(r)}${veel}${hand?"":" (andersom!)"}.`;
+ if(aanhKant)return`Aanhanger draait al genoeg naar ${aanhKant} &#8594; nu ${stuurTekst(r)}${veel} om hem te <b>volgen</b>, anders schaart hij.`;
+ if(Math.abs(A.dDoel)<4*G)return`Aanhanger staat goed &#8594; <b>stuur terug naar het midden</b>.`;
+ return`Aanhanger staat goed &#8594; ${stuurTekst(r)}${veel} om hem zo te houden.`}
+/* ===== Tekenen: bovenaanzicht ===== */
+const $=s=>document.querySelector(s);
+const cv=$("#boven"),cx=cv.getContext("2d");
+const DPR=Math.min(2,window.devicePixelRatio||1);
+function bovenaanzicht(){cx.setTransform(DPR,0,0,DPR,0,0);const W=cv.width/DPR,H=cv.height/DPR,D=delen(),sc_=SC[sc];
+ const mx=(S.x+D.as[0])/2,my=(S.y+D.as[1])/2,sch=Math.min(W,H)/26;
+ const P=(x,y)=>[W/2+(x-mx)*sch,H/2-(y-my)*sch];
+ cx.fillStyle="#8f968e";cx.fillRect(0,0,W,H);
+ cx.fillStyle="#d8d2c2";cx.strokeStyle="#777";cx.lineWidth=2;
+ for(const b of sc_.blokken){const pl=blokPoly(b);cx.beginPath();pl.forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.closePath();cx.fill();cx.stroke()}
+ if(sc_.strepen){cx.strokeStyle="#fff";cx.lineWidth=2;cx.setLineDash([3*sch,3*sch]);cx.beginPath();const[a1,b1]=P(sc_.strepen.x,sc_.strepen.y1),[a2,b2]=P(sc_.strepen.x,sc_.strepen.y2);cx.moveTo(a1,b1);cx.lineTo(a2,b2);cx.stroke();cx.setLineDash([])}
+ if(sc_.hek!==undefined){const[a1,b1]=P(0,sc_.hek),[a2]=P(7,sc_.hek);cx.fillStyle="#c0392b";cx.fillRect(a1,b1-4,a2-a1,8);cx.fillStyle="#fff";for(let i=0;i<7;i+=1.4){const[q]=P(i,0);cx.fillRect(q,b1-4,0.7*sch,8)}
+  const[c1,d1]=P(0.2,sc_.hek+1);cx.strokeStyle="rgba(46,125,79,.8)";cx.setLineDash([4,4]);cx.beginPath();cx.moveTo(c1,d1);cx.lineTo(P(6.8,0)[0],d1);cx.stroke();cx.setLineDash([]);cx.fillStyle="#fff";cx.font="12px sans-serif";cx.fillText("stop binnen 1 m van het hek",c1+4,d1-4)}
+ if(sc_.kegels)for(const[kx,ky]of sc_.kegels){const[a,c]=P(kx,ky);cx.fillStyle="#E8895F";cx.beginPath();cx.arc(a,c,0.35*sch,0,7);cx.fill()}
+ if(instellingen.hulp&&sc_.pad().length){cx.strokeStyle="rgba(166,194,132,.9)";cx.lineWidth=2;cx.setLineDash([6,6]);cx.beginPath();sc_.pad().forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.stroke();cx.setLineDash([])}
+ if(instellingen.lijn){const g={...S,v:V_ACHTER};cx.strokeStyle="#E8895F";cx.lineWidth=3;cx.beginPath();for(let i=0;i<=60;i++){if(i)stap(g,0.05);if(Math.abs(knik(g))>SCHAAR)break;const[a,c]=P(...delen(g).achter);i?cx.lineTo(a,c):cx.moveTo(a,c)}cx.stroke();
+  cx.fillStyle="#E8895F";cx.font="11px sans-serif";const[e1,e2]=P(...D.achter);cx.fillText("zo gaat de aanhanger als je nu achteruit rijdt",8,H-8)}
+ const poly=(pl,f,s)=>{cx.beginPath();pl.forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.closePath();cx.fillStyle=f;cx.fill();cx.strokeStyle=s;cx.lineWidth=1.5;cx.stroke()};
+ cx.strokeStyle="#333";cx.lineWidth=3;cx.beginPath();cx.moveTo(...P(...D.haak));const[fx,fy]=[D.as[0]+D.px*BAK_HALF,D.as[1]+D.py*BAK_HALF];cx.lineTo(...P(fx,fy));cx.stroke();
+ poly(D.aanh,"#f4f4f0","#444");
+ const[ax2,ay2]=D.achter;const nx=-D.py,ny=D.px;cx.fillStyle="#c0392b";[[1,0.7],[-1,0.7]].forEach(([s])=>{const[a,c]=P(ax2+nx*s*0.75,ay2+ny*s*0.75);cx.fillRect(a-3,c-3,6,6)});
+ poly(D.auto,"#3b6ea5","#1d3f66");
+ // voorruit en voorwielen
+ const[cxx,cyy]=[D.cx,D.cy],nnx=-cyy,nny=cxx;const vr=[S.x+cxx*(L-0.2),S.y+cyy*(L-0.2)];
+ cx.fillStyle="#a9c7e8";cx.beginPath();[[0.6,0.8],[0.6,-0.8],[-0.2,-0.85],[-0.2,0.85]].forEach(([f,s],i)=>{const[a,c]=P(vr[0]+cxx*f+nnx*s,vr[1]+cyy*f+nny*s);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.fill();
+ const wiel=(px_,py_,ang)=>{const[a,c]=P(px_,py_);cx.save();cx.translate(a,c);cx.rotate(-ang);cx.fillStyle="#111";cx.fillRect(-0.35*sch,-0.12*sch,0.7*sch,0.24*sch);cx.restore()};
+ [1,-1].forEach(s=>{wiel(S.x+cxx*L+nnx*s*0.8,S.y+cyy*L+nny*s*0.8,S.theta+S.delta);wiel(S.x+nnx*s*0.8,S.y+nny*s*0.8,S.theta)});
+ [1,-1].forEach(s=>wiel(D.as[0]+nx*s*1.05,D.as[1]+ny*s*1.05,S.phi));
+ cx.fillStyle="#fff";cx.font="bold 12px sans-serif";const[n1,n2]=P(S.x+cxx*(L+1.6),S.y+cyy*(L+1.6));cx.fillText("voor",n1-12,n2+4)}
+/* ===== Tekenen: spiegels (eenvoudige 3D) ===== */
+function spiegel(canvas,kant){const g=canvas.getContext("2d");g.setTransform(DPR,0,0,DPR,0,0);const W=canvas.width/DPR,H=canvas.height/DPR,D=delen(),sc_=SC[sc];
+ const[cxx,cyy]=[D.cx,D.cy],nnx=-cyy,nny=cxx;const zij=kant==="L"?1:-1;
+ const C=[S.x+cxx*1.9+nnx*zij*1.08,S.y+cyy*1.9+nny*zij*1.08,1.15];
+ const yaw=S.theta+Math.PI-zij*9*Math.PI/180,pitch=-5*Math.PI/180;
+ const f=[Math.cos(yaw)*Math.cos(pitch),Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch)],r=[Math.sin(yaw),-Math.cos(yaw),0];
+ const u=[r[1]*f[2]-r[2]*f[1],r[2]*f[0]-r[0]*f[2],r[0]*f[1]-r[1]*f[0]];
+ const F=(W/2)/Math.tan(17*Math.PI/180);
+ const cam=p=>{const d=[p[0]-C[0],p[1]-C[1],(p[2]||0)-C[2]];return[d[0]*r[0]+d[1]*r[1]+d[2]*r[2],d[0]*u[0]+d[1]*u[1]+d[2]*u[2],d[0]*f[0]+d[1]*f[1]+d[2]*f[2]]};
+ const NEAR=0.25;
+ const clip=pts=>{const o=[];for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];const ai=a[2]>=NEAR,bi=b[2]>=NEAR;if(ai)o.push(a);if(ai!==bi){const t=(NEAR-a[2])/(b[2]-a[2]);o.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,NEAR])}}return o};
+ const proj=c=>[W-(W/2+F*c[0]/c[2]),H/2-F*c[1]/c[2]]; // spiegelbeeld
+ const vul=(pts3,kleur,lijn)=>{const c=clip(pts3.map(cam));if(c.length<3)return;g.beginPath();c.forEach((p,i)=>{const[a,b]=proj(p);i?g.lineTo(a,b):g.moveTo(a,b)});g.closePath();g.fillStyle=kleur;g.fill();if(lijn){g.strokeStyle=lijn;g.lineWidth=1;g.stroke()}};
+ // lucht en weg
+ const hor=H/2-F*Math.tan(-pitch);g.fillStyle="#bcd3e6";g.fillRect(0,0,W,H);g.fillStyle="#8f968e";g.fillRect(0,hor,W,H-hor);
+ for(const b of sc_.blokken)vul(blokPoly(b).map(([x,y])=>[x,y,0]),"#d8d2c2","#777");
+ if(sc_.strepen)for(let y=sc_.strepen.y1;y<sc_.strepen.y2;y+=6)vul([[3.4,y,0],[3.6,y,0],[3.6,y+3,0],[3.4,y+3,0]],"#f4f4f4");
+ if(instellingen.hulp&&sc==="recht")vul([[0.2,sc_.hek+0.95,0],[6.8,sc_.hek+0.95,0],[6.8,sc_.hek+1.05,0],[0.2,sc_.hek+1.05,0]],"#6cbf84");
+ // dozen (hek, palen, aanhanger), van ver naar dichtbij
+ const dozen=[];const doos=(pl,z1,z2,zijkleur,topkleur)=>dozen.push({pl,z1,z2,zijkleur,topkleur});
+ if(sc_.hek!==undefined)doos([[0,sc_.hek-0.15],[7,sc_.hek-0.15],[7,sc_.hek],[0,sc_.hek]],0,1.1,"#c0392b","#e57373");
+ if(sc_.kegels)for(const[kx,ky]of sc_.kegels)doos([[kx-.2,ky-.2],[kx+.2,ky-.2],[kx+.2,ky+.2],[kx-.2,ky+.2]],0,0.7,"#E8895F","#f3b08f");
+ for(const b of sc_.blokken){for(let y=Math.ceil(b.y1/9)*9;y<b.y2;y+=9){const x=b.x1>=0?b.x1+1.2:b.x2-1.2;if(inBlok(b,x,y))doos([[x-.12,y-.12],[x+.12,y-.12],[x+.12,y+.12],[x-.12,y+.12]],0,3.2,"#555","#555")}}
+ doos(D.aanh,0.45,2.2,"#e9e9e4","#fafafa");
+ doos([[D.haak[0]-.05,D.haak[1]-.05],[D.haak[0]+.05,D.haak[1]+.05],[D.as[0]+D.px*BAK_HALF+.05,D.as[1]+D.py*BAK_HALF+.05],[D.as[0]+D.px*BAK_HALF-.05,D.as[1]+D.py*BAK_HALF-.05]],0.42,0.5,"#333","#333");
+ const diepte=d=>{const m=d.pl.reduce((a,[x,y])=>[a[0]+x/d.pl.length,a[1]+y/d.pl.length],[0,0]);return cam([m[0],m[1],(d.z1+d.z2)/2])[2]};
+ dozen.sort((a,b)=>diepte(b)-diepte(a));
+ for(const d of dozen){const n=d.pl.length;const vlakken=[];
+  for(let i=0;i<n;i++){const a=d.pl[i],b=d.pl[(i+1)%n];vlakken.push([[a[0],a[1],d.z1],[b[0],b[1],d.z1],[b[0],b[1],d.z2],[a[0],a[1],d.z2]])}
+  vlakken.sort((A,B)=>{const z=v=>v.reduce((s,p)=>s+cam(p)[2],0)/4;return z(B)-z(A)});
+  vlakken.forEach(v=>vul(v,d.zijkleur,"#666"));vul(d.pl.map(([x,y])=>[x,y,d.z2]),d.topkleur,"#666")}
+ // achterlichten aanhanger
+ const[ax2,ay2]=D.achter,nx=-D.py,ny=D.px;[1,-1].forEach(s=>vul([[ax2+nx*s*0.95,ay2+ny*s*0.95,0.6],[ax2+nx*s*0.6,ay2+ny*s*0.6,0.6],[ax2+nx*s*0.6,ay2+ny*s*0.6,0.85],[ax2+nx*s*0.95,ay2+ny*s*0.95,0.85]],"#d32f2f"));
+ // eigen auto aan de binnenkant van de spiegel
+ g.fillStyle="#3b6ea5";const bw=W*0.13;if(kant==="L")g.fillRect(W-bw,H*0.25,bw,H*0.75);else g.fillRect(0,H*0.25,bw,H*0.75)}
+/* ===== Uitslag ===== */
+function toonUitslag(goed,titel,tekst,verder){const u=$("#uitslag");$("#uVerder").style.display=verder?"block":"none";u.className=goed?"goed":"fout";$("#uTitel").textContent=titel;$("#uTekst").innerHTML=tekst;u.style.display="block";S.uit=true;
+ const s=stats[sc]||(stats[sc]={pogingen:0,gelukt:0});s.pogingen++;if(goed)s.gelukt++;bewaar();scoreTekst()}
+function scoreTekst(){const s=stats[sc];$("#score").textContent=s?`${SC[sc].naam}: ${s.gelukt} van ${s.pogingen} gelukt`:""}
+function beoordeel(){if(S.uit)return;if(Math.abs(S.v)>0.01){return}const D=delen(),k=Math.abs(knik(S))*180/Math.PI,graden=a=>Math.abs(a)*180/Math.PI;
+ if(sc==="recht"){const af=Math.min(...D.aanh.map(p=>p[1]))-SC.recht.hek,dx=D.as[0]-SC.recht.lijnX,hoek=graden(S.phi-Math.PI/2);
+  const regels=[`Afstand tot het hek: <b>${af.toFixed(1)} m</b> ${af<=1?"✓":"(moet binnen 1 m)"}`,`Afwijking van je lijn: <b>${Math.abs(dx).toFixed(1)} m</b> ${Math.abs(dx)<=0.8?"✓":"(te ver naar "+(dx>0?"rechts":"links")+")"}`,`Aanhanger scheef: <b>${hoek.toFixed(0)}°</b> ${hoek<=6?"✓":"(moet recht)"}`,`Keer vooruit gereden: ${S.vooruit}`];
+  const ok=af<=1&&Math.abs(dx)<=0.8&&hoek<=6;toonUitslag(ok,ok?"Geslaagd!":"Nog niet",regels.join("<br>"),!ok)}
+ else if(sc==="bocht"){const inStraat=D.as[0]<-6,richting=graden(Math.atan2(Math.sin(S.theta),Math.cos(S.theta)));
+  const regels=[`Aanhanger in de zijstraat: ${inStraat?"✓":"nog niet ver genoeg"}`,`Auto recht in de straat: ${richting<=15?"✓":"nog "+richting.toFixed(0)+"° scheef"}`,`Combinatie recht (knik): ${k<=12?"✓":k.toFixed(0)+"°, trek hem recht"}`,`Keer vooruit gereden: ${S.vooruit}`];
+  const ok=inStraat&&richting<=15&&k<=12;toonUitslag(ok,ok?"Geslaagd!":"Nog niet",regels.join("<br>"),!ok)}
+ else toonUitslag(true,"Vrij oefenen",`Knik nu ${k.toFixed(0)}°. Gereden: ${S.afstand.toFixed(0)} m.`,true)}
+/* ===== Lus ===== */
+let laatst=performance.now(),vorigeRichting=0;
+function lus(nu){const dt=Math.min(0.05,(nu-laatst)/1000);laatst=nu;
+ if(!S.uit){let dl=0;if(keys.links)dl+=1;if(keys.rechts)dl-=1;
+  if(dl)S.delta=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,S.delta+dl*STUURSNEL*dt));
+  if(keys.recht){const s=Math.sign(S.delta);S.delta-=s*Math.min(Math.abs(S.delta),STUURSNEL*2*dt)}
+  const doel=keys.achteruit?V_ACHTER:keys.vooruit?V_VOOR:0;S.v+=(doel-S.v)*Math.min(1,dt*6);if(!doel&&Math.abs(S.v)<0.02)S.v=0;
+  const richting=Math.sign(doel);if(richting===1&&vorigeRichting!==1)S.vooruit++;if(richting)vorigeRichting=richting;
+  const n=Math.ceil(dt/0.01);for(let i=0;i<n;i++)stap(S,dt/n);
+  if(Math.abs(knik(S))>SCHAAR)toonUitslag(false,"Geschaard!","De hoek tussen auto en aanhanger werd te groot. Dat gebeurt als je te lang dezelfde kant op stuurt. Stuur korter, en draai het stuur terug zodra de aanhanger de goede kant op gaat.");
+  else{const b=botsing(delen());if(b)toonUitslag(false,"Au!",b)}
+  if(klaarGedrukt){klaarGedrukt=false;if(Math.abs(S.v)>0.05)$("#coach").innerHTML="Eerst stilstaan (laat de knop los), dan Klaar.";else beoordeel()}}
+ if(instellingen.boven)bovenaanzicht();spiegel($("#spL"),"L");spiegel($("#spR"),"R");
+ const graden=S.delta*180/Math.PI;$("#wiel").setAttribute("transform",`rotate(${-graden*12})`);
+ if(!S.uit)$("#coach").innerHTML=(instellingen.hulp?coach():"Coach staat uit.")+`<div class="klein">Stuur: ${Math.abs(graden)<1?"recht":(Math.abs(graden*12/360).toFixed(1)+" slag naar "+(graden>0?"links":"rechts"))}</div>`;
+ requestAnimationFrame(lus)}
+/* ===== Bediening ===== */
+function zet(k,aan){if(k==="klaar"){if(aan)klaarGedrukt=true;return}keys[k]=aan;document.querySelectorAll(`[data-k="${k}"]`).forEach(b=>b.classList.toggle("actief",aan))}
+document.querySelectorAll(".k[data-k]").forEach(b=>{const k=b.dataset.k;
+ b.addEventListener("pointerdown",e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);zet(k,true)});
+ ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>b.addEventListener(ev,()=>zet(k,false)));
+ b.addEventListener("contextmenu",e=>e.preventDefault())});
+const TOETS={ArrowLeft:"links",ArrowRight:"rechts",ArrowDown:"achteruit",ArrowUp:"vooruit"," ":"recht",Enter:"klaar"};
+addEventListener("keydown",e=>{if(e.key==="r"||e.key==="R"){nieuw();return}const k=TOETS[e.key];if(k){e.preventDefault();zet(k,true)}});
+addEventListener("keyup",e=>{const k=TOETS[e.key];if(k)zet(k,false)});
+addEventListener("blur",()=>Object.keys(keys).forEach(k=>zet(k,false)));
+$("#uOpnieuw").onclick=nieuw;
+$("#uVerder").onclick=()=>{$("#uitslag").style.display="none";S.uit=false};
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{sc=t.dataset.sc;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("aan",x===t));nieuw();scoreTekst()});
+const wissel=(id,veld,tekstAan,tekstUit)=>{const b=$(id);b.onclick=()=>{instellingen[veld]=!instellingen[veld];b.classList.toggle("aan",instellingen[veld]);b.textContent=instellingen[veld]?tekstAan:tekstUit;
+ if(veld==="boven")$("#boven").style.display=instellingen.boven?"block":"none";if(veld==="hand")$("#hand").style.display=instellingen.hand?"block":"none"}};
+wissel("#tHulp","hulp","Coach aan","Coach uit");wissel("#tLijn","lijn","Voorspellingslijn aan","Voorspellingslijn uit");wissel("#tBoven","boven","Bovenaanzicht aan","Alleen spiegels (examen)");wissel("#tHand","hand","Hand onderaan het stuur ✓","Hand onderaan het stuur");
+function maatvoering(){const z=(c,h)=>{const r=c.getBoundingClientRect();if(r.width){c.width=Math.round(r.width*DPR);c.height=Math.round(h*DPR)}};z(cv,cv.getBoundingClientRect().height||300);z($("#spL"),118);z($("#spR"),118)}
+addEventListener("resize",maatvoering);maatvoering();
+window.__sim={get S(){return S},stap,delen,knik,beoordeel,nieuw,zet,setSc:s=>{sc=s;nieuw()},coach,stuurAdvies,botsing,CO};
+nieuw();scoreTekst();requestAnimationFrame(lus);
+</script>
+</body>
+</html>
