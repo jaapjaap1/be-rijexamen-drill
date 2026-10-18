@@ -36,7 +36,6 @@ Een adaptieve oefen-app (één html-bestand, werkt op telefoon) waarmee Jaap vó
 ## Besluiten voor Jaap
 | # | Keuze | Wat ik koos | Alternatief | Waarom | Terug te draaien? |
 |---|-------|-------------|-------------|--------|-------------------|
-
 | 1 | Hosting | nog niets online | GitHub Pages (openbaar) / Tailscale (privé) | app moet op telefoon met https draaien | ja |
 | 2 | Rijstrookregel | 7 m (wet) | 7,5 m (video) | RVV art 43 lid 4 | ja |
 
