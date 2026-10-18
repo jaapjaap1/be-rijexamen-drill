@@ -69,7 +69,7 @@ a{color:var(--groen)}
   <button class="k" data-k="klaar">&#10003; Klaar</button>
   <button class="k gas terug" data-k="achteruit">&#9660; Achteruit</button>
  </div>
- <p class="klein">Pc: pijltjes links/rechts = sturen, omlaag = achteruit, omhoog = vooruit, spatie = stuur recht, Enter = klaar, R = opnieuw. Loslaten = stilstaan. Het stuur blijft staan waar je het laat, net als echt.</p>
+ <p class="klein">Pc: pijltjes links/rechts = sturen, omlaag = achteruit, omhoog = vooruit, spatie = stuur recht, Enter = klaar, R = opnieuw. Loslaten = stilstaan. Eén klik op sturen = 0,05 slag; vasthouden = rustig doordraaien. Het stuur blijft staan waar je het laat, net als echt.</p>
  <details class="uitleg" open><summary>Welke kant stuur je op bij achteruit?</summary>
  <ul>
   <li><b>Achteruit stuurt de aanhanger andersom.</b> Stuur je naar links, dan gaat de achterkant van de aanhanger naar rechts. Stuur je naar rechts, dan gaat hij naar links.</li>
@@ -94,8 +94,8 @@ const L=3.0,  // wielbasis auto
  ACHTEROVERHANG=1.0, VOOROVERHANG=1.0, AUTO_B=1.9,
  HAAK=1.1,    // trekhaak achter de achteras
  DISSEL=2.9,  // trekhaak tot as aanhanger
- BAK_HALF=1.7, AANH_B=2.0, MAXSTUUR=35*Math.PI/180, STUURSNEL=45*Math.PI/180,
- V_ACHTER=-0.8, V_VOOR=1.2, SCHAAR=62*Math.PI/180;
+ BAK_HALF=1.7, AANH_B=2.0, MAXSTUUR=35*Math.PI/180, STUURSNEL=20*Math.PI/180, KLIK=0.05*360/12*Math.PI/180, VASTHOUDEN=350,
+ V_ACHTER=-0.6, V_VOOR=1.0, SCHAAR=62*Math.PI/180;
 const R=5; // straal stoeprandhoek
 /* ===== Scenario's ===== */
 function blok(x1,y1,x2,y2,rc){return{x1,y1,x2,y2,rc}}
@@ -255,8 +255,8 @@ function beoordeel(){if(S.uit)return;if(Math.abs(S.v)>0.01){return}const D=delen
 let laatst=performance.now(),vorigeRichting=0;
 function lus(nu){const dt=Math.min(0.05,(nu-laatst)/1000);laatst=nu;
  if(!S.uit){let dl=0;if(keys.links)dl+=1;if(keys.rechts)dl-=1;
-  if(dl)S.delta=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,S.delta+dl*STUURSNEL*dt));
-  if(keys.recht){const s=Math.sign(S.delta);S.delta-=s*Math.min(Math.abs(S.delta),STUURSNEL*2*dt)}
+  if(dl&&performance.now()-(keys.links?keys.linksT:keys.rechtsT)>VASTHOUDEN)S.delta=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,S.delta+dl*STUURSNEL*dt));
+  if(keys.recht){const s=Math.sign(S.delta);S.delta-=s*Math.min(Math.abs(S.delta),STUURSNEL*4*dt)}
   const doel=keys.achteruit?V_ACHTER:keys.vooruit?V_VOOR:0;S.v+=(doel-S.v)*Math.min(1,dt*6);if(!doel&&Math.abs(S.v)<0.02)S.v=0;
   const richting=Math.sign(doel);if(richting===1&&vorigeRichting!==1)S.vooruit++;if(richting)vorigeRichting=richting;
   const n=Math.ceil(dt/0.01);for(let i=0;i<n;i++)stap(S,dt/n);
@@ -265,16 +265,16 @@ function lus(nu){const dt=Math.min(0.05,(nu-laatst)/1000);laatst=nu;
   if(klaarGedrukt){klaarGedrukt=false;if(Math.abs(S.v)>0.05)$("#coach").innerHTML="Eerst stilstaan (laat de knop los), dan Klaar.";else beoordeel()}}
  if(instellingen.boven)bovenaanzicht();spiegel($("#spL"),"L");spiegel($("#spR"),"R");
  const graden=S.delta*180/Math.PI;$("#wiel").setAttribute("transform",`rotate(${-graden*12})`);
- if(!S.uit)$("#coach").innerHTML=(instellingen.hulp?coach():"Coach staat uit.")+`<div class="klein">Stuur: ${Math.abs(graden)<1?"recht":(Math.abs(graden*12/360).toFixed(1)+" slag naar "+(graden>0?"links":"rechts"))}</div>`;
+ if(!S.uit)$("#coach").innerHTML=(instellingen.hulp?coach():"Coach staat uit.")+`<div class="klein">Stuur: ${Math.abs(graden)<0.5?"recht":(Math.abs(graden*12/360).toFixed(2)+" slag naar "+(graden>0?"links":"rechts"))}</div>`;
  requestAnimationFrame(lus)}
 /* ===== Bediening ===== */
-function zet(k,aan){if(k==="klaar"){if(aan)klaarGedrukt=true;return}keys[k]=aan;document.querySelectorAll(`[data-k="${k}"]`).forEach(b=>b.classList.toggle("actief",aan))}
+function zet(k,aan){if(k==="klaar"){if(aan)klaarGedrukt=true;return}if(aan&&!keys[k]&&(k==="links"||k==="rechts")&&S&&!S.uit){keys[k+"T"]=performance.now();S.delta=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,S.delta+(k==="links"?KLIK:-KLIK)))}keys[k]=aan;document.querySelectorAll(`[data-k="${k}"]`).forEach(b=>b.classList.toggle("actief",aan))}
 document.querySelectorAll(".k[data-k]").forEach(b=>{const k=b.dataset.k;
  b.addEventListener("pointerdown",e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);zet(k,true)});
  ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>b.addEventListener(ev,()=>zet(k,false)));
  b.addEventListener("contextmenu",e=>e.preventDefault())});
 const TOETS={ArrowLeft:"links",ArrowRight:"rechts",ArrowDown:"achteruit",ArrowUp:"vooruit"," ":"recht",Enter:"klaar"};
-addEventListener("keydown",e=>{if(e.key==="r"||e.key==="R"){nieuw();return}const k=TOETS[e.key];if(k){e.preventDefault();zet(k,true)}});
+addEventListener("keydown",e=>{if(e.key==="r"||e.key==="R"){nieuw();return}const k=TOETS[e.key];if(k){e.preventDefault();if(!e.repeat)zet(k,true)}});
 addEventListener("keyup",e=>{const k=TOETS[e.key];if(k)zet(k,false)});
 addEventListener("blur",()=>Object.keys(keys).forEach(k=>zet(k,false)));
 $("#uOpnieuw").onclick=nieuw;
