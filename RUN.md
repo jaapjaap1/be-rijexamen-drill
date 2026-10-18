@@ -1,5 +1,5 @@
 # RUN - Rijexamen BE - drill-app
-Status: LOOPT - feiten checken, dan bouwen
+Status: WACHT OP JAAP - akkoord online zetten (openbare GitHub Pages of alternatief)
 Gestart: 18-10-2026, 15:45 · Scherm: Rijexamen BE - drill-app · Sessie: 8227f57c-77bb-4d12-aab5-5a9ad81de413
 
 ## Doel
@@ -28,17 +28,21 @@ Een adaptieve oefen-app (één html-bestand, werkt op telefoon) waarmee Jaap vó
 |---|------|--------|---------------|
 | 1 | Video's inventariseren | af | 11 video's afspeellijst + 6 shorts |
 | 2 | Transcripten | af | bron/tekst/*.txt |
-| 3 | Feiten checken (RVV/CBR) | loopt | |
-| 4 | App bouwen | | index.html |
-| 5 | Testen | | |
-| 6 | Opleveren | | resultatenmap + GitHub |
+| 3 | Feiten checken (RVV/CBR) | af | rijstrook 7 m (RVV art 43), 90/80/50, CBR 55 min |
+| 4 | App bouwen | af | index.html (137 vragen, 14 onderwerpen) |
+| 5 | Testen | af | alle vragen gerenderd zonder fouten, nakijker 10 cases, Gemini goed/fout getest, CORS ok |
+| 6 | Opleveren | wacht | openbare repo geblokkeerd door classifier: akkoord Jaap nodig |
 
 ## Besluiten voor Jaap
 | # | Keuze | Wat ik koos | Alternatief | Waarom | Terug te draaien? |
 |---|-------|-------------|-------------|--------|-------------------|
+
+| 1 | Hosting | nog niets online | GitHub Pages (openbaar) / Tailscale (privé) | app moet op telefoon met https draaien | ja |
+| 2 | Rijstrookregel | 7 m (wet) | 7,5 m (video) | RVV art 43 lid 4 | ja |
 
 ## Bijvangst
 
 ## Logboek (alleen aanvullen)
 - 18-10-2026, 15:45 gestart (claim)
 - 18-10-2026, 16:00 video's en transcripten binnen
+- 18-10-2026, 16:10 app gebouwd en getest; lokaal gecommit; online zetten wacht op akkoord
