@@ -105,7 +105,7 @@ a{color:var(--groen)}
  <p class="klein">Terug naar de <a href="./">vragen-drill</a>.</p></details>
 </main>
 <div id="kaart" class="overlay"><div class="paneel"><h2 id="kTitel"></h2><div id="kTekst"></div><div class="paneelknoppen"><button class="k gas" id="kStart">Start</button></div></div></div>
-<div id="uitslag" class="overlay"><div class="paneel"><h2 id="uTitel"></h2><div id="uTekst"></div><div class="paneelknoppen"><button class="k" id="uOpnieuw">&#8634; Opnieuw</button><button class="k gas" id="uVolgende"></button></div></div></div>
+<div id="uitslag" class="overlay"><div class="paneel"><h2 id="uTitel"></h2><div id="uTekst"></div><div class="paneelknoppen"><button class="k" id="uVerder" style="display:none">Verder rijden</button><button class="k" id="uOpnieuw">&#8634; Opnieuw</button><button class="k gas" id="uVolgende"></button></div></div></div>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),G=Math.PI/180;
@@ -154,7 +154,7 @@ const SC={};
    ["Iets uitzwaaien","Stuur een klein beetje naar rechts. Zo maak je ruimte voor de draai."],
    ["Draaien","Stuur ver naar links (ongeveer 1 slag) en houd het stuur zo vast. Kijk in je linkerspiegel: de kar snijdt de bocht een stukje af."],
    ["Uitkomen","Draai het stuur terug, zodat je recht op de rechterweghelft uitkomt. Daarna weer op tempo."]],
-  fase(){const i=S.padIdx;return i<i1-2?0:i<i2-2?1:i<i3-3?2:3},
+  fase(){const i=S.padIdx+12;return i<i1?0:i<i2?1:i<i3?2:3},
   autoEinde(D){return D.as[1]<4&&Math.sin(S.theta)<-0.8},
   tipBotsing:"Zwaai eerst iets naar rechts uit (stap 2) en stuur dan meteen ver genoeg naar links (stap 3).",
   beoordeel(D){const maxX=Math.max(...D.auto.map(p=>p[0]),...D.aanh.map(p=>p[0])),r=Math.abs(hoekNorm(S.theta+Math.PI/2))/G;
@@ -181,11 +181,11 @@ const SC={};
     [Math.abs(dx)<=0.8,`Afwijking van je lijn: ${komma(Math.abs(dx))} m`,`Je bent naar ${dx>0?"rechts":"links"} weggelopen. Stuur eerder en kleiner bij (stap 1).`],
     [h<=6,`Kar recht${h>6?` (${h.toFixed(0)}° scheef)`:""}`,"Zet de kar recht voor je stopt (stap 1)."]]}};}
 const afstHek=D=>Math.min(...D.aanh.map(p=>p[1]))-SC.recht.hek.y;
-{const R=5,b=padBouw();b.lijn(2,44,2,31);const iA=b.merk();b.boog(-5,31,7,0,-Math.PI/2);b.lijn(-5,24,-35,24);
+{const R=5,b=padBouw();b.lijn(2,48,2,31);const iA=b.merk();b.boog(-5,31,7,0,-Math.PI/2);b.lijn(-5,24,-35,24);
  SC.bocht={naam:"Achteruit de hoek om",richting:-1,pad:b.p,
   blokken:[rh(7,-60,40,80),[[-40,-60],[0,-60],...boog(-R,20-R,R,0,Math.PI/2),[-40,20]],[[-40,27],...boog(-R,27+R,R,1.5*Math.PI,2*Math.PI),[0,80],[-40,80]]],
   strepen:[[3.5,-60,80]],palen:[...palenV(8.2,-55,78),...palenV(-1.2,-55,13),...palenV(-1.2,35,78),...palenH(18.8,-37,-10),...palenH(28.2,-37,-10)],
-  start(){return{ax:2.0,ay:36,phi:Math.PI/2,theta:Math.PI/2}},
+  start(){return{ax:2.0,ay:41,phi:Math.PI/2,theta:Math.PI/2}},
   startTekst:"Je bent over het kruispunt naar de linkerweghelft gereden, voorbij de zijstraat links van je. Je staat stil op ongeveer 1 meter van de stoeprand.",
   opdracht:"Keer met een bocht achteruit: rij achteruit linksom de zijstraat in en houd de kar op ongeveer 1 meter van de stoeprand. Stop als auto en kar recht in de zijstraat staan.",
   kort:"Achteruit linksom de zijstraat in; stop als alles recht in de straat staat.",
@@ -193,9 +193,9 @@ const afstHek=D=>Math.min(...D.aanh.map(p=>p[1]))-SC.recht.hek.y;
    ["Recht achteruit tot de bocht","Houd &#9660; Achteruit ingedrukt en rij recht. Nog niet sturen: wacht tot de achterkant van de kar bij het begin van de bocht is, waar de stoeprand wegdraait."],
    ["Inzetten","Stuur naar rechts. Achteruit werkt het andersom: stuur je naar rechts, dan draait de achterkant van de kar naar links, de straat in."],
    ["Meesturen","De kar draait de straat in. Stuur nu terug en naar links, zodat de auto achter de kar aan gaat. Doe je dat niet, dan schaart hij. Komt de kar te dicht bij de stoeprand: stuur naar het gevaar toe (naar links)."],
-   ["Rechttrekken","De kar staat bijna recht in de straat. Draai het stuur terug tot auto en kar op één lijn staan."],
+   ["Rechttrekken","De kar staat bijna recht in de straat. Blijf licht naar links sturen tot ook de auto recht achter de kar staat. Daarna het stuur terug, zodat auto en kar op één lijn komen."],
    ["Stilstaan en melden","Laat &#9660; los. Sta je stil, druk dan op &#10003; Klaar."]],
-  fase(D){if(bochtKlaar(D))return 4;const d=Math.max(0,Math.PI/2-S.phi);if(S.padIdx<iA-3&&d<8*G)return 0;if(d<20*G&&Math.abs(knik(S))<15*G)return 1;if(d<60*G)return 2;return 3},
+  fase(D){if(bochtKlaar(D))return 4;const d=Math.max(0,Math.PI/2-S.phi);if(S.padIdx<iA-15&&d<8*G)return 0;if(d<60*G){if(!S.mee&&advies().dDoel<0.02)return 1;S.mee=true;return 2}return 3},
   stopVoordoen(D){return bochtKlaar(D)||D.as[0]<-20},
   tipBotsing:"Kwam de kar te dicht bij de stoep? Stuur dan naar het gevaar toe (stap 3). Raakte de auto voorin de stoep? Dan stuurde je te lang naar rechts: ga eerder meesturen.",
   beoordeel(D){const inStraat=D.as[0]<-6,r=Math.abs(hoekNorm(S.theta))/G,k=Math.abs(knik(S))/G;
@@ -334,7 +334,7 @@ function volgendeStap(ok){const volg={draai:"recht",recht:"bocht",bocht:"draai"}
  if(modus==="kijk")return{tekst:"Nu samen doen →",doe:()=>kies(sc,"samen")};
  if(modus==="samen")return ok?{tekst:"Nu zelf doen →",doe:()=>kies(sc,"zelf")}:{tekst:"Eerst nog eens kijken",doe:()=>kies(sc,"kijk")};
  return ok?{tekst:`Volgende: ${SC[volg].naam} →`,doe:()=>kies(volg)}:{tekst:"Terug naar samen doen",doe:()=>kies(sc,"samen")}}
-function uitslag(ok,titel,regels,tekst=""){S.uit=true;const t=st();
+function uitslag(ok,titel,regels,tekst="",verder=false){S.uit=true;$("#uVerder").style.display=verder?"":"none";const t=st();
  if(modus==="kijk")t.kijk++;else{t[modus][1]++;if(ok)t[modus][0]++}bewaar();ladder();
  const lijst=regels.map(([g,txt,tip])=>`<li class="${g===null?"":g?"ok":"nok"}">${g===null?"•":g?"✓":"✗"} ${txt}${g===false&&tip?`<br><span class="tip">Tip: ${tip}</span>`:""}</li>`).join("");
  let slot="";if(modus==="kijk")slot="<p>Dat was het voordoen. Nu jij, met de coach erbij.</p>";
@@ -345,7 +345,7 @@ function uitslag(ok,titel,regels,tekst=""){S.uit=true;const t=st();
  const v=volgendeStap(ok);$("#uVolgende").textContent=v.tekst;$("#uVolgende").onclick=v.doe;open("#uitslag")}
 function beoordeel(){const s_=SC[sc],regels=s_.beoordeel(delen()),ok=regels.every(r=>r[0]);
  if(s_.richting<0)regels.push([null,`Keer vooruit gecorrigeerd: ${S.vooruit}`,""]);
- uitslag(ok,ok?"Geslaagd!":"Nog niet",regels)}
+ uitslag(ok,ok?"Geslaagd!":"Nog niet",regels,"",!ok&&modus!=="kijk"&&!s_.autoEinde)}
 function toonKaart(){const s_=SC[sc];$("#kTitel").textContent=`${s_.naam} · ${MODI[modus]}`;
  $("#kTekst").innerHTML=`<p><b>Startpositie:</b> ${s_.startTekst}</p><p><b>Opdracht van de examinator:</b> "${s_.opdracht}"</p><p><b>${MODI[modus]}:</b> ${MODUSUITLEG[modus]}</p><p><b>De stappen:</b></p><ol>${s_.stappen.map(([t,u])=>`<li><b>${t}.</b> ${u}</li>`).join("")}</ol>`;
  $("#kStart").textContent=S.loopt?"Verder":"Start";if(S.loopt)S.pauze=true;open("#kaart")}
@@ -395,6 +395,7 @@ addEventListener("keyup",e=>{const k=TOETS[e.key];if(k)zet(k,false)});
 addEventListener("blur",()=>["links","rechts","recht","vooruit","achteruit"].forEach(k=>zet(k,false)));
 $("#kStart").onclick=()=>{sluit("#kaart");S.loopt=true;S.pauze=false};
 $("#uOpnieuw").onclick=()=>{nieuw();toonKaart()};
+$("#uVerder").onclick=()=>{sluit("#uitslag");S.uit=false;const t=st();t[modus][1]--;bewaar();ladder()};
 $("#tOpnieuw").onclick=$("#kOpnieuw").onclick=()=>{nieuw();toonKaart()};
 $("#tOpdracht").onclick=toonKaart;
 $("#kPauze").onclick=()=>{S.pauze=!S.pauze;$("#kPauze").innerHTML=S.pauze?"&#9654; Verder":"&#10074;&#10074; Pauze"};
