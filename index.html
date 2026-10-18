@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#2E4A3C">
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" href="data:,">
+<title>BE-examen drillen</title>
+<style>
+:root{--groen:#2E4A3C;--licht:#A6C284;--oranje:#E8895F;--bg:#FBFAF6;--tekst:#1f2a24;--grijs:#6b7570;--rood:#c0392b;--goed:#2e7d4f;--kaart:#fff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tekst);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Open Sans",sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--groen);color:#fff;padding:10px 14px calc(10px) 14px;padding-top:max(10px,env(safe-area-inset-top))}
+header .rij{display:flex;align-items:center;justify-content:space-between;gap:10px}
+header h1{font-size:17px;margin:0;font-weight:700}
+header .klaar{font-size:13px;opacity:.9;text-align:right}
+.balk{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:6px;overflow:hidden}
+.balk>i{display:block;height:100%;background:var(--licht);width:0;transition:width .4s}
+main{max-width:720px;margin:0 auto;padding:14px 14px 96px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;z-index:5;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:10px 4px 12px;font-size:13px;color:var(--grijs)}
+nav button b{display:block;font-size:20px;line-height:1.1}
+nav button.aan{color:var(--groen);font-weight:700}
+.kaart{background:var(--kaart);border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:16px;margin-bottom:14px}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--grijs);margin-bottom:8px;gap:8px}
+.bakjes i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#ddd;margin-left:3px}
+.bakjes i.v{background:var(--licht)}
+.vraag{font-size:18px;font-weight:600;margin:4px 0 12px}
+.opties{display:flex;flex-direction:column;gap:8px}
+.opt{display:block;width:100%;text-align:left;border:2px solid #d8ddd9;background:#fff;border-radius:10px;padding:12px;font-size:16px;color:var(--tekst)}
+.opt:active{background:#f1f4f0}
+.opt.goed{border-color:var(--goed);background:#e8f5ec}
+.opt.fout{border-color:var(--rood);background:#fbeaea}
+.opt.gekozen{border-color:var(--groen);background:#eef3ec}
+.opt[disabled]{opacity:1}
+.opt .nr{display:inline-block;min-width:24px;height:24px;border-radius:12px;background:var(--groen);color:#fff;text-align:center;font-size:13px;line-height:24px;margin-right:8px}
+.knop{display:inline-block;border:0;border-radius:10px;padding:12px 18px;font-size:16px;font-weight:600;background:var(--groen);color:#fff;margin:4px 6px 4px 0}
+.knop.licht{background:#e7ece5;color:var(--groen)}
+.knop.oranje{background:var(--oranje)}
+.knop.klein{padding:8px 12px;font-size:14px}
+.knop[disabled]{opacity:.45}
+.knoppen{margin-top:12px}
+textarea,input[type=number],input[type=text]{width:100%;font-size:16px;border:2px solid #d8ddd9;border-radius:10px;padding:10px;font-family:inherit;background:#fff}
+textarea{min-height:120px}
+.mic{background:var(--oranje)}
+.mic.op{background:var(--rood);animation:puls 1.2s infinite}
+@keyframes puls{50%{opacity:.6}}
+.uitslag{margin-top:14px;border-radius:12px;padding:12px 14px}
+.uitslag.goed{background:#e8f5ec;border-left:5px solid var(--goed)}
+.uitslag.fout{background:#fbeaea;border-left:5px solid var(--rood)}
+.uitslag.bijna{background:#fff4e6;border-left:5px solid var(--oranje)}
+.uitslag h3{margin:0 0 6px;font-size:17px}
+.uitslag ul{margin:6px 0;padding-left:20px}
+.uitslag li.ok{color:var(--goed)}
+.uitslag li.mis{color:var(--rood)}
+.uitleg{margin-top:8px}
+.bron{font-size:13px;margin-top:8px;color:var(--grijs)}
+.bron a{color:var(--groen)}
+.tag{display:inline-block;font-size:11px;background:#eef1ee;color:var(--grijs);border-radius:6px;padding:1px 6px;margin-left:4px}
+.fig{width:100%;max-height:300px;display:block;margin:4px auto 12px;background:#f4f6f2;border-radius:10px}
+.fig text{font-family:inherit}
+.lbl{font-size:11px;fill:#444}
+.onderwerp{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+.onderwerp:last-child{border:0}
+.onderwerp .naam{flex:1}
+.onderwerp .naam small{display:block;color:var(--grijs)}
+.mini{width:90px;height:8px;background:#e5e8e4;border-radius:4px;overflow:hidden}
+.mini i{display:block;height:100%;background:var(--goed)}
+.chip{display:inline-block;background:#eef3ec;color:var(--groen);border-radius:20px;padding:4px 10px;font-size:13px;margin:0 6px 6px 0;border:1px solid #d5e0d0}
+.chip.aan{background:var(--groen);color:#fff}
+details{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:10px;padding:0 14px}
+summary{padding:14px 0;font-weight:700;cursor:pointer}
+details ul{margin-top:0;padding-left:20px}
+details li{margin-bottom:6px}
+.leeg{text-align:center;color:var(--grijs);padding:30px 10px}
+.klein{font-size:13px;color:var(--grijs)}
+.reeks{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.stap{background:#eef3ec;border-radius:8px;padding:6px 10px;font-size:14px}
+.ai{background:#f3f0fa;border-left:5px solid #6a5acd;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:15px}
+</style>
+</head>
+<body>
+<header>
+ <div class="rij"><h1>BE-examen drillen</h1><div class="klaar" id="klaar">Examenklaar 0%</div></div>
+ <div class="balk"><i id="balk"></i></div>
+</header>
+<main id="app"></main>
+<nav id="nav">
+ <button data-tab="oefen" class="aan"><b>&#9654;</b>Oefenen</button>
+ <button data-tab="stand"><b>&#9638;</b>Voortgang</button>
+ <button data-tab="leer"><b>&#9998;</b>Leren</button>
+ <button data-tab="meer"><b>&#9881;</b>Instellingen</button>
+</nav>
+<script>
+"use strict";
+/* ============ BRONNEN ============ */
+const VIDS={
+ "W5VBro9Ilpw":"BE-rijbewijs theorie-uitleg",
+ "8l5VoG34rEI":"Kogeldruk",
+ "GhnmAxt-bVE":"Bonusvraag paardentrailer",
+ "9Rg9GQ8AQJY":"Controlevragen aanhanger (short)",
+ "cBME75Arkis":"Aanhanger aan- en afkoppelen",
+ "XNkuVIdhvXY":"Fatale fout bij aankoppelen (short)",
+ "9yvkQriHuXE":"Spiegelen met een BE-combinatie",
+ "nA4JQGroLbU":"Wat is uitzwaai?",
+ "Fd8KfItsXYg":"Kruispunten en rotondes met aanhanger",
+ "sCSEpBgSr88":"Snelweg in- en uitvoegen met aanhanger",
+ "gNk4tG9kI-A":"Driebaans snelweg met aanhanger (short)",
+ "MZ989c1qygQ":"Recht achteruit rijden met aanhanger",
+ "K-dbXvmgBAQ":"Halve draai met aanhanger",
+ "1QLpVbB0RjI":"Bochtje achteruit / keren via een zijstraat",
+ "eUWqinAvBVw":"CBR: zo gaat het BE-examen"
+};
+const CBR="https://www.cbr.nl/nl/rijbewijs-halen/aanhangwagen/praktijkexamen-auto-met-aanhangwagen/hoe-gaat-het-praktijkexamen-auto-met-aanhangwagen";
+const RVV="https://wetten.overheid.nl/BWBR0004825/";
+
+/* ============ ONDERWERPEN ============ */
+const TOPICS=[
+ {id:"regels",naam:"Regels, maten en gewichten",v:["W5VBro9Ilpw","gNk4tG9kI-A"],leer:[
+  "Personenauto + aanhanger: samen max <b>18 m</b>. Met een bedrijfsauto/bus: <b>18,75 m</b>. Aanhanger zelf max <b>12 m</b>.",
+  "Max breedte <b>2,55 m</b>, max hoogte <b>4 m</b>.",
+  "Waarom je maten kennen? Vanwege verbodsborden: lengte (draai niet te maken), hoogte (tunnel, viaduct), breedte (bv. afgezette linkerbaan in Duitsland).",
+  "Zegt de examinator 'er wordt geen verbodsbord aangegeven'? Dan is er geen beperking en mag je gewoon doorrijden.",
+  "BE-combinatie: max 3.500 kg auto + 3.500 kg aanhanger = <b>7.000 kg</b>.",
+  "BE nodig als de <b>toegestane maximummassa (TMM)</b> van auto + aanhanger samen boven 3.500 kg komt (bij een aanhanger zwaarder dan 750 kg). De politie kijkt naar de kentekenbewijzen, niet naar de weegbrug.",
+  "Snelheid met aanhanger: snelweg en autoweg <b>90</b>, gewone weg buiten de kom <b>80</b>, binnen de kom <b>50</b>.",
+  "3 of meer rijstroken in jouw richting: alleen de <b>twee meest rechtse</b>. Reden: je lengte (wet: langer dan 7 m; de video zegt 7,5 m), niet je snelheid.",
+  "Gewicht kennen vanwege bruggen met gewichtsbeperking. Wegen kan bij een weegbrug, milieustraat, stenenhandel of veehouderij (even bellen)."]},
+ {id:"rekenen",naam:"Kentekenbewijs en rekenen",v:["W5VBro9Ilpw"],leer:[
+  "<b>Massa rijklaar</b> = wat het voertuig leeg weegt.",
+  "<b>Laadvermogen</b> = TMM min massa rijklaar.",
+  "Mag de auto de aanhanger trekken? Vergelijk de TMM van de aanhanger met het <b>max trekgewicht geremd</b> van de auto.",
+  "Past de lading niet in de aanhanger? Verdeel: wat over is mag in de auto, tot het laadvermogen van de auto.",
+  "Geremde aanhanger herken je aan een <b>eigen kentekenbewijs/kenteken</b> en een <b>oploopreminrichting</b>.",
+  "Je rijdt het examen <b>geladen</b>. De examinator kan vragen: wat wegen we nu, wat mogen we samen wegen (TMM samen), hoe lang/breed/hoog zijn we."]},
+ {id:"laden",naam:"Kogeldruk en beladen",v:["8l5VoG34rEI","GhnmAxt-bVE"],leer:[
+  "<b>Kogeldruk</b>: hoeveel druk de trekhaak mag hebben (sticker/typeplaatje trekhaak). <b>Lastende koppeling</b>: hoeveel de koppeling van de aanhanger mag hebben.",
+  "Houd altijd de <b>laagste</b> van de twee aan en blijf ongeveer <b>10% onder</b> dat maximum.",
+  "Lading te ver <b>achter</b> = te weinig kogeldruk = aanhanger gaat slingeren.",
+  "Lading te ver <b>voor</b> = te veel kogeldruk = neus van de auto komt omhoog, minder grip op de voorwielen, meer slipgevaar.",
+  "Lading in het midden (boven de as), zwaar onderin, en altijd <b>vastzetten</b> zodat hij niet schuift.",
+  "Paardentrailer met één paard: laad het paard <b>links</b>. Wegen lopen bol naar rechts, je wijkt bij tegenliggers uit naar de berm: rechts geeft meer kantelgevaar."]},
+ {id:"remmen",naam:"Remsystemen",v:["W5VBro9Ilpw"],leer:[
+  "Drie remmen aan de dissel: <b>losbreekreminrichting</b> (kabel), <b>handrem</b>, <b>oploopreminrichting</b>.",
+  "Losbreekkabel: schiet de koppeling los van de trekhaak, dan trekt de kabel de handrem aan. Daarna <b>breekt de kabel af</b>, zo is het bedoeld. Nooit vervangen door een ketting.",
+  "Stofhoes (balg) om de oploopremstang: houdt vuil en regen weg, zodat het vet niet wegspoelt. Scheurtjes? Zo snel mogelijk vervangen."]},
+ {id:"controle",naam:"Controle en examenverloop",v:["9Rg9GQ8AQJY","eUWqinAvBVw"],leer:[
+  "Controle aanhanger: geen <b>ijs/sneeuw op het dak</b> (jij bent aansprakelijk), geen <b>loshangende kabels</b> onder, <b>bandenprofiel minimaal 1,6 mm</b> (ezelsbrug: scooter op je 16e), geen schade aan de zijkant van de band, genoeg lucht, <b>wielbouten</b> niet geroest. Plus (algemeen): verlichting werkt.",
+  "Het examen duurt <b>55 minuten</b>, de rit ongeveer 35 minuten. Ogentest: kenteken lezen op ongeveer 25 m.",
+  "Vooraf vragen over de kentekenbewijzen, het beladen en het aankoppelen. Je instructeur mag je bij het aankoppelen aanwijzingen geven.",
+  "Je doet <b>twee bijzondere verrichtingen</b>; de examinator kijkt dan buiten mee, ook of je beide spiegels gebruikt en het verkeer in de gaten houdt.",
+  "Meenemen: identiteitsbewijs, rijbewijs B en de bevestiging van het examen."]},
+ {id:"aankoppelen",naam:"Aankoppelen",v:["cBME75Arkis","XNkuVIdhvXY"],leer:[
+  "Examinator laat je een stukje naar voren rijden en 'uit het lood' draaien. Dan: ramen omlaag, alarmlichten aan, achteruit; aan beide kanten even veel afstand; laatste meter heel rustig. Instructeur mag gidsen.",
+  "1. Slot van de koppeling eraf (knopje in, hand eronder).",
+  "2. Neuswiel laten zakken tot de koppeling op de kogel valt: <b>klik</b>.",
+  "3. Controle: neuswiel terugdraaien (omhoog). Komt de auto mee omhoog, dan zit hij vast. Indicator op groen. Groen maar geen klik? Op de dissel drukken/staan tot hij klikt.",
+  "4. <b>Losbreekkabel</b> om: gaat er daarna iets mis, dan trekt hij de handrem aan.",
+  "5. Stekker erin en verlichting controleren (algemeen).",
+  "6. Neuswiel helemaal omhoog: gleufje naar de zijkant, wiel recht omhoog, met je voet tegenhouden (anders tegen de stang).",
+  "7. Handrem eraf en controleren dat hij echt los is.",
+  "Bewijs aan de examinator dat hij vastzit: auto kwam mee omhoog, indicator groen, handgreep vergrendeld."]},
+ {id:"afkoppelen",naam:"Afkoppelen",v:["cBME75Arkis"],leer:[
+  "1. Verlichting uit (voorkomt kortsluiting) en motor uit.",
+  "2. Aanhanger <b>naar achteren duwen</b> en vasthouden tot de oploopremstang helemaal uit is (geen bumperschade). <b>Vergeet je dit: gezakt.</b>",
+  "3. <b>Handrem erop</b>: nu kan hij niet wegrollen. <b>Vergeet je dit: gezakt.</b>",
+  "4. Neuswiel laten zakken tot op de grond, met je voet tegenhouden.",
+  "5. Stekker (stroom) eruit.",
+  "6. Losbreekkabel eraf.",
+  "7. Koppeling ontgrendelen en van de kogel halen."]},
+ {id:"spiegelen",naam:"Spiegelen, bochten en uitzwaai",v:["9yvkQriHuXE","nA4JQGroLbU"],leer:[
+  "Rechtsaf: <b>linkerspiegel, rechterspiegel, rechts naast je, richting aan</b>. Linksaf: rechterspiegel, linkerspiegel, links naast je, richting aan. (Eerst de andere kant, dan de kant waar je heen gaat.)",
+  "<b>Vóór de bocht de buitenkant</b> kijken (uitzwaai, wie zit naast me), <b>in de bocht de binnenkant</b> (inloop, stoep, wie zit achter me).",
+  "<b>Inloop</b>: de aanhanger snijdt de bocht af naar binnen. <b>Uitzwaai</b>: de achterkant van de aanhanger zwaait bij het insturen naar de andere kant. Stuur je naar rechts, dan gaat de kar even naar links.",
+  "Doe alsof de kar 1 tot 2 m uitzwaait; de examinator weet niet hoe groot jouw aanhanger is.",
+  "Geen binnenspiegel (dichte aanhanger): stop altijd <b>in een rechte lijn</b> zodat je in beide spiegels langs de combinatie kijkt. Het middenvak bij linksaf niet gebruiken.",
+  "Aan de kant zetten: ver genoeg doortrekken zodat de aanhanger recht staat.",
+  "Rechte weg: afwisselend links en rechts spiegelen, de aanhanger blijven volgen.",
+  "Kruispunt naderen: tempo eruit, rollend aankomen. Hoe langzamer je nadert, hoe sneller je misschien door kunt."]},
+ {id:"kruispunt",naam:"Kruispunten en rotondes",v:["Fd8KfItsXYg"],leer:[
+  "Ezelsbrug: <b>20 m vóór het eerste obstakel</b> (zebrapad, fietspad) <b>20 km/u op de teller</b>.",
+  "Niet alleen de voorkant moet ervoor, ook de <b>achterkant van de aanhanger</b>.",
+  "Twee of meer auto's: gewoon stoppen.",
+  "Rol je al en komt er ineens iemand? Liever <b>stilzetten</b> (ook op een leeg fietspad/zebrapad) dan gas bijgeven. 9 van de 10 die zakken geven op dat moment gas.",
+  "Oranje licht: je remweg is langer, dus eerder remmen, en tijdens het remmen achter je kijken.",
+  "Achter een voorganger stoppen: je ziet nog de onderkant van zijn banden.",
+  "Rijd zo dicht mogelijk bij de max (47 in een 50-zone is prima). Te langzaam vindt de examinator hinderlijk.",
+  "Drempels: afremmen (denk aan een heet bekertje koffie).",
+  "Scherpe bocht: wachten tot er ruimte is, ruim insturen (als het spelletje Snake).",
+  "Kun je de draai niet maken? Stop recht ervoor, laat passeren, stel ruim op.",
+  "Meest gemaakte fouten: uitritten en rotondes, te snel naderen en niet langs de kar kijken."]},
+ {id:"snelweg",naam:"Snelweg in- en uitvoegen",v:["sCSEpBgSr88","gNk4tG9kI-A"],leer:[
+  "Invoegen met 60 = gezakt. Snelheid maken, richting 80 of meer, zo dicht mogelijk bij de snelheid van het verkeer (max 90).",
+  "Invoegen (naar links): rechterspiegel, linkerspiegel, links naast je (schouder), richting aan, rustig opschuiven. Gebruik je invoegstrook: je bent lang.",
+  "Daarna afstand maken: minimaal 2 seconden, met aanhanger liever 3. Tellen vanaf een vast punt: 21-22-23.",
+  "Uitvoegen: richting aan ongeveer 300 m van tevoren, aan laten tot het laatste pijltje. Vóór de bocht buitenkant, in de bocht binnenkant.",
+  "3 of meer stroken: alleen de twee meest rechtse."]},
+ {id:"recht",naam:"Recht achteruit",v:["MZ989c1qygQ"],leer:[
+  "Meetopdracht: recht achteruit tot een punt of obstakel (denk aan je caravan tot het hek op de camping).",
+  "Stilstaan op ongeveer <b>1 m van de stoeprand</b>. Alarmlichten aan, ramen omlaag.",
+  "Beide spiegels: houd de afstand aan beide kanten gelijk. Kleine stuurbewegingen.",
+  "Denk je dat je er bijna bent: stilzetten (mag meters ervoor), uitstappen en meten.",
+  "Meten: vanaf het achterlicht stappen of <b>stoepbanden tellen</b> tot het punt. Pionnetje mag. Kies een oriëntatiepunt en rijd tot je gezicht naast het pionnetje is."]},
+ {id:"halvedraai",naam:"Halve draai (keren)",v:["K-dbXvmgBAQ"],leer:[
+  "Halve draai = U-bocht <b>vooruit</b>, in één keer naar je eigen weghelft.",
+  "Je mag alle ruimte gebruiken: kruispunt, bedrijventerrein, parkeerplaats.",
+  "Jij zoekt de plek, de examinator geeft de opdracht.",
+  "Tempo eruit, rechterspiegel, linkerspiegel, links naast je, richting links, achterom kijken. Vrij? Niet stoppen, doorrijden.",
+  "Kijk tijdens het draaien langs/achter de kar. Daarna zo snel mogelijk weer op tempo."]},
+ {id:"zijstraat",naam:"Bocht achteruit / keren via zijstraat",v:["1QLpVbB0RjI"],leer:[
+  "Doel: keren met een bochtje achteruit. Doe het <b>linksom</b>: de bocht zit aan jouw kant.",
+  "Rijd over het kruispunt naar de <b>verkeerde (linker) weghelft</b>, voorbij de zijstraat, en stop op ongeveer <b>1 m van de stoeprand</b> (dichterbij = haakser).",
+  "Zijstraat alleen rechts? Rij rechts de zijstraat in, zet hem aan de verkeerde kant en maak het bochtje linksom.",
+  "Alarmlichten aan, ramen omlaag. Je ziet in de rechterspiegel wat eraan komt.",
+  "Zo langzaam mogelijk, voet op de rem. Vloeiend is niet vlot.",
+  "Houd de kar op ongeveer 1 m van de bocht. Komt hij te dichtbij: <b>stuur naar het gevaar toe</b>, dan gaat de kar ervan af. De kar reageert een paar seconden later: vroeg en klein corrigeren.",
+  "Komt er verkeer: stilzetten en laten passeren.",
+  "Staat hij recht in de straat: alarmlichten uit, richting aan, kijken, wegrijden naar de examinator."]},
+ {id:"achteruit",naam:"Achteruit sturen en parkeren",v:[],leer:[
+  "<span class='tag'>algemene kennis, niet uit de video's</span>",
+  "Achteruit stuur je 'omgekeerd': stuur je de auto naar links, dan gaat de achterkant van de aanhanger naar rechts.",
+  "Trucje: hand <b>onderaan</b> het stuur. Beweeg je hand naar de kant waar de aanhanger heen moet.",
+  "Wordt de hoek tussen auto en aanhanger te groot (scharen), dan kom je er achteruit niet meer uit: stop en rijd een stukje vooruit om recht te trekken.",
+  "Inparkeren: eerst de combinatie recht, dan langzaam, kleine correcties, uitstappen om te kijken mag. Gebruik de ruimte die er is."]}
+];
+const TNAAM=Object.fromEntries(TOPICS.map(t=>[t.id,t.naam]));
+
+/* ============ FIGUREN (SVG) ============ */
+const S=(w,h,b)=>`<svg class="fig" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${b}</svg>`;
+const T=(x,y,s,o="")=>`<text x="${x}" y="${y}" class="lbl" ${o}>${s}</text>`;
+const pijl=`<defs><marker id="pk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#c0392b"/></marker><marker id="pb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2E4A3C"/></marker></defs>`;
+function autoBoven(x,y,w,h,kleur="#3b6ea5"){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" fill="${kleur}"/>`}
+const FIG={
+ combi(p){const lx={voor:132,midden:80,achter:24}[p.lading];return S(340,130,pijl+
+  T(170,16,"Bovenaanzicht · rijrichting &#8594;",'text-anchor="middle"')+
+  `<rect x="18" y="35" width="152" height="70" rx="4" fill="#eceee9" stroke="#666"/>
+  <rect x="80" y="27" width="36" height="9" fill="#333"/><rect x="80" y="104" width="36" height="9" fill="#333"/>
+  <line x1="98" y1="30" x2="98" y2="110" stroke="#999" stroke-dasharray="3 3"/>`+T(86,125,"as")+
+  `<path d="M170 52 L200 70 L170 88" stroke="#555" fill="none" stroke-width="3"/><circle cx="203" cy="70" r="5" fill="#c0392b"/>`+T(186,122,"kogel")+
+  autoBoven(208,40,112,60)+`<rect x="268" y="46" width="16" height="48" rx="4" fill="#a9c7e8"/>`+
+  (lx!==undefined?`<rect x="${lx}" y="45" width="40" height="50" rx="3" fill="#E8895F"/>`+T(lx+20,74,"lading",'text-anchor="middle" fill="#fff" style="fill:#fff;font-weight:700"'):""))},
+ bocht(){return S(300,230,pijl+
+  `<rect x="60" y="40" width="70" height="190" fill="#d9dcd6"/><rect x="60" y="40" width="240" height="80" fill="#d9dcd6"/>
+  <path d="M105 230 L105 135 Q105 82 158 82 L300 82" stroke="#3b6ea5" stroke-width="3" fill="none"/>
+  <path d="M105 230 L105 160 Q112 108 165 104 L300 104" stroke="#E8895F" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+  <circle cx="130" cy="120" r="4" fill="#555"/>`+T(136,136,"binnenbocht: inloop",'style="fill:#b85c33;font-weight:700"')+
+  `<rect x="93" y="128" width="24" height="64" rx="3" fill="#eceee9" stroke="#666"/>
+  <g transform="translate(124 98) rotate(45)"><rect x="-12" y="-24" width="24" height="44" rx="6" fill="#3b6ea5"/></g>
+  <line x1="93" y1="186" x2="66" y2="186" stroke="#c0392b" stroke-width="3" marker-end="url(#pk)"/>`+T(8,182,"uitzwaai",'style="fill:#c0392b;font-weight:700"')+
+  T(150,30,"blauw = spoor auto",'')+T(150,16,"oranje = spoor aanhanger",'style="fill:#b85c33"'))},
+ snelweg(p){const n=p.n,w=60*n+40;let b=pijl;for(let i=0;i<n;i++){const x=20+i*60;b+=`<rect x="${x}" y="20" width="60" height="150" fill="#d0d3cd"/>`;if(i>0)b+=`<line x1="${x}" y1="20" x2="${x}" y2="170" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/>`;b+=T(x+30,195,String.fromCharCode(65+i),'text-anchor="middle" style="font-size:16px;font-weight:700;fill:#2E4A3C"');}
+  b+=`<line x1="${w/2}" y1="150" x2="${w/2}" y2="60" stroke="#2E4A3C" stroke-width="3" marker-end="url(#pb)"/>`+T(20,212,"links")+T(w-20,212,"rechts",'text-anchor="end"');return S(w,220,b)},
+ zijstraat(p){const comb=(x,y,l,d=1)=>`<rect x="${x-9}" y="${y}" width="18" height="24" rx="5" fill="#3b6ea5"/><rect x="${x-10}" y="${y+28}" width="20" height="36" rx="2" fill="#eceee9" stroke="#666"/><circle cx="${x+22*d}" cy="${y+30}" r="11" fill="#E8895F"/>${T(x+22*d,y+35,l,'text-anchor="middle" style="fill:#fff;font-weight:700;font-size:13px"')}`;
+  return S(300,270,pijl+`<rect x="110" y="0" width="80" height="270" fill="#d9dcd6"/><rect x="0" y="110" width="110" height="60" fill="#d9dcd6"/>
+  <line x1="150" y1="0" x2="150" y2="110" stroke="#fff" stroke-width="2" stroke-dasharray="10 8"/><line x1="150" y1="170" x2="150" y2="270" stroke="#fff" stroke-width="2" stroke-dasharray="10 8"/>`+
+  T(20,104,"zijstraat")+T(196,262,"jij rijdt &#8593;")+comb(170,190,"A")+comb(128,20,"B",-1)+comb(170,20,"C")+
+  (p.toon?`<path d="M128 90 Q128 140 80 140 L20 140" stroke="#c0392b" stroke-width="3" fill="none" stroke-dasharray="6 4" marker-end="url(#pk)"/>`+T(18,190,"achteruit linksom de zijstraat in",'style="fill:#c0392b"'):""))},
+ recht(){let b=pijl+`<rect x="0" y="40" width="320" height="50" fill="#d9dcd6"/><rect x="0" y="90" width="320" height="10" fill="#b9bdb5"/>`;
+  for(let i=0;i<=8;i++){const x=50+i*30;b+=`<line x1="${x}" y1="90" x2="${x}" y2="100" stroke="#777"/>`;if(i<8)b+=T(x+15,114,i+1,'text-anchor="middle"');}
+  b+=`<rect x="0" y="52" width="50" height="34" rx="2" fill="#eceee9" stroke="#666"/><rect x="45" y="80" width="5" height="6" fill="#c0392b"/>`+T(2,34,"aanhanger (achterkant &#8594;)")+
+  `<rect x="282" y="62" width="16" height="16" fill="#555"/>`+T(268,34,"putje")+`<path d="M170 70 l7 14 h-14z" fill="#E8895F"/>`+T(160,62,"pion")+
+  `<line x1="60" y1="20" x2="160" y2="20" stroke="#c0392b" stroke-width="2" marker-end="url(#pk)"/>`;return S(320,125,b)},
+ rotonde(){return S(240,250,pijl+`<rect x="100" y="110" width="40" height="140" fill="#d9dcd6"/><circle cx="120" cy="70" r="52" fill="#d9dcd6"/><circle cx="120" cy="70" r="24" fill="#A6C284"/>
+  ${[0,1,2,3,4].map(i=>`<rect x="${102+i*8}" y="128" width="5" height="16" fill="#fff"/>`).join("")}`+T(146,140,"zebrapad")+
+  `<line x1="96" y1="146" x2="96" y2="206" stroke="#c0392b" stroke-width="2" marker-start="url(#pk)" marker-end="url(#pk)"/>`+T(8,176,"20 m",'style="fill:#c0392b;font-weight:700;font-size:14px"')+
+  `<line x1="100" y1="206" x2="140" y2="206" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3"/>`+T(146,210,"hier: 20 km/u",'style="fill:#c0392b;font-weight:700"')+
+  `<rect x="111" y="214" width="18" height="24" rx="5" fill="#3b6ea5"/>`)},
+ stoppen(){const pan=(ox,l,scheef)=>`<rect x="${ox}" y="20" width="130" height="170" fill="#d9dcd6"/><rect x="${ox+55}" y="20" width="20" height="90" fill="#A6C284"/>
+  <line x1="${ox+65}" y1="110" x2="${ox+65}" y2="190" stroke="#fff" stroke-width="2" stroke-dasharray="8 6"/>
+  <g transform="translate(${ox+98} 112) rotate(${scheef?-28:0})"><rect x="-9" y="-26" width="18" height="24" rx="5" fill="#3b6ea5"/></g><rect x="${ox+88}" y="114" width="20" height="40" rx="2" fill="#eceee9" stroke="#666"/>`+
+  T(ox+65,210,l,'text-anchor="middle" style="font-size:16px;font-weight:700;fill:#2E4A3C"');
+  return S(300,220,pan(10,"A",true)+pan(160,"B",false)+T(150,14,"linksaf, wachten op tegenliggers",'text-anchor="middle"'))},
+ koppeling(p){const n=(x,y,k)=>`<circle cx="${x}" cy="${y}" r="10" fill="${p&&p.vraag==k?"#c0392b":"#2E4A3C"}"/>${T(x,y+4,k,'text-anchor="middle" style="fill:#fff;font-weight:700;font-size:12px"')}`;
+  return S(340,170,`<rect x="0" y="15" width="58" height="110" fill="#eceee9" stroke="#666"/>`+T(4,140,"aanhanger")+
+  `<rect x="305" y="45" width="35" height="70" rx="4" fill="#3b6ea5"/>`+T(296,140,"auto")+
+  `<path d="M305 100 H285 V88" stroke="#333" stroke-width="5" fill="none"/><circle cx="285" cy="82" r="7" fill="#777"/>
+  <line x1="58" y1="80" x2="250" y2="80" stroke="#555" stroke-width="7"/>
+  <rect x="248" y="70" width="34" height="18" rx="5" fill="#666"/><line x1="262" y1="70" x2="270" y2="58" stroke="#333" stroke-width="4"/><circle cx="276" cy="66" r="4" fill="#3c3"/>
+  <path d="M200 74 l5 12 l5 -12 l5 12 l5 -12 l5 12 l5 -12 l5 12" stroke="#222" stroke-width="3" fill="none"/>
+  <line x1="180" y1="78" x2="168" y2="44" stroke="#333" stroke-width="5"/><circle cx="167" cy="42" r="5" fill="#c0392b"/>
+  <path d="M182 84 Q240 130 306 108" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
+  <path d="M110 84 Q200 150 312 92" stroke="#111" stroke-width="2" fill="none"/>
+  <line x1="138" y1="56" x2="138" y2="135" stroke="#555" stroke-width="5"/><circle cx="138" cy="142" r="10" fill="#333"/><line x1="130" y1="56" x2="146" y2="56" stroke="#333" stroke-width="4"/>`+
+  n(285,30,1)+n(262,108,2)+n(240,148,3)+n(205,158,4)+n(114,150,5)+n(150,28,6)+n(222,52,7))},
+ stuur(){return S(320,150,pijl+`<circle cx="80" cy="72" r="52" fill="none" stroke="#333" stroke-width="9"/><circle cx="80" cy="72" r="10" fill="#333"/>
+  <line x1="80" y1="72" x2="80" y2="124" stroke="#333" stroke-width="5"/><circle cx="80" cy="128" r="11" fill="#E8895F"/>
+  <line x1="94" y1="134" x2="140" y2="134" stroke="#c0392b" stroke-width="3" marker-end="url(#pk)"/>`+
+  T(160,60,"Hand onderaan het stuur.")+T(160,80,"Hand naar rechts =")+T(160,100,"aanhanger gaat naar rechts.")+T(160,124,"(alleen bij achteruitrijden)"))}
+};
+function fig(item,beantwoord){if(!item.fig)return"";const [n,p]=Array.isArray(item.fig)?item.fig:[item.fig,{}];return FIG[n]?FIG[n]({...p,toon:beantwoord&&p.toonNa}):""}
+
+/* ============ VRAGEN ============ */
+const ITEMS=[];
+const add=o=>{ITEMS.push(o);return o};
+const mc=(id,t,q,opts,why,x={})=>add({id,t,type:"mc",q,opts,why,...x});      // opts[0] is goed, wordt gehusseld
+const tf=(id,t,q,waar,why,x={})=>add({id,t,type:"mc",q,opts:waar?["Waar","Niet waar"]:["Niet waar","Waar"],vast:true,why,...x});
+const ord=(id,t,q,steps,why,x={})=>add({id,t,type:"order",q,steps,why,...x});
+const sp=(id,t,q,points,why,x={})=>add({id,t,type:"speak",q,points,why,...x}); // points: [label, [alternatieven]]
+const num=(id,t,q,ans,why,x={})=>add({id,t,type:"num",q,ans,why,...x});
+const gen=(id,t,fn,x={})=>add({id,t,type:"gen",fn,...x});
+const V=(v,s,t)=>({v,s,t});
+const rnd=(a,b,st=1)=>a+st*Math.floor(Math.random()*((b-a)/st+1));
+const kg=n=>n.toLocaleString("nl-NL")+" kg";
+
+/* --- Regels --- */
+mc("r1","regels","Hoe lang mag een personenauto met aanhanger samen maximaal zijn?",["18 m","12 m","16,5 m","18,75 m"],"Met een personenauto mag de combinatie maximaal 18 m zijn. Met een bus/bedrijfsauto ervoor is het 18,75 m.",{src:V("W5VBro9Ilpw","maximaal 18 lang",17)});
+mc("r2","regels","En als er een bestelbus voor de aanhanger zit?",["18,75 m","18 m","16,5 m","20 m"],"Met een bus mag de combinatie maximaal 18,75 m lang zijn.",{src:V("W5VBro9Ilpw","18,75",24)});
+mc("r3","regels","Hoe lang mag de aanhanger zelf maximaal zijn?",["12 m","10 m","8 m","18 m"],"Een aanhanger mag in totaal maximaal 12 m lang zijn.",{src:V("W5VBro9Ilpw","12m lang",33)});
+mc("r4","regels","Wat is de maximale breedte van een aanhanger of caravan?",["2,55 m","2,10 m","2,50 m","3,00 m"],"Maximaal 2,55 m breed.",{src:V("W5VBro9Ilpw","2,55",49)});
+mc("r5","regels","Hoe hoog mag een aanhanger maximaal zijn?",["4 m","3,5 m","3 m","4,5 m"],"Maximaal 4 m hoog.",{src:V("W5VBro9Ilpw","4 me hoog",39)});
+sp("r6","regels","De examinator vraagt: waarom wil ik weten hoe lang, hoe breed en hoe hoog jouw combinatie is? Antwoord hardop.",[
+ ["Vanwege verbodsborden / beperkingen",["verbod","bord","beperking"]],
+ ["Lengte: je kunt ergens een draai niet maken",["lengte","lang","draai"]],
+ ["Hoogte: tunnels, viaducten",["hoog","tunnel","viaduct","brug"]],
+ ["Breedte: bv. afgezette linkerbaan (Duitsland)",["breed","breedte","linkerbaan","duitsland"]]],
+ "Vanwege verbodsborden: lengte (een draai niet kunnen maken), hoogte (tunnel) en breedte (bv. een linkerbaan in Duitsland die alleen voor smalle voertuigen is).",{min:3,src:V("W5VBro9Ilpw","verbodsporden",70)});
+tf("r7","regels","De examinator zegt: 'Tijdens de rit wordt geen verbodsbord aangegeven.' Dat betekent dat je overal gewoon mag doorrijden.",true,"Klopt: zie je geen verbodsbord, dan is er geen beperking.",{src:V("W5VBro9Ilpw","geen verbodsport",101)});
+mc("r8","regels","Hoe zwaar mag een BE-combinatie maximaal zijn (toegestane maximummassa samen)?",["7.000 kg","3.500 kg","4.250 kg","8.250 kg"],"3.500 kg voor de auto plus 3.500 kg voor de aanhanger: samen 7.000 kg.",{src:V("W5VBro9Ilpw","7.000 kg",135)});
+mc("r9","regels","Wanneer heb je het BE-rijbewijs nodig?",["Als de TMM van auto en aanhanger samen boven 3.500 kg komt (aanhanger zwaarder dan 750 kg)","Als je lading zwaarder is dan 750 kg","Bij elke geremde aanhanger","Als de combinatie langer is dan 12 m"],"Het gaat om de toegestane maximummassa (TMM) op de kentekenbewijzen: auto + aanhanger samen boven 3.500 kg, met een aanhanger boven 750 kg.",{src:V("W5VBro9Ilpw","boven de 3500 kg uit",149)});
+mc("r10","regels","Waar kijkt de politie naar om te bepalen of je BE nodig hebt?",["De TMM op de kentekenbewijzen van auto en aanhanger","Wat je nu werkelijk weegt (weegbrug)","De lengte van de combinatie","Het trekgewicht van de auto"],"De politie zet je niet op een weegbrug: ze kijken op de kentekenbewijzen wat auto en aanhanger samen mogen wegen.",{src:V("W5VBro9Ilpw","politie",605)});
+mc("r11","regels","Hoe hard mag je met een aanhanger op de snelweg in Nederland?",["90 km/u","80 km/u","100 km/u","130 km/u"],"90 km/u op autosnelweg en autoweg (aanhanger tot 3.500 kg).",{src:{u:RVV,s:"RVV art. 22"}});
+mc("r12","regels","En op een gewone weg buiten de bebouwde kom (geen autoweg)?",["80 km/u","90 km/u","60 km/u","100 km/u"],"Buiten de kom op een gewone weg is het maximum 80 km/u, ook met aanhanger. Binnen de kom 50.",{src:{u:RVV,s:"RVV art. 21"}});
+mc("r13","regels","Waarom moet je weten hoe zwaar je combinatie is voor je op vakantie gaat?",["Je kunt bruggen met een gewichtsbeperking tegenkomen","Voor de tol","Omdat je anders sneller mag","Voor de verzekering"],"Bruggetjes met een gewichtsbeperking: weet je wat je weegt, dan hoef je bij zo'n bord niet te twijfelen.",{src:V("W5VBro9Ilpw","bruggetjes",245)});
+mc("r14","regels","Waar kun je je combinatie laten wegen?",["Bij een weegbrug, milieustraat, stenenhandel of veehouderij (even bellen)","Alleen bij de RDW","Bij elk tankstation","Bij de APK-garage"],"Weegbruggen langs de snelweg, milieustraten, veehouderijen, stenenhandels. Bel even of je langs mag.",{src:V("W5VBro9Ilpw","weegbruggen",264)});
+mc("r15","regels","Snelweg met 4 rijstroken in jouw richting. Welke stroken mag je met de combinatie gebruiken?",["C en D","Alleen D","B, C en D","Alle vier"],"Alleen de twee meest rechtse rijstroken.",{fig:["snelweg",{n:4}],src:V("W5VBro9Ilpw","meest rechter mag",187)});
+mc("r16","regels","Waarom mag je op een weg met 3 of meer stroken alleen de twee rechtse gebruiken?",["Vanwege je lengte (langer dan 7 m)","Omdat je maar 90 mag","Omdat je zwaarder bent dan 3.500 kg","Omdat je een geremde aanhanger hebt"],"Het gaat om de lengte, niet om de snelheid. De wet (RVV art. 43) zegt: langer dan 7 m. In de video noemt de instructeur 7,5 m; antwoord op het examen gewoon 'vanwege mijn lengte'.",{src:V("W5VBro9Ilpw","lengtebeperking en niet met de snelheid",192)});
+mc("r17","regels","Driebaans snelweg. Op welke banen mag je komen met de aanhanger?",["B en C","Alleen C","A, B en C","Alleen B"],"De twee meest rechtse: B en C. De linkerbaan (A) niet, ook niet om in te halen.",{fig:["snelweg",{n:3}],src:V("gNk4tG9kI-A","driebaans",0)});
+
+/* --- Rekenen --- */
+gen("k1","rekenen",()=>{const t=rnd(1200,2700,5),r=rnd(350,1000,5);return{type:"num",q:`Kentekenbewijs aanhanger: toegestane maximummassa ${kg(t)}, massa rijklaar ${kg(r)}. Hoeveel kg lading mag erin?`,ans:t-r,unit:"kg",why:`Laadvermogen = TMM min massa rijklaar: ${kg(t)} - ${kg(r)} = ${kg(t-r)}.`}},{src:V("W5VBro9Ilpw","massa rijk klaar betekent",459)});
+gen("k2","rekenen",()=>{const c=rnd(1600,3200,50),a=Math.random()<.2?rnd(500,750,50):rnd(800,2500,50),be=a>750&&c+a>3500;return{type:"mc",q:`Auto: TMM ${kg(c)}. Aanhanger: TMM ${kg(a)}. Heb je BE nodig?`,opts:be?["Ja","Nee"]:["Nee","Ja"],vast:true,why:a<=750?`Nee: de aanhanger is niet zwaarder dan 750 kg, dan volstaat B.`:`Tel de TMM's op: ${kg(c)} + ${kg(a)} = ${kg(c+a)}. ${be?"Meer dan 3.500 kg, dus BE.":"Niet meer dan 3.500 kg, dus B is genoeg."}`}},{src:V("W5VBro9Ilpw","boven de 3500 kg uit",149)});
+gen("k3","rekenen",()=>{const m=rnd(12,35)*100,a=rnd(10,35)*100+(Math.random()<.5?55:0),ok=a<=m;return{type:"mc",q:`De auto mag geremd ${kg(m)} trekken. De aanhanger heeft een TMM van ${kg(a)}. Mag de auto deze aanhanger (volgeladen) meenemen?`,opts:ok?["Ja","Nee"]:["Nee","Ja"],vast:true,why:ok?`Ja: ${kg(a)} is niet meer dan het trekgewicht van ${kg(m)}.`:`Nee: ${kg(a)} is meer dan het trekgewicht van ${kg(m)}.`}},{src:V("W5VBro9Ilpw","2000 kg trekken",408)});
+gen("k4","rekenen",()=>{const t=rnd(1300,2000,5),r=rnd(600,1000,10),L=t-r,w=L+rnd(150,500,50);return{type:"num",q:`Aanhanger: TMM ${kg(t)}, massa rijklaar ${kg(r)}. Je moet ${kg(w)} stenen mee. Hoeveel kg moet er minimaal in de auto?`,ans:w-L,unit:"kg",why:`In de aanhanger past ${kg(t)} - ${kg(r)} = ${kg(L)}. De rest, ${kg(w-L)}, moet in de auto (als het laadvermogen van de auto dat toelaat).`}},{src:V("W5VBro9Ilpw","1200 kg stenen",442)});
+gen("k5","rekenen",()=>{const c=rnd(2400,3500,50),a=rnd(1200,2700,5);return{type:"num",q:`De examinator vraagt: wat mag deze combinatie samen wegen? Bus: TMM ${kg(c)}. Aanhanger: TMM ${kg(a)}.`,ans:c+a,unit:"kg",why:`TMM bus + TMM aanhanger = ${kg(c+a)}. Naar dit getal kijkt de politie.`}},{src:V("W5VBro9Ilpw","4825",600)});
+gen("k6","rekenen",()=>{const t=rnd(2800,3500,50),r=rnd(1800,2400,10);return{type:"num",q:`Je bus: TMM ${kg(t)}, massa rijklaar ${kg(r)}. Hoeveel lading mag er in de bus?`,ans:t-r,unit:"kg",why:`${kg(t)} - ${kg(r)} = ${kg(t-r)}.`}},{src:V("W5VBro9Ilpw","overgeladen",502)});
+mc("k7","rekenen","Wat betekent 'massa rijklaar' op het kentekenbewijs?",["Wat het voertuig leeg weegt","Wat het maximaal mag wegen","Wat de auto mag trekken","Het gewicht van de lading"],"Massa rijklaar = hoeveel het voertuig leeg weegt.",{src:V("W5VBro9Ilpw","massa rijk klaar betekent",459)});
+mc("k8","rekenen","Aanhanger: TMM 1.755 kg, massa rijklaar 900 kg. Je hebt 1.200 kg stenen. Wat zeg je tegen de examinator?",["855 kg in de aanhanger, de rest in de bus als die genoeg laadvermogen heeft","Dat mag niet mee","Mag allemaal in de aanhanger, die mag 1.755 kg","Alleen met een zwaarder rijbewijs"],"De aanhanger kan 855 kg hebben. Maar je hebt ook een bus: lading verdelen mag. Zo gaat de 1.200 kg toch mee.",{src:V("W5VBro9Ilpw","1200 kg stenen",442)});
+mc("k9","rekenen","Hoe zie je dat je een geremde aanhanger bij je hebt?",["Eigen kentekenbewijs/kenteken en een oploopreminrichting","Hij heeft twee assen","Hij heeft een neuswiel","Er zit een losbreekkabel aan de auto"],"Een eigen kentekenbewijs (dus een eigen kenteken) en een eigen oploopreminrichting.",{src:V("W5VBro9Ilpw","eigen kentekenbewijs",653)});
+tf("k10","rekenen","Tijdens het BE-examen rijd je met een lege aanhanger.",false,"Niet waar: je rijdt het examen geladen.",{src:V("W5VBro9Ilpw","geladen rondrijden",634)});
+sp("k11","rekenen","De examinator vraagt: welke gegevens van onze combinatie moet je kennen voor we vertrekken? Noem ze.",[
+ ["Lengte",["lengte","lang"]],["Breedte",["breed"]],["Hoogte",["hoog"]],["Wat we nu wegen",["weeg","wegen","gewicht","zwaar"]],["Wat we samen mogen wegen (TMM)",["mogen","toegestane","maximum","tmm","maximale massa"]]],
+ "Lengte, breedte, hoogte, wat je nu weegt en wat je samen mag wegen (TMM).",{min:4,src:V("W5VBro9Ilpw","hoe lang ben ik",58)});
+
+/* --- Laden --- */
+mc("l1","laden","Wat is kogeldruk?",["De druk die de trekhaak (kogel) maximaal mag hebben","De bandenspanning van de aanhanger","De remkracht van de oploopremmen","Het gewicht van de lading"],"Kogeldruk is de druk die de trekhaak mag hebben; staat op de sticker of het typeplaatje van de trekhaak.",{src:V("8l5VoG34rEI","kogeldruk is de druk",5)});
+mc("l2","laden","Wat is de 'lastende koppeling'?",["De druk die de koppeling van de aanhanger mag hebben","Het gewicht dat de auto mag trekken","De koppeling van de auto (pedaal)","De kracht van de losbreekkabel"],"De lastende koppeling is de druk die de koppeling van de aanhanger aankan. Staat gegraveerd op de koppeling.",{src:V("8l5VoG34rEI","lastende koppeling is",8)});
+gen("l3","laden",()=>{const a=rnd(5,15)*10,b=rnd(5,15)*10;return{type:"num",q:`Op de trekhaak staat ${a} kg kogeldruk, op de koppeling van de aanhanger ${b} kg. Welke maximale kogeldruk houd je aan?`,ans:Math.min(a,b),unit:"kg",why:`Altijd de laagste waarde: ${Math.min(a,b)} kg. En probeer daar ongeveer 10% onder te blijven.`}},{src:V("8l5VoG34rEI","laagste waarde",43)});
+mc("l4","laden","Trekhaak 75 kg, koppeling 100 kg. Waar mik je op bij het laden?",["Iets onder 75 kg, ongeveer 10% eronder","Precies 100 kg","Precies 75 kg","Zo dicht mogelijk bij 0 kg"],"Laagste waarde (75 kg) en dan ongeveer 10% eronder blijven.",{src:V("8l5VoG34rEI","10% onder",120)});
+mc("l5","laden","De lading ligt helemaal achterin de aanhanger. Wat gebeurt er?",["Te weinig kogeldruk: de aanhanger gaat slingeren","Te veel kogeldruk: de neus van de auto komt omhoog","Niets, zolang het vastzit","De aanhanger remt harder"],"Te veel achterin = te weinig kogeldruk. De aanhanger wordt onrustig en gaat slingeren.",{fig:["combi",{lading:"achter"}],src:V("8l5VoG34rEI","achterzijde",52)});
+mc("l6","laden","De lading ligt helemaal voorin de aanhanger. Wat gebeurt er?",["Te veel kogeldruk: de neus van de auto komt omhoog, minder grip op de voorwielen","Te weinig kogeldruk: slingeren","De aanhanger gaat harder remmen","Niets, voorin is altijd goed"],"Te veel kogeldruk drukt de achterkant van de auto omlaag en de voorkant omhoog. Bij voorwielaandrijving minder grip en meer slipgevaar.",{fig:["combi",{lading:"voor"}],src:V("8l5VoG34rEI","te ver naar voren",76)});
+mc("l7","laden","Waar leg je de lading het liefst?",["In het midden, boven de as, zwaar onderin, en vastgezet","Zo ver mogelijk voorin","Zo ver mogelijk achterin","Maakt niet uit als de klep dicht is"],"In het midden boven de as, en alles vastzetten zodat het niet schuift (anders verandert de kogeldruk onderweg).",{fig:["combi",{lading:"midden"}],src:V("8l5VoG34rEI","vast te zetten",129)});
+tf("l8","laden","Als de lading mooi in het midden staat, hoef je hem niet vast te zetten.",false,"Niet waar: lading die verschuift verandert de kogeldruk. Altijd vastzetten.",{src:V("8l5VoG34rEI","vast te zetten",129)});
+mc("l9","laden","Paardentrailer voor twee paarden, je hebt er één bij je. Waar laad je het paard?",["Links","Rechts","Maakt niet uit","In het midden, schot eruit"],"Links. Wegen lopen bol naar rechts, en bij een tegenligger op een smal weggetje moet je de berm in. Een paard rechts geeft meer kantelgevaar.",{src:V("GhnmAxt-bVE","linkerzijde",8)});
+sp("l10","laden","Vertel de examinator hoe je de aanhanger gaat beladen.",[
+ ["Zwaar in het midden / boven de as",["midden","as","boven de as"]],
+ ["Laagste waarde van trekhaak en koppeling aanhouden",["laagste","kogeldruk"]],
+ ["Ongeveer 10% onder het maximum",["10","procent","onder het max"]],
+ ["Lading vastzetten",["vast","sjor","spanband","zekeren"]]],
+ "Lading in het midden boven de as, kogeldruk: laagste waarde van trekhaak en koppeling en ongeveer 10% daaronder, en alles vastzetten.",{min:3,src:V("8l5VoG34rEI","10% onder",120)});
+
+/* --- Remmen --- */
+mc("b1","remmen","Welke drie remmen/remonderdelen zitten aan de dissel?",["Losbreekreminrichting, handrem, oploopreminrichting","ABS, handrem, motorrem","Schijfrem, trommelrem, handrem","Losbreekkabel, neuswiel, stofhoes"],"Losbreekreminrichting (de kabel), de handrem en de oploopreminrichting.",{src:V("W5VBro9Ilpw","drie verschillende remsystemen",280)});
+const ONDERDELEN=["Kogel van de trekhaak","Koppeling met indicator","Losbreekkabel","Stekker en kabel (verlichting)","Neuswiel","Handrem","Stofhoes om de oploopreminrichting"];
+gen("b2","remmen",()=>{const k=rnd(1,7),goed=ONDERDELEN[k-1],rest=ONDERDELEN.filter(x=>x!==goed).sort(()=>Math.random()-.5).slice(0,3);return{type:"mc",q:`Wat is onderdeel nummer ${k}?`,opts:[goed,...rest],fig:["koppeling",{vraag:k}],why:`Nummer ${k} is: ${goed}. (1 kogel, 2 koppeling, 3 losbreekkabel, 4 stekker, 5 neuswiel, 6 handrem, 7 stofhoes.)`}},{src:V("W5VBro9Ilpw","drie verschillende remsystemen",280)});
+mc("b3","remmen","Wat doet de losbreekkabel?",["Schiet de koppeling los van de trekhaak, dan trekt hij de handrem van de aanhanger aan","Hij houdt de aanhanger vast aan de auto","Hij zorgt voor stroom naar de lampen","Hij zet de oploopremmen vast tijdens het rijden"],"Komt de koppeling los van de trekhaak, dan trekt de kabel de handrem aan, zodat de aanhanger tot stilstand komt.",{src:V("W5VBro9Ilpw","handrem",286)});
+mc("b4","remmen","Wat gebeurt er met de losbreekkabel nadat hij de handrem heeft aangetrokken?",["Hij breekt af; zo is hij bedoeld","Hij houdt de aanhanger aan de auto vast","Hij rolt zichzelf op","Hij zet de alarmlichten aan"],"De kabel is bedoeld om af te breken. Hij moet de aanhanger niet vasthouden.",{src:V("W5VBro9Ilpw","af te breken",325)});
+tf("b5","remmen","Je mag de losbreekkabel vervangen door een stevige ketting.",false,"Niet waar: de kabel moet kunnen afbreken. Een ketting houdt de aanhanger vast, dat wil je juist niet.",{src:V("W5VBro9Ilpw","ketting",344)});
+mc("b6","remmen","Waarom zit er een stofhoes (balg) om de oploopreminrichting?",["Om vuil en regen buiten te houden, zodat het vet niet wegspoelt","Voor de mooiheid","Om de kabels bij elkaar te houden","Om de kogeldruk te meten"],"De oploopremstang moet gesmeerd blijven. De stofhoes beschermt het vet tegen vuil en regen.",{src:V("W5VBro9Ilpw","stofhoes",356)});
+mc("b7","remmen","Je ziet scheurtjes in de stofhoes. Wat doe je?",["Zo snel mogelijk vervangen","Niets, dat is normaal","Er tape omheen doen en zo laten","Hem weghalen"],"Beschadigd = zo snel mogelijk vervangen, anders komt er vuil en water bij en spoelt het vet weg.",{src:V("W5VBro9Ilpw","beschadigd",387)});
+sp("b8","remmen","De examinator wijst de losbreekkabel aan: 'Wat is dit, wat doet het, en wat gebeurt er daarna mee?'",[
+ ["Losbreekkabel / losbreekreminrichting",["losbreek","breekkabel"]],
+ ["Trekt de handrem aan als de aanhanger loskomt",["handrem"]],
+ ["Komt los van de trekhaak / auto",["los","trekhaak"]],
+ ["Breekt daarna af (geen ketting)",["breekt af","afbreken","af breken","breekt","ketting"]]],
+ "Losbreekreminrichting. Komt de koppeling los van de trekhaak, dan trekt de kabel de handrem aan. Daarna breekt de kabel af; daarom nooit een ketting.",{min:3,src:V("W5VBro9Ilpw","handrem",286)});
+
+/* --- Controle --- */
+sp("c1","controle","Wat controleer je aan de aanhanger voor je wegrijdt? Noem zoveel mogelijk.",[
+ ["Geen ijs/sneeuw op het dak",["ijs","sneeuw","dak"]],
+ ["Geen loshangende kabels",["kabel","loshang"]],
+ ["Bandenprofiel minimaal 1,6 mm",["profiel","1 6","16","1,6"]],
+ ["Geen schade aan de zijkant van de banden",["zijkant","wang","schade"]],
+ ["Bandenspanning / genoeg lucht",["spanning","lucht","bandendruk"]],
+ ["Wielbouten (niet geroest/los)",["bout","moer"]],
+ ["Verlichting werkt",["licht","lamp","verlichting"]],
+ ["Koppeling goed vast / losbreekkabel om",["koppeling","vast","losbreek"]]],
+ "Dak zonder ijs, geen loshangende kabels, banden (profiel 1,6 mm, geen schade aan de zijkant, genoeg lucht), wielbouten, verlichting, koppeling en losbreekkabel.",{min:5,src:V("9Rg9GQ8AQJY","ijs op dak",8)});
+mc("c2","controle","Wat is het minimale bandenprofiel van een aanhangerband?",["1,6 mm","1,0 mm","2,5 mm","3 mm"],"1,6 mm. Ezelsbrug: op je 16e mag je scooter rijden.",{src:V("9Rg9GQ8AQJY","1,6",19)});
+mc("c3","controle","Er ligt ijs op het dak van de aanhanger. Waarom moet dat eraf?",["Valt het eraf, dan ben jij aansprakelijk","Anders is de aanhanger te zwaar","Anders werkt de verlichting niet","Moet niet, dat waait er vanzelf af"],"Vliegt er ijs af, dan ben je juridisch verantwoordelijk.",{src:V("9Rg9GQ8AQJY","ijs op dak",8)});
+mc("c4","controle","Wat controleer je aan de wielen?",["Bouten niet geroest, geen schade aan de zijkant, genoeg lucht, profiel","Alleen of ze rond zijn","Alleen de kleur van de velg","De remvloeistof"],"Wielbouten, zijkant (wangen) van de band, luchtdruk en profiel.",{src:V("9Rg9GQ8AQJY","wielbouten",35)});
+mc("c5","controle","Hoe lang duurt het BE-praktijkexamen?",["55 minuten (rit ongeveer 35 minuten)","30 minuten","75 minuten","2 uur"],"Het examen duurt 55 minuten; de rit zelf ongeveer 35 minuten.",{src:{u:CBR,s:"CBR"}});
+mc("c6","controle","Bij de ogentest lees je een kenteken op ongeveer...",["25 meter","10 meter","50 meter","100 meter"],"Je leest het kenteken van een stilstaande auto op ongeveer 25 m.",{src:{u:CBR,s:"CBR"}});
+mc("c7","controle","Hoeveel bijzondere verrichtingen moet je doen?",["Twee","Eén","Drie","Vier"],"Twee bijzondere verrichtingen. De examinator kijkt daarbij buiten mee.",{src:V("eUWqinAvBVw","verrichtingen",79)});
+mc("c8","controle","Waar gaan de vragen vóór de rit over?",["Kentekenbewijzen, beladen en aankoppelen","Alleen de verkeersborden","De motor van de auto","Je rijervaring"],"Vragen over de kentekenbewijzen van auto en aanhanger, en bijvoorbeeld over beladen en aankoppelen.",{src:{u:CBR,s:"CBR"}});
+tf("c9","controle","Je instructeur mag je bij het aankoppelen aanwijzingen geven.",true,"Waar: bij het achteruitrijden naar de aanhanger mag de instructeur gidsen.",{src:V("cBME75Arkis","gidsen",19)});
+mc("c10","controle","Wat moet je meenemen naar het examen?",["Identiteitsbewijs, rijbewijs B en de examenbevestiging","Alleen je rijbewijs B","Kentekenbewijs van je eigen auto","Een medische verklaring"],"Identiteitsbewijs, je rijbewijs B en de bevestiging van het praktijkexamen.",{src:{u:CBR,s:"CBR"}});
+mc("c11","controle","Waar let de examinator op als hij bij een bijzondere verrichting buiten staat?",["Of je in beide spiegels kijkt en het overige verkeer in de gaten houdt","Alleen of je het punt haalt","Of je radio uit staat","Hoe snel je het doet"],"Hij kijkt of je beide spiegels gebruikt en het verkeer om je heen blijft volgen.",{src:V("MZ989c1qygQ","beide spiegels",85)});
+
+/* --- Aankoppelen --- */
+const AANK=["Ramen omlaag, alarmlichten aan, rustig achteruit naar de dissel","Slot van de koppeling eraf","Neuswiel laten zakken tot de koppeling op de kogel klikt","Controle: neuswiel terugdraaien, auto moet mee omhoog komen","Losbreekkabel om","Stekker erin en verlichting controleren","Neuswiel helemaal omhoog en vastzetten","Handrem eraf en controleren dat hij los is"];
+ord("a1","aankoppelen","Zet de stappen van het aankoppelen in de goede volgorde.",AANK,"Eerst vastklikken en controleren (auto komt mee omhoog), dan de losbreekkabel, stekker, neuswiel omhoog en als laatste de handrem eraf.",{src:V("cBME75Arkis","neuswiel zakken",62)});
+sp("a2","aankoppelen","Vertel hardop hoe je aankoppelt, stap voor stap, vanaf het moment dat je achteruit naar de aanhanger rijdt.",[
+ ["Ramen omlaag / alarmlichten / rustig achteruit",["raam","ramen","alarm","achteruit","rustig"]],
+ ["Slot eraf",["slot","lok"]],
+ ["Neuswiel laten zakken tot klik op de kogel",["zakken","klik","op de kogel"]],
+ ["Controle: terugdraaien, auto komt mee omhoog",["omhoog","mee omhoog","controle","terugdraai"]],
+ ["Losbreekkabel om",["losbreek","breekkabel"]],
+ ["Stekker erin",["stekker","stroom"]],
+ ["Neuswiel omhoog en vastzetten",["neuswiel omhoog","wiel omhoog","vastzetten","klem"]],
+ ["Handrem eraf",["handrem"]]],
+ "Achteruit (ramen omlaag, alarmlichten), slot eraf, neuswiel laten zakken tot klik, controleren door terug te draaien (auto komt mee omhoog), losbreekkabel om, stekker erin, neuswiel omhoog en vast, handrem eraf.",{ordered:true,min:7,src:V("cBME75Arkis","neuswiel zakken",62)});
+mc("a3","aankoppelen","De examinator vraagt: 'Zit hij vast? Hoe weet je dat?'",["Ik heb het neuswiel teruggedraaid en de auto kwam mee omhoog; de indicator staat op groen","Ik hoorde een klik","De lampen doen het","De losbreekkabel zit om"],"Het bewijs: je draaide het neuswiel terug en de auto ging mee omhoog. Plus de indicator op groen en de handgreep vergrendeld.",{src:V("cBME75Arkis","zit hij vast",120)});
+mc("a4","aankoppelen","De indicator op de koppeling staat op groen, maar je hoorde geen klik. Wat doe je?",["Op de dissel drukken/gaan staan tot hij klikt","Niets, groen is goed","Wegrijden en kijken of het goed gaat","De losbreekkabel strakker zetten"],"Groen maar niet geklikt: druk erop (ga erop staan), dan komt de klik alsnog.",{src:V("XNkuVIdhvXY","niet geklikt",0)});
+mc("a5","aankoppelen","Waarom doe je de losbreekkabel om vóór je het neuswiel omhoog draait en de handrem eraf haalt?",["Gaat er daarna iets mis, dan trekt hij de handrem aan","Omdat het neuswiel anders niet omhoog kan","Voor de stroom","Dat maakt niet uit"],"Zit de kabel om en schiet de aanhanger los, dan gaat de handrem erop.",{src:V("cBME75Arkis","losbreekreminrichting erop",90)});
+mc("a6","aankoppelen","Je draait het neuswiel omhoog. Waar let je op?",["Gleufje naar de zijkant, wiel recht omhoog en met je voet tegenhouden","Zo snel mogelijk draaien","Het wiel schuin laten staan","Eerst de handrem eraf"],"Staat het wiel schuin, dan komt het tegen de stang. Gleufje naar de zijkant, wiel recht omhoog, voet ertegen.",{src:V("cBME75Arkis","gleufje",95)});
+mc("a7","aankoppelen","Wat laat de examinator je doen vóór het aankoppelen?",["Een stukje naar voren rijden en een beetje 'uit het lood' draaien, dan achteruit terug","Een rondje om het terrein rijden","De aanhanger met de hand verplaatsen","Niets, de auto staat al goed"],"Je rijdt naar voren en draait een kwartslag weg, zodat je niet meer recht staat. Dan rijd je achteruit terug naar de aanhanger.",{src:V("cBME75Arkis","uit lood",3)});
+tf("a8","aankoppelen","Bij het achteruitrijden naar de aanhanger mag je de koppeling raken, zolang het heel rustig gaat.",true,"Volgens de instructeur mag dat, zolang het heel rustig gebeurt. De laatste meter dus heel langzaam.",{src:V("cBME75Arkis","laatste meter",41)});
+
+/* --- Afkoppelen --- */
+const AFK=["Verlichting uit en motor uit","Aanhanger naar achteren duwen tot de oploopremstang uit is","Handrem erop","Neuswiel laten zakken tot op de grond","Stekker eruit","Losbreekkabel eraf","Koppeling ontgrendelen en van de kogel halen"];
+ord("f1","afkoppelen","Zet de stappen van het afkoppelen in de goede volgorde.",AFK,"Verlichting en motor uit, naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit, losbreekkabel eraf, koppeling los.",{src:V("cBME75Arkis","officiële volgorde",169)});
+sp("f2","afkoppelen","Vertel hardop hoe je afkoppelt, stap voor stap.",[
+ ["Verlichting uit / motor uit",["verlichting","licht","motor uit"]],
+ ["Naar achteren duwen (oploopremstang uit)",["achter","duw","oploop","bumper"]],
+ ["Handrem erop",["handrem"]],
+ ["Neuswiel omlaag",["neuswiel","zakken","omlaag"]],
+ ["Stekker eruit",["stekker","stroom"]],
+ ["Losbreekkabel eraf",["losbreek","breekkabel"]],
+ ["Koppeling los en van de kogel",["ontgrendel","van de kogel","koppeling los","los","til"]]],
+ "Verlichting uit en motor uit, aanhanger naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit, losbreekkabel eraf, koppeling ontgrendelen en van de kogel.",{ordered:true,min:6,src:V("cBME75Arkis","bumperschade",148)});
+mc("f3","afkoppelen","Welke twee stappen zijn zo belangrijk dat je zakt als je ze vergeet?",["Aanhanger naar achteren duwen en de handrem erop","Stekker eruit en losbreekkabel eraf","Neuswiel omlaag en motor uit","Verlichting uit en ramen omlaag"],"Naar achteren duwen (anders bumperschade) en de handrem erop (anders rolt hij weg).",{src:V("cBME75Arkis","ben je gezakt",166)});
+mc("f4","afkoppelen","Waarom zet je de verlichting uit voordat je de stekker eruit haalt?",["Om kortsluiting te voorkomen","Om de accu te sparen","Omdat het verplicht is in het donker","Zodat de examinator het ziet"],"Verlichting uit voorkomt kortsluiting.",{src:V("cBME75Arkis","kortsluiting",144)});
+mc("f5","afkoppelen","Waarom duw je de aanhanger eerst naar achteren?",["Zodat de oploopremstang uit is en de aanhanger niet tegen je bumper komt","Om de handrem te testen","Om de lading te verschuiven","Zodat het neuswiel beter draait"],"Je houdt hem vast tot de oploopremstang helemaal uit is. Zo voorkom je bumperschade.",{src:V("cBME75Arkis","bumperschade",148)});
+mc("f6","afkoppelen","Wat is de laatste stap voordat je de koppeling ontgrendelt en van de kogel haalt?",["Losbreekkabel eraf","Handrem erop","Verlichting uit","Naar achteren duwen"],"Als laatste gaat de losbreekkabel eraf, dan ontgrendel je de koppeling.",{src:V("cBME75Arkis","stroom eraf",180)});
+
+/* --- Spiegelen --- */
+ord("s1","spiegelen","Je gaat rechtsaf. Zet in de goede volgorde.",["Linkerspiegel","Rechterspiegel","Rechts naast je kijken (dode hoek)","Richting aan naar rechts","Vlak vóór het insturen: buitenkant (links) kijken","In de bocht: binnenkant (rechts) meekijken"],"Linkerspiegel, rechterspiegel, rechts naast je, richting aan. Vóór de bocht de buitenkant, in de bocht de binnenkant.",{src:V("9yvkQriHuXE","rechts naast je",0)});
+ord("s2","spiegelen","Je gaat linksaf. Zet in de goede volgorde.",["Rechterspiegel","Linkerspiegel","Links naast je kijken (dode hoek)","Richting aan naar links","Vlak vóór het insturen: buitenkant (rechts) kijken","In de bocht: binnenkant (links) meekijken"],"Rechterspiegel, linkerspiegel, links naast je, richting aan. Vóór de bocht de buitenkant (rechts), in de bocht de binnenkant (links).",{src:V("9yvkQriHuXE","links naast mij",101)});
+sp("s3","spiegelen","Je gaat rechtsaf bij een kruispunt. Vertel hardop wat je doet, in de goede volgorde.",[
+ ["Linkerspiegel",["linkerspiegel","linker spiegel","links spiegel"]],
+ ["Rechterspiegel",["rechterspiegel","rechter spiegel"]],
+ ["Rechts naast je (dode hoek)",["naast","dode hoek","schouder"]],
+ ["Richting aan",["richting","knipper"]],
+ ["Vóór de bocht de buitenkant",["buitenkant"]],
+ ["In de bocht de binnenkant",["binnenkant"]]],
+ "Linkerspiegel, rechterspiegel, rechts naast je, richting aan. Vóór de bocht de buitenkant kijken, in de bocht de binnenkant meekijken.",{ordered:true,src:V("9yvkQriHuXE","rechts naast je",0)});
+mc("s4","spiegelen","Wanneer kijk je naar de buitenkant en wanneer naar de binnenkant van de bocht?",["Vóór de bocht de buitenkant, in de bocht de binnenkant","Vóór de bocht de binnenkant, in de bocht de buitenkant","Alleen de binnenkant","Alleen na de bocht"],"Vóór het insturen: buitenkant (zit er niets naast me?). Tijdens de bocht: binnenkant (inloop, stoep, wie zit erachter).",{src:V("9yvkQriHuXE","eerst de buitenkant",7)});
+mc("s5","spiegelen","Wat is 'inloop'?",["De aanhanger snijdt de bocht af naar binnen","De achterkant van de aanhanger zwaait naar buiten","De auto loopt uit na het remmen","De aanhanger duwt tegen de auto"],"Inloop: de wielen van de aanhanger nemen een kortere lijn en snijden de binnenbocht af. Daarom in de bocht de binnenkant meekijken.",{fig:"bocht",src:V("9yvkQriHuXE","binnenkant",14)});
+mc("s6","spiegelen","Wat is 'uitzwaai'?",["Bij het insturen zwaait de achterkant van de aanhanger even naar de andere kant","De aanhanger snijdt de bocht af","De aanhanger slingert op de snelweg","Je zwaait naar de examinator"],"Uitzwaai: stuur je in, dan beweegt de achterkant van de aanhanger eerst naar de andere kant. Daarom vóór de bocht de buitenkant kijken.",{fig:"bocht",src:{v:"nA4JQGroLbU"}});
+mc("s7","spiegelen","Je stuurt naar rechts. Welke kant gaat de achterkant van je aanhanger op dat moment op?",["Naar links","Naar rechts","Hij blijft recht","Omhoog"],"Stuur je naar rechts, dan gaat de kar naar links (en andersom). Let dus op fietsers aan die kant.",{src:V("Fd8KfItsXYg","gaat die kar naar links",19)});
+mc("s8","spiegelen","Linksaf, je wacht op tegenliggers. Er is een middenvak tussen de rijbanen. Welke stand is goed?",["B: recht op de weg blijven","A: schuin het middenvak in","Allebei goed","Achter de stopstreep schuin zetten"],"Met de combinatie stop je kaarsrecht en gebruik je het middenvak niet. Dan kun je in beide spiegels langs de combinatie kijken.",{fig:"stoppen",src:V("9yvkQriHuXE","middenvak",227)});
+mc("s9","spiegelen","Waarom moet je de combinatie altijd recht stilzetten?",["Je hebt geen binnenspiegel; recht kun je in beide buitenspiegels langs de combinatie kijken","Omdat dat mooier staat","Omdat de handrem anders niet werkt","Om de kogeldruk goed te houden"],"Met een dichte aanhanger heb je geen binnenspiegel. Alleen als je recht staat zie je langs de combinatie wat ernaast zit.",{src:V("9yvkQriHuXE","binnenspiegel",139)});
+mc("s10","spiegelen","Je zet de combinatie aan de kant. Waar let je op?",["Ver genoeg doortrekken zodat de aanhanger recht staat","Zo snel mogelijk stoppen","Met de aanhanger schuin naar de stoep","Zo dicht mogelijk achter een geparkeerde auto"],"Ver genoeg doortrekken, zodat de aanhanger recht en stabiel staat en je langs de combinatie kunt kijken.",{src:V("9yvkQriHuXE","ver genoeg doortrekt",149)});
+mc("s11","spiegelen","Hoeveel moet je er bij het afslaan van uitgaan dat je kar uitzwaait?",["Ongeveer 1 tot 2 meter; de examinator weet niet hoe groot jouw aanhanger is","Niets, een kleine aanhanger zwaait niet uit","10 cm","5 meter"],"Doe alsof hij 1 tot 2 m uitzwaait. Het examen is algemeen; de examinator wil zien dat je er rekening mee houdt.",{src:V("Fd8KfItsXYg","een meter naar buiten",285)});
+mc("s12","spiegelen","Hoe nader je een kruispunt waar je moet afslaan?",["Tempo eruit en rollend naderen; hoe langzamer je nadert, hoe eerder je door kunt","Op snelheid blijven en pas op het laatst remmen","Altijd volledig stoppen","Gas geven om voor het verkeer te zijn"],"Rollend naderen geeft tijd om te kijken. Vaak hoef je dan niet te stoppen.",{src:V("9yvkQriHuXE","hoe langzamer ik nader",168)});
+mc("s13","spiegelen","Op een rechte weg, hoe spiegel je?",["Afwisselend links en rechts, en de aanhanger blijven volgen","Alleen in de binnenspiegel","Alleen links","Alleen voor een bocht"],"Gewoon blijven spiegelen, links en rechts. Je zit er voor de aanhanger: laat zien dat je hem volgt.",{src:V("9yvkQriHuXE","rechte wegen",62)});
+
+/* --- Kruispunt --- */
+mc("x1","kruispunt","Wat is de ezelsbrug voor rotondes en kruispunten met een zebrapad?",["20 m vóór het eerste obstakel 20 km/u op de teller","50 m ervoor stoppen","30 km/u tot op de rotonde","10 m ervoor 10 km/u"],"20 m voor het eerste obstakel (zebrapad, fietspad) 20 op de teller. Dan kun je nog stoppen zonder noodstop.",{fig:"rotonde",src:V("Fd8KfItsXYg","20 op de teller",121)});
+mc("x2","kruispunt","Je rolt naar de rotonde en ziet twee of meer auto's aankomen. Wat doe je?",["Stoppen","Gas bijgeven en ertussen","Doorrollen en hopen","Toeteren"],"Twee of meer auto's: gewoon stoppen en wachten.",{src:V("Fd8KfItsXYg","twee of meerdere auto",605)});
+mc("x3","kruispunt","Je rolt al de rotonde op en ineens verschijnt er een auto. Met de achterkant van de aanhanger kom je er niet meer voor. Wat doe je?",["Stilzetten, ook al sta je dan op een (leeg) fietspad of zebrapad","Gas bijgeven: de bus komt er nog voor","Doorrollen en de auto laten remmen","Achteruit terugrijden"],"Stilzetten is de keuze die de examinator wil zien. Negen van de tien die zakken geven op dat moment gas: de bus komt ervoor, de aanhanger niet.",{src:V("Fd8KfItsXYg","negen van de 10",622)});
+mc("x4","kruispunt","Je gaat een voorrangsweg op. Wat moet er allemaal voor het verkeer langs zijn?",["De hele combinatie, ook de achterkant van de aanhanger","Alleen de voorkant van de auto","Alleen de auto","Alleen de neus van de aanhanger"],"Niet alleen de voorkant: ook de achterkant van de aanhanger moet er voor de andere auto zijn.",{src:V("Fd8KfItsXYg","ook de achterzijde",147)});
+mc("x5","kruispunt","Het verkeerslicht springt op oranje. Wat is anders met een aanhanger?",["Je remweg is langer: eerder remmen, en tijdens het remmen achter je kijken","Je mag door oranje rijden","Niets","Je moet altijd vol remmen"],"Met een aanhanger is je remweg langer. Rem op tijd en houd in de spiegels in de gaten wat er achter je zit.",{src:V("Fd8KfItsXYg","oranje",155)});
+mc("x6","kruispunt","Je stopt achter een andere auto. Hoeveel ruimte laat je?",["Je ziet nog de onderkant van zijn banden","Een halve meter","Je bumper raakt bijna","Tien meter"],"Zie je de onderkant van zijn banden, dan kun je er omheen als hij kapot gaat.",{src:V("Fd8KfItsXYg","onderkant van zijn banden",168)});
+mc("x7","kruispunt","In een 50-zone rijd je met de combinatie...",["Zo dicht mogelijk bij 50, bijvoorbeeld 47","Rustig 30, dat is veiliger","Precies 50 of iets erboven","40, met aanhanger mag niet harder"],"Probeer net onder het maximum te blijven. Rijd je veel te langzaam, dan vindt de examinator je hinderlijk.",{src:V("Fd8KfItsXYg","47 is gewoon prima",379)});
+mc("x8","kruispunt","Hoe neem je een verkeersdrempel?",["Afremmen, alsof er een heet bekertje koffie staat","Op snelheid blijven","Gas geven vlak voor de drempel","Schuin erover"],"Rustig afremmen: denk aan een heet bekertje koffie dat niet mag omvallen.",{src:V("Fd8KfItsXYg","bekertje koffie",768)});
+mc("x9","kruispunt","Een scherpe bocht naar rechts in een smalle straat. Wat doe je?",["Wachten tot er ruimte is en de bocht zo ruim mogelijk insturen","Zo krap mogelijk de bocht om","Over de stoep","Snel doorrijden"],"Wachten op ruimte, ruim insturen, de kar volgen. 'Als het spelletje Snake.'",{src:V("Fd8KfItsXYg","sneake",454)});
+mc("x10","kruispunt","Je kunt de draai op een kruispunt niet in één keer maken. Wat doe je?",["Recht stoppen ervoor, het verkeer laten passeren, dan ruim opstellen","Half de bocht in en wachten","Achteruit rijden","Over de stoep"],"Stop recht, zodat je langs de kar kunt kijken. Laat passeren, stel ruim op en ga dan.",{src:V("Fd8KfItsXYg","stop ik beter hier recht",262)});
+mc("x11","kruispunt","Wat zijn volgens de instructeur de meest gemaakte fouten?",["Te snel naar uitritten en rotondes, en niet langs de kar kijken","Te langzaam op de snelweg","Verkeerd parkeren","De radio aan"],"Uitritten en rotondes: te snel ernaartoe en niet langs de kar kijken of er iets naast zit.",{src:V("Fd8KfItsXYg","meest gemaakte fout",574)});
+mc("x12","kruispunt","Kruispunt met weinig zicht naar rechts. Hoe nader je?",["Snelheid zo ver eruit dat je de straat in kunt kijken voor je beslist; ook kijken wie naast je zit","Op snelheid blijven, je hebt voorrang","Toeteren en doorrijden","Volledig stoppen en 10 seconden wachten"],"Pas je snelheid aan je zicht aan, en vergeet niet wat er naast de kar rijdt.",{src:V("Fd8KfItsXYg","weinig zicht",2)});
+sp("x13","kruispunt","Je nadert een rotonde met een zebrapad en gaat rechtsaf. Vertel wat je allemaal doet.",[
+ ["Spiegels: links, rechts, rechts naast je",["spiegel","naast"]],
+ ["Richting aan",["richting","knipper"]],
+ ["20 m voor het zebrapad 20 km/u",["20"]],
+ ["Rollend naderen en kijken",["rol","kijk"]],
+ ["Twee of meer auto's: stoppen",["stop","wacht"]],
+ ["Achterkant aanhanger moet ervoor",["achterkant","aanhanger","kar"]],
+ ["Twijfel: liever stoppen dan gas geven",["liever","niet gas","geen gas","stilzetten"]],
+ ["Langs de kar kijken (fietser)",["fiets","langs de kar","naast de kar","binnenkant","buitenkant"]]],
+ "Spiegels (links, rechts, rechts naast je), richting aan, 20 m voor het zebrapad 20 km/u, rollend naderen, bij twee of meer auto's stoppen, de hele combinatie moet ervoor, bij twijfel stilzetten in plaats van gas, en langs de kar kijken.",{min:5,src:V("Fd8KfItsXYg","20 op de teller",121)});
+
+/* --- Snelweg --- */
+mc("w1","snelweg","Met welke snelheid probeer je in te voegen?",["Zo dicht mogelijk bij de snelheid van het verkeer, minstens richting 80","Met 60, rustig aan","Met 50","Met 120 om snel ertussen te zijn"],"Invoegen met 60 = gezakt. Maak snelheid, richting 80 en meer (max 90), zo dicht mogelijk bij het verkeer.",{src:V("sCSEpBgSr88","met 60 invoegt",27)});
+ord("w2","snelweg","Invoegen op de snelweg (naar links). Zet in de goede volgorde.",["Rechterspiegel","Linkerspiegel","Links naast je kijken (schouder)","Richting aan","Rustig opschuiven"],"Rechterspiegel, linkerspiegel, links naast je, richting aan en rustig opschuiven terwijl je blijft kijken.",{src:V("sCSEpBgSr88","links naast je richting aan",40)});
+mc("w3","snelweg","Hoeveel afstand houd je na het invoegen met de aanhanger?",["Minstens 2 seconden, liever 3","1 seconde","Een autolengte","5 meter"],"Minimaal 2 seconden; met een aanhanger is je remweg langer, dus 3 is beter.",{src:V("sCSEpBgSr88","2 seconden",184)});
+mc("w4","snelweg","Hoe tel je je volgafstand?",["Vast punt kiezen (bord); als je voorganger het passeert tellen: 21-22-23","Strepen op de weg tellen","Op de kilometerteller kijken","Schatten in meters"],"Kies een vast punt. Passeert je voorganger het, tel 21-22-23 tot jij er bent.",{src:V("sCSEpBgSr88","21 22 23",192)});
+mc("w5","snelweg","Wanneer zet je bij het uitvoegen je richting aan?",["Ongeveer 300 m van tevoren","Pas op de uitvoegstrook","1 km van tevoren","Niet nodig bij uitvoegen"],"Ongeveer 300 m van tevoren.",{src:V("sCSEpBgSr88","300m",61)});
+mc("w6","snelweg","Hoe lang blijft je richtingaanwijzer aan bij het uitvoegen?",["Tot het laatste pijltje / de uitvoegstrook echt begonnen is","Drie keer knipperen","Tot je de snelweg niet meer ziet","Tot het eerste kruispunt"],"Aan laten tot het laatste pijltje, dan uit.",{src:V("sCSEpBgSr88","laatste pijltje",78)});
+num("w7","snelweg","Je rijdt 90 km/u. Hoeveel meter leg je af in 3 seconden?",75,"90 km/u is 25 m per seconde. 3 seconden = 75 m. (rekenvoorbeeld, niet uit de video)",{tol:5,unit:"m",tags:["algemeen"]});
+mc("w8","snelweg","Waarom gebruik je de invoegstrook goed?",["Je bent lang; andere weggebruikers hebben tijd nodig om je te zien en te reageren","Om de examinator te laten wachten","Om brandstof te sparen","Dat hoeft niet"],"Je bent lang. Begin op tijd met kijken en gebruik je strook, zodat anderen je zien en ruimte kunnen maken.",{src:V("sCSEpBgSr88","je bent lang",125)});
+tf("w9","snelweg","Op een driebaansweg mag je met de combinatie de linkerbaan gebruiken om een vrachtwagen in te halen.",false,"Niet waar: alleen de twee meest rechtse banen.",{fig:["snelweg",{n:3}],src:V("W5VBro9Ilpw","meest rechter mag",187)});
+
+/* --- Recht achteruit --- */
+mc("ra1","recht","Wat is het doel van 'recht achteruit'?",["Een meetopdracht: recht achteruit tot een punt of obstakel, zonder het te raken","Zo snel mogelijk achteruit","Achteruit om een hoek","Achteruit inparkeren tussen twee auto's"],"Het is een meetopdracht. Denk aan je caravan op de camping tot het hek: niet ertegen, maar ook niet 4 m ervoor.",{src:V("MZ989c1qygQ","meetopdracht",2)});
+mc("ra2","recht","Hoe ver van de stoeprand stel je je op?",["Ongeveer 1 meter","Tegen de stoeprand","3 meter","Midden op de weg"],"Ongeveer een meter. Hoe dichterbij, hoe moeilijker je het jezelf maakt.",{src:V("MZ989c1qygQ","meterruimte",23)});
+ord("ra3","recht","Recht achteruit. Zet in de goede volgorde.",["Stilstaan op ongeveer 1 m van de stoeprand","Alarmlichten aan en ramen omlaag","Achteruit; in beide spiegels de afstand gelijk houden","Ruim voor het punt stilzetten","Uitstappen en uitmeten (stoepbanden tellen, pion)","Achteruit tot je bij je oriëntatiepunt bent"],"Opstellen, alarmlichten en ramen, achteruit met beide spiegels, op tijd stilzetten, uitstappen en meten, dan het laatste stuk.",{src:V("MZ989c1qygQ","alarmlichten aanzet",37)});
+mc("ra4","recht","Hoe houd je de combinatie recht?",["In beide spiegels de afstand gelijk houden en met kleine stuurbewegingen corrigeren","Alleen in de linkerspiegel kijken","Grote stuurbewegingen","Over je schouder door de achterruit"],"Houd aan beide kanten de afstand gelijk. Kleine stuurbewegingen.",{src:V("MZ989c1qygQ","kleine stuurbeweging",97)});
+mc("ra5","recht","Hoe meet je hoe ver je nog moet?",["Vanaf het achterlicht stappen of stoepbanden tellen tot het punt, en een pion als oriëntatiepunt neerzetten","Op gevoel","De examinator vragen","Op de camera kijken"],"Loop naar de achterkant, tel stoepbanden tot het punt, en kies een oriëntatiepunt (pion). Rijd tot je gezicht naast de pion is.",{fig:"recht",src:V("MZ989c1qygQ","stoepbanden",150)});
+tf("ra6","recht","Bij recht achteruit mag je uitstappen om te kijken, en een pionnetje gebruiken.",true,"Waar. Uitstappen en meten mag, een pionnetje ook.",{src:V("MZ989c1qygQ","pionnetje",133)});
+num("ra7","recht","Je telt 8 stoepbanden van je achterlicht tot het putje. Hoeveel meter is dat ongeveer?",8,"Een stoepband is ongeveer 1 m. 8 stoepbanden = ongeveer 8 m.",{tol:0,unit:"m",src:V("MZ989c1qygQ","betekent 8m",153)});
+
+/* --- Halve draai --- */
+mc("h1","halvedraai","Wat is een 'halve draai' met de combinatie?",["Een U-bocht vooruit, in één keer naar je eigen weghelft","Achteruit een zijstraat in","Een rondje op de rotonde","Keren in drie keer steken"],"Gewoon een U-turn, vooruit, in één keer.",{src:V("K-dbXvmgBAQ","u-turn",4)});
+mc("h2","halvedraai","Welke ruimte mag je gebruiken voor de halve draai?",["Alles: kruispunt, bedrijventerrein, parkeerplaats","Alleen je eigen rijstrook","Alleen de rijbaan, geen kruispunt","Alleen een rotonde"],"Je mag alle ruimte benutten, zolang je in één keer doorrijdt.",{src:V("K-dbXvmgBAQ","alle ruimte",11)});
+mc("h3","halvedraai","Wie kiest de plek voor de halve draai?",["Jij zoekt een geschikte plek; de examinator geeft de opdracht","De examinator wijst het exacte punt aan","Je instructeur","Maakt niet uit, je doet het meteen"],"De examinator vraagt waar je kunt keren. Jij zoekt het plekje.",{src:V("K-dbXvmgBAQ","plekje",30)});
+ord("h4","halvedraai","Halve draai (naar links). Zet in de goede volgorde.",["Tempo eruit","Rechterspiegel","Linkerspiegel","Links naast je kijken","Richting aan naar links","Achterom kijken of er niets aankomt","Vrij? Doorrijden en alle ruimte gebruiken","Daarna zo snel mogelijk weer op tempo"],"Tempo eruit, rechterspiegel, linkerspiegel, links naast je, richting, achterom kijken, doorrijden, op tempo komen.",{src:V("K-dbXvmgBAQ","links naast me",44)});
+tf("h5","halvedraai","Bij de halve draai moet je altijd eerst stilstaan voor je draait.",false,"Niet waar. Is het vrij, dan hoef je niet te stoppen.",{src:V("K-dbXvmgBAQ","hoeft ook niet te stoppen",52)});
+mc("h6","halvedraai","Waar let je op tijdens het draaien?",["Langs/achter de kar kijken of er niets opduikt dat je eerst niet zag","Alleen naar voren kijken","Op je snelheidsmeter","Naar de examinator kijken"],"Kijk achter de kar: er kan iets verschijnen dat je eerst niet kon zien.",{src:V("K-dbXvmgBAQ","achter de kar",72)});
+sp("h7","halvedraai","De examinator vraagt: 'Waar kun je hier een halve draai maken? Laat maar horen hoe je het doet.' Vertel het.",[
+ ["Geschikte plek met ruimte (kruispunt/bedrijventerrein/parkeerplaats)",["ruimte","kruispunt","bedrijven","parkeer","plek"]],
+ ["Tempo eruit",["tempo","vaart","snelheid","rem"]],
+ ["Spiegels en links naast je",["spiegel","naast"]],
+ ["Richting aan naar links",["richting","knipper"]],
+ ["Achterom kijken",["achter","schouder"]],
+ ["In één keer doorrijden",["een keer","in 1","door","niet stoppen"]],
+ ["Daarna weer op tempo",["op tempo","gas","optrekken","snelheid"]]],
+ "Plek met ruimte zoeken, tempo eruit, spiegels en links naast je, richting links, achterom kijken, in één keer door (alle ruimte gebruiken) en daarna snel weer op tempo.",{ordered:false,min:5,src:V("K-dbXvmgBAQ","alle ruimte",11)});
+
+/* --- Zijstraat --- */
+mc("z1","zijstraat","Welke kant op maak je het bochtje achteruit volgens de instructeur?",["Linksom: de bocht zit aan jouw kant","Rechtsom","Maakt niet uit","Altijd de kant die de examinator zegt"],"Linksom. Je kijkt zelf naar de bocht en houdt in de rechterspiegel het verkeer in de gaten.",{src:V("1QLpVbB0RjI","linksom",17)});
+mc("z2","zijstraat","Waar zet je de combinatie neer voor het bochtje achteruit (zijstraat links)?",["B: voorbij de zijstraat, op de linkerweghelft, ongeveer 1 m van de stoep","A: voor de zijstraat, rechts","C: voorbij de zijstraat, rechts","Midden op het kruispunt"],"Je rijdt over het kruispunt naar de 'verkeerde' kant (B). Daar zie je in de rechterspiegel wat eraan komt en kijk je zelf naar de bocht.",{fig:["zijstraat",{toonNa:true}],src:V("1QLpVbB0RjI","verkeerde kant",43)});
+mc("z3","zijstraat","Waarom ga je op de verkeerde (linker) weghelft staan?",["In de rechterspiegel zie je al het verkeer dat eraan komt, en de bocht zit aan jouw kant","Omdat het daar breder is","Omdat de examinator daar staat","Om sneller klaar te zijn"],"Zo houd je in de rechterspiegel alles in de gaten en kun je over je schouder de bocht volgen.",{src:V("1QLpVbB0RjI","rechterspiegel alles",54)});
+mc("z4","zijstraat","Het kruispunt heeft alleen rechts een zijstraat. Wat doe je?",["Rechts de zijstraat in, aan de verkeerde kant wegzetten en linksom achteruit","Dan maak je het rechtsom","Je weigert de opdracht","Je rijdt door naar een ander kruispunt"],"Rij de zijstraat rechts in, zet hem aan de verkeerde kant en maak toch het boogje linksom.",{src:V("1QLpVbB0RjI","alleen maar rechts een zijstraat",73)});
+mc("z5","zijstraat","Waarom stel je op ongeveer 1 m van de stoeprand op?",["Hoe dichterbij de stoep, hoe haakser (moeilijker) de bocht","Zodat fietsers erlangs kunnen","Dat is de wet","Zodat de examinator kan instappen"],"Sta je te dichtbij, dan wordt de bocht te haaks.",{src:V("1QLpVbB0RjI","haakser",246)});
+mc("z6","zijstraat","De aanhanger komt te dicht bij de stoep in de bocht. Hoe stuur je?",["Naar het gevaar toe: dan gaat de kar ervan af","Van het gevaar af","Stuur recht houden en gas geven","Vol insturen"],"Achteruit stuur je 'naar het probleem toe'; de kar gaat dan van de stoep af.",{src:V("1QLpVbB0RjI","naar het gevaar toe",311)});
+mc("z7","zijstraat","Het CBR wil het 'vloeiend' zien. Wat betekent dat?",["Rustig en gelijkmatig, zo langzaam mogelijk; vloeiend is niet vlot","Zo snel mogelijk","Zonder één keer te remmen","In één stuurbeweging"],"Vloeiend betekent niet vlot. Zo langzaam mogelijk achteruit rollen, voet op de rem.",{src:V("1QLpVbB0RjI","vloeiend",292)});
+mc("z8","zijstraat","Hoe snel reageert de aanhanger op een kleine stuurbeweging?",["Een paar seconden later; dus vroeg en klein corrigeren","Meteen","Nooit","Pas na 10 meter"],"De kar reageert een paar seconden later. Hoe later je reageert, hoe meer je moet sturen.",{src:V("1QLpVbB0RjI","paar seconden later",303)});
+mc("z9","zijstraat","Tijdens het bochtje achteruit komt er een auto aan. Wat doe je?",["Stilzetten en laten passeren","Snel doorrijden","Toeteren","Vooruit rijden"],"Jij doet een bijzondere verrichting: wacht gewoon even en laat het verkeer voorgaan.",{src:V("1QLpVbB0RjI","wacht gewoon even",356)});
+mc("z10","zijstraat","Hoeveel afstand houd je de aanhanger van de bocht (stoep)?",["Ongeveer 1 meter","Zo dicht mogelijk, 10 cm","3 meter","Midden op de zijstraat"],"Houd de kar constant ongeveer een meter van de bocht. Van ver af kun je altijd nog dichterbij.",{src:V("1QLpVbB0RjI","op een meter van de bocht",320)});
+ord("z11","zijstraat","Keren via een zijstraat (bochtje achteruit linksom). Zet in de goede volgorde.",["Spiegels, richting aan, naar de linkerweghelft voorbij de zijstraat","Stoppen op ongeveer 1 m van de stoeprand","Alarmlichten aan en ramen omlaag","Langzaam achteruit, kar op ongeveer 1 m van de bocht","Komt er verkeer: stilzetten en laten passeren","Staat hij recht in de straat: alarmlichten uit","Richting aan, kijken en wegrijden"],"Opstellen links voorbij de zijstraat, 1 m van de stoep, alarmlichten, langzaam achteruit met 1 m afstand, wachten op verkeer, alarmlichten uit, richting aan en weg.",{src:V("1QLpVbB0RjI","gevarenlichten uit",398)});
+sp("z12","zijstraat","De examinator zegt: 'Wil je hier keren door middel van de zijstraat?' Vertel hoe je dat doet.",[
+ ["Naar de linker (verkeerde) weghelft, voorbij de zijstraat",["links","verkeerde","overkant","overzijde"]],
+ ["Ongeveer 1 m van de stoep",["meter","stoep"]],
+ ["Alarmlichten aan, ramen omlaag",["alarm","gevaren","raam","ramen"]],
+ ["Langzaam achteruit, linksom",["langzaam","achteruit","linksom"]],
+ ["Kar ongeveer 1 m van de bocht; naar het gevaar toe sturen",["gevaar","bocht","meter"]],
+ ["Verkeer: stilzetten en laten passeren",["verkeer","wacht","stil","passeren"]],
+ ["Recht: alarmlichten uit, richting aan, wegrijden",["uit","richting","weg"]]],
+ "Naar de verkeerde kant voorbij de zijstraat, 1 m van de stoep, alarmlichten en ramen, langzaam linksom achteruit met de kar op 1 m van de bocht (naar het gevaar toe sturen), wachten op verkeer, recht in de straat: alarmlichten uit, richting aan en weg.",{min:5,src:V("1QLpVbB0RjI","verkeerde kant",43)});
+
+/* --- Achteruit algemeen --- */
+mc("g1","achteruit","Achteruit rijden: je stuurt de auto naar links. Waar gaat de achterkant van de aanhanger heen?",["Naar rechts","Naar links","Recht achteruit","Hij blijft staan"],"Achteruit werkt de aanhanger 'omgekeerd': auto naar links = aanhanger naar rechts.",{tags:["algemeen"]});
+mc("g2","achteruit","Wat is het trucje met je hand onderaan het stuur?",["Beweeg je hand naar de kant waar de aanhanger heen moet","Beweeg je hand de andere kant op dan de aanhanger moet","Hand bovenaan, draaien naar de aanhanger","Twee handen op 10 voor 2 en niet loslaten"],"Hand onderaan het stuur: hand naar rechts = aanhanger naar rechts. Alleen bij achteruitrijden.",{fig:"stuur",tags:["algemeen"]});
+mc("g3","achteruit","De hoek tussen auto en aanhanger wordt achteruit steeds groter. Wat doe je?",["Stoppen en een stukje vooruit rijden om recht te trekken","Harder achteruit","Vol tegensturen en doorrijden","Uitstappen en de aanhanger duwen"],"Gaat hij 'scharen', dan kom je er achteruit niet meer uit. Stop, rij een stukje vooruit en begin opnieuw.",{tags:["algemeen"]});
+mc("g4","achteruit","Wat is de basis voor elke manoeuvre achteruit?",["Heel langzaam, kleine stuurbewegingen, beide spiegels, op tijd stoppen en kijken","Snel, dan heb je minder tijd om fout te gaan","Alleen op de camera vertrouwen","Grote stuurbewegingen"],"Langzaam, klein sturen, beide spiegels, en stoppen als je twijfelt. Uitstappen om te kijken mag.",{tags:["algemeen"],src:V("1QLpVbB0RjI","zo langzaam mogelijk",102)});
+mc("g5","achteruit","Je moet achteruit inparkeren in een vak. Wat doe je eerst?",["De combinatie recht zetten met ruimte ervoor, dan langzaam achteruit met kleine correcties","Direct schuin het vak in sturen","Vooruit inparkeren is altijd beter","De aanhanger afkoppelen"],"Begin met een rechte combinatie en voldoende ruimte. Dan langzaam, klein corrigeren, en uitstappen om te kijken als het nodig is.",{tags:["algemeen"]});
+
+/* ============ OPSLAG ============ */
+const KEY="beDrill.v1";
+let ST=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items)return s}catch(e){}return{items:{},n:0,log:[],settings:{},focus:[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}}
+function rec(id){return ST.items[id]||(ST.items[id]={box:0,seen:0,ok:0,fout:0,dueN:0,dueT:0})}
+
+/* Gemini-sleutel via link (#gk=...) */
+(function(){const m=location.hash.match(/gk=([A-Za-z0-9_\-]+)/);if(m){ST.settings.gk=m[1];save();history.replaceState(null,"",location.pathname+location.search)}})();
+
+/* ============ ADAPTIEF SCHEMA ============ */
+const MIN=60e3,UUR=60*MIN,DAG=24*UUR;
+const BEHEERST=3; // bakje 3+ = je snapt het
+function grade(id,goed){const r=rec(id),nu=Date.now(),nieuw=r.seen===0;r.seen++;ST.n++;
+ if(goed){r.ok++;r.box=nieuw?2:Math.min(5,r.box+1);
+  if(r.box===1){r.dueN=ST.n+5;r.dueT=0}
+  else if(r.box===2){r.dueN=ST.n+12;r.dueT=nu+10*MIN}
+  else if(r.box===3){r.dueN=ST.n+20;r.dueT=nu+3*UUR}
+  else if(r.box===4){r.dueN=0;r.dueT=nu+DAG}
+  else{r.dueN=0;r.dueT=nu+2*DAG}}
+ else{r.fout++;r.box=0;r.dueN=ST.n+3;r.dueT=0}
+ r.last=nu;ST.log.push({t:nu,id,g:goed?1:0});if(ST.log.length>3000)ST.log=ST.log.slice(-3000);save();}
+function pool(){return ITEMS.filter(i=>!ST.focus.length||ST.focus.includes(i.t))}
+function topicStats(tid){const its=ITEMS.filter(i=>i.t===tid);let m=0,s=0,pts=0;its.forEach(i=>{const r=ST.items[i.id];if(r&&r.seen){s++;pts+=Math.min(r.box,BEHEERST);if(r.box>=BEHEERST)m++}});return{tot:its.length,beheerst:m,gezien:s,pct:Math.round(100*pts/(its.length*BEHEERST))}}
+function totaal(){let pts=0,m=0;ITEMS.forEach(i=>{const r=ST.items[i.id];if(r){pts+=Math.min(r.box,BEHEERST);if(r.box>=BEHEERST)m++}});return{pct:Math.round(100*pts/(ITEMS.length*BEHEERST)),beheerst:m,tot:ITEMS.length}}
+let vorige=null;
+function kiesVolgende(){const P=pool(),nu=Date.now();
+ const due=P.filter(i=>{const r=ST.items[i.id];return r&&r.seen&&ST.n>=r.dueN&&nu>=r.dueT&&i.id!==vorige});
+ const wankel=P.filter(i=>{const r=ST.items[i.id];return r&&r.seen&&r.box<2});
+ const pick=a=>{a.sort((x,y)=>{const rx=ST.items[x.id],ry=ST.items[y.id];return rx.box-ry.box||rx.dueN-ry.dueN||Math.random()-.5});return a[0]};
+ if(due.length)return pick(due);
+ const nieuw=P.filter(i=>!ST.items[i.id]||!ST.items[i.id].seen);
+ if(nieuw.length&&wankel.length<6){
+  const per={};nieuw.forEach(i=>{(per[i.t]=per[i.t]||[]).push(i)});
+  const tids=Object.keys(per).sort((a,b)=>{const sa=topicStats(a),sb=topicStats(b);return sa.gezien/sa.tot-sb.gezien/sb.tot||TOPICS.findIndex(t=>t.id===a)-TOPICS.findIndex(t=>t.id===b)});
+  return per[tids[0]][0];}
+ const rest=P.filter(i=>i.id!==vorige&&ST.items[i.id]&&ST.items[i.id].seen);
+ if(wankel.length){const w=wankel.filter(i=>i.id!==vorige);if(w.length)return pick(w)}
+ if(!rest.length)return P[0]||null;
+ rest.sort((x,y)=>{const rx=ST.items[x.id],ry=ST.items[y.id];return rx.box-ry.box||(rx.dueT-ry.dueT)||Math.random()-.5});
+ return rest[0];}
+
+/* ============ NAKIJKEN SPRAAK ============ */
+function norm(s){return(" "+s+" ").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/(\d),(\d)/g,"$1 $2").replace(/[^a-z0-9]+/g," ").replace(/\s+/g," ")}
+// Zoekt een alternatief (een of meer woorddelen, dicht bij elkaar) vanaf positie 'van'; geeft de positie of -1.
+function zoek(tekst,alt,van=0){const sq=norm(tekst).replace(/ /g,""),p0=norm(alt).trim().split(" ").filter(Boolean);if(!p0.length)return -1;
+ let from=van;
+ while(true){const i=sq.indexOf(p0[0],from);if(i<0)return -1;let ok=true,na=i+p0[0].length;
+  for(let k=1;k<p0.length;k++){const j=sq.indexOf(p0[k],na);if(j<0||j>na+25){ok=false;break}na=j+p0[k].length}
+  if(ok)return i;from=i+1}}
+function eerste(tekst,alts,van=0){let pos=-1;alts.forEach(a=>{const p=zoek(tekst,a,van);if(p>=0&&(pos<0||p<pos))pos=p});return pos}
+function lokaalNakijken(item,tekst){let res,volgordeOk=true,omgedraaid=[];
+ if(item.ordered){let laatst=-1;res=item.points.map(([label,alts])=>{const p=eerste(tekst,alts,laatst+1);if(p>=0){laatst=p;return{label,pos:p}}
+   const ergens=eerste(tekst,alts,0);if(ergens>=0){volgordeOk=false;omgedraaid.push(label)}return{label,pos:ergens}})}
+ else res=item.points.map(([label,alts])=>({label,pos:eerste(tekst,alts,0)}));
+ const gevonden=res.filter(r=>r.pos>=0).length,min=item.min||item.points.length;
+ const goed=gevonden>=min&&volgordeOk;const bijna=!goed&&gevonden>=Math.ceil(min*0.6);
+ return{res,gevonden,min,volgordeOk,omgedraaid,goed,bijna}}
+const MODEL="gemini-flash-latest";
+async function aiNakijken(item,tekst){const key=ST.settings.gk;if(!key)return null;
+ const prompt=`Je bent een strenge maar redelijke rijinstructeur voor het Nederlandse BE-examen (auto met aanhangwagen, CBR). Een kandidaat beantwoordt mondeling een vraag. De tekst komt uit spraakherkenning en kan rare woorden of tikfouten bevatten: beoordeel op betekenis, niet op spelling.
+
+Vraag: ${item.q}
+Kernpunten van het modelantwoord${item.ordered?" (de VOLGORDE telt)":""}:
+${item.points.map((p,i)=>`${i+1}. ${p[0]}`).join("\n")}
+Er moeten minstens ${item.min||item.points.length} van de ${item.points.length} kernpunten in staan${item.ordered?", in de goede volgorde":""}.
+Toelichting modelantwoord: ${item.why}
+
+Antwoord van de kandidaat: """${tekst}"""
+
+Geef alleen JSON: {"goed": true/false, "gevonden": [nummers van de kernpunten die erin staan], "volgorde_ok": true/false, "feedback": "max 2 korte zinnen in het Nederlands, je-vorm, wat er ontbrak of fout was"}. Iets dat gevaarlijk fout is (bijv. handrem pas als laatste bij afkoppelen, of gas geven als je twijfelt) maakt het antwoord fout.`;
+ const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),20000);
+ try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,{method:"POST",signal:ctl.signal,headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:0,responseMimeType:"application/json"}})});
+  clearTimeout(to);if(!r.ok)return{fout:"AI gaf fout "+r.status};const d=await r.json();const txt=d.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
+  const j=JSON.parse(txt.replace(/^```json|```$/g,"").trim());return j}catch(e){clearTimeout(to);return{fout:"AI niet bereikbaar ("+(e.name==="AbortError"?"te traag":e.message)+")"}}}
+
+/* ============ SPRAAK ============ */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec_=null,opname=false;
+function startSpraak(ta,knop){if(!SR){alert("Inspreken via de app werkt niet in deze browser. Tik in het tekstvak en gebruik de microfoon van je toetsenbord.");ta.focus();return}
+ if(opname){stopSpraak(knop);return}
+ const basis=ta.value?ta.value.trim()+" ":"";let vast="";
+ rec_=new SR();rec_.lang="nl-NL";rec_.continuous=true;rec_.interimResults=true;
+ rec_.onresult=e=>{let tussen="";for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)vast+=t+" ";else tussen+=t}ta.value=basis+vast+tussen};
+ rec_.onerror=e=>{if(e.error==="not-allowed")alert("Geef de browser toestemming voor de microfoon, of gebruik de microfoon van je toetsenbord.")};
+ rec_.onend=()=>{if(opname){try{rec_.start()}catch(e){stopSpraak(knop)}}};
+ try{rec_.start();opname=true;knop.classList.add("op");knop.textContent="■ Stop"}catch(e){alert("Kon de microfoon niet starten.")}}
+function stopSpraak(knop){opname=false;try{rec_&&rec_.stop()}catch(e){}if(knop){knop.classList.remove("op");knop.textContent="🎤 Inspreken"}}
+
+/* ============ WEERGAVE ============ */
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function bronHtml(it){const s=it.src;let h="";if(s&&s.v){const t=s.t?`&t=${s.t}s`:"";const tt=s.t?` (${Math.floor(s.t/60)}:${String(s.t%60).padStart(2,"0")})`:"";h=`Bron: <a href="https://www.youtube.com/watch?v=${s.v}${t}" target="_blank" rel="noopener">${esc(VIDS[s.v]||"video")}${tt}</a>`}
+ else if(s&&s.u)h=`Bron: <a href="${s.u}" target="_blank" rel="noopener">${esc(s.s||"bron")}</a>`;
+ if(it.tags&&it.tags.includes("algemeen"))h+=`<span class="tag">algemene kennis</span>`;return h?`<div class="bron">${h}</div>`:""}
+function kopBalk(){const t=totaal();$("#klaar").textContent=`Klaar ${t.pct}% · ${t.beheerst}/${t.tot}`;$("#balk").style.width=t.pct+"%"}
+function bakjes(id){const b=(ST.items[id]||{}).box||0;return`<span class="bakjes" title="beheersing">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"v":""}"></i>`).join("")}</span>`}
+
+let huidig=null,examen=null;
+function maakConcreet(item){if(item.type!=="gen")return{...item,base:item};const g=item.fn();return{...item,...g,id:item.id,t:item.t,base:item,src:item.src}}
+function toonOefenen(){stopSpraak();kopBalk();
+ if(examen&&examen.i>=examen.lijst.length)return toonExamenUitslag();
+ const basis=examen?examen.lijst[examen.i]:kiesVolgende();vorige=basis?basis.id:null;
+ if(!basis){app.innerHTML=`<div class="leeg">Geen vragen in deze selectie.</div>`;return}
+ huidig=maakConcreet(basis);renderVraag(huidig)}
+function focusBalk(){if(examen)return`<div class="klein" style="margin-bottom:8px">Examinatorvragen: vraag ${examen.i+1} van ${examen.lijst.length} · <a href="#" id="stopEx">stoppen</a></div>`;
+ return ST.focus.length?`<div class="klein" style="margin-bottom:8px">Alleen: ${ST.focus.map(f=>esc(TNAAM[f])).join(", ")} · <a href="#" id="wisFocus">alles oefenen</a></div>`:""}
+function renderVraag(it){const r=ST.items[it.id];const nieuw=!r||!r.seen;
+ let h=focusBalk()+`<div class="kaart"><div class="meta"><span>${esc(TNAAM[it.t])}${nieuw?' <span class="tag">nieuw</span>':""}</span>${bakjes(it.id)}</div>`+fig(it,false)+`<div class="vraag">${esc(it.q)}</div><div id="invoer"></div><div id="uitslag"></div></div>`;
+ if(!examen)h+=`<div style="text-align:center"><button class="knop licht klein" id="naarExamen">Examinatorvragen (8 open vragen)</button></div>`;
+ app.innerHTML=h;
+ const w=$("#wisFocus");if(w)w.onclick=e=>{e.preventDefault();ST.focus=[];save();toonOefenen()};
+ const se=$("#stopEx");if(se)se.onclick=e=>{e.preventDefault();examen=null;toonOefenen()};
+ const ne=$("#naarExamen");if(ne)ne.onclick=startExamen;
+ const inv=$("#invoer");
+ if(it.type==="mc"){const opts=it.vast?it.opts.map((o,i)=>({o,g:i===0})):shuffle(it.opts.map((o,i)=>({o,g:i===0})));
+  inv.innerHTML=`<div class="opties">${opts.map((x,i)=>`<button class="opt" data-i="${i}">${esc(x.o)}</button>`).join("")}</div>`;
+  inv.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const x=opts[+b.dataset.i];inv.querySelectorAll(".opt").forEach((bb,i)=>{bb.disabled=true;if(opts[i].g)bb.classList.add("goed")});if(!x.g)b.classList.add("fout");klaar(it,x.g)})}
+ else if(it.type==="num"){inv.innerHTML=`<div style="display:flex;gap:8px;align-items:center"><input type="number" inputmode="decimal" id="numIn" placeholder="antwoord">${it.unit?`<span>${esc(it.unit)}</span>`:""}</div><div class="knoppen"><button class="knop" id="numOk">Controleer</button><button class="knop licht" id="weetNiet">Weet ik niet</button></div>`;
+  const go=()=>{const v=parseFloat(($("#numIn").value||"").replace(",","."));if(isNaN(v))return;$("#numIn").disabled=true;$("#numOk").disabled=true;$("#weetNiet").disabled=true;klaar(it,Math.abs(v-it.ans)<=(it.tol||0),`Goed antwoord: <b>${it.ans.toLocaleString("nl-NL")} ${esc(it.unit||"")}</b>`)};
+  $("#numOk").onclick=go;$("#numIn").onkeydown=e=>{if(e.key==="Enter")go()};$("#weetNiet").onclick=()=>{$("#numIn").disabled=true;$("#numOk").disabled=true;$("#weetNiet").disabled=true;klaar(it,false,`Goed antwoord: <b>${it.ans.toLocaleString("nl-NL")} ${esc(it.unit||"")}</b>`)}}
+ else if(it.type==="order"){const mix=shuffle(it.steps.map((s,i)=>({s,i})));let gekozen=[];
+  const teken=()=>{inv.innerHTML=`<div class="klein">Tik de stappen aan in de goede volgorde.</div><div class="opties" style="margin-top:8px">${mix.map((x,k)=>{const pos=gekozen.indexOf(k);return`<button class="opt ${pos>=0?"gekozen":""}" data-k="${k}" ${pos>=0?"disabled":""}>${pos>=0?`<span class="nr">${pos+1}</span>`:""}${esc(x.s)}</button>`}).join("")}</div><div class="knoppen"><button class="knop licht" id="opnieuw">Opnieuw</button><button class="knop" id="ordOk" ${gekozen.length<mix.length?"disabled":""}>Controleer</button></div>`;
+   inv.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{gekozen.push(+b.dataset.k);teken()});$("#opnieuw").onclick=()=>{gekozen=[];teken()};
+   $("#ordOk").onclick=()=>{const seq=gekozen.map(k=>mix[k].i);const goed=seq.every((v,i)=>v===i);
+    inv.querySelectorAll(".opt").forEach(b=>{const k=+b.dataset.k,pos=gekozen.indexOf(k);b.disabled=true;b.classList.remove("gekozen");b.classList.add(mix[k].i===pos?"goed":"fout")});$("#ordOk").disabled=true;$("#opnieuw").disabled=true;
+    klaar(it,goed,`Goede volgorde:<ol>${it.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>`)}};teken()}
+ else if(it.type==="speak"){inv.innerHTML=`<textarea id="spIn" placeholder="Spreek in of typ je antwoord. Op de iPhone kan ook de microfoon van het toetsenbord."></textarea><div class="knoppen"><button class="knop mic" id="micKnop">🎤 Inspreken</button><button class="knop" id="spOk">Nakijken</button><button class="knop licht" id="weetNiet">Weet ik niet</button></div><div class="klein">${item_hint(it)}</div>`;
+  const ta=$("#spIn");$("#micKnop").onclick=()=>startSpraak(ta,$("#micKnop"));
+  $("#spOk").onclick=()=>{if(!ta.value.trim()){ta.focus();return}nakijkenSpraak(it,ta.value)};
+  $("#weetNiet").onclick=()=>{stopSpraak($("#micKnop"));ta.disabled=true;["spOk","micKnop","weetNiet"].forEach(i=>$("#"+i).disabled=true);klaar(it,false,modelAntwoord(it))}}
+ window.scrollTo(0,0)}
+function item_hint(it){return`${it.ordered?"Volgorde telt. ":""}Nodig: ${it.min||it.points.length} van ${it.points.length} kernpunten.${ST.settings.gk?" AI kijkt mee.":""}`}
+function modelAntwoord(it){return`<b>Modelantwoord:</b><ol>${it.points.map(p=>`<li>${esc(p[0])}</li>`).join("")}</ol>`}
+async function nakijkenSpraak(it,tekst){stopSpraak($("#micKnop"));$("#spIn").disabled=true;["spOk","micKnop","weetNiet"].forEach(i=>$("#"+i).disabled=true);
+ const L=lokaalNakijken(it,tekst);
+ const lijst=`<ul>${L.res.map(r=>`<li class="${r.pos>=0?"ok":"mis"}">${r.pos>=0?"✓":"✗"} ${esc(r.label)}</li>`).join("")}</ul>`+(it.ordered&&!L.volgordeOk?`<div>Volgorde klopt niet bij: ${L.omgedraaid.map(esc).join(", ")}</div>`:"");
+ let goed=L.goed,extra=`<div class="klein">Woordcontrole: ${L.gevonden} van ${it.points.length} kernpunten herkend.</div>`+lijst;
+ if(ST.settings.gk){$("#uitslag").innerHTML=`<div class="ai">AI kijkt na…</div>`;const A=await aiNakijken(it,tekst);
+  if(A&&!A.fout&&typeof A.goed==="boolean"){goed=A.goed;extra=`<div class="ai"><b>AI:</b> ${esc(A.feedback||"")}</div>`+extra}
+  else if(A&&A.fout)extra=`<div class="ai">${esc(A.fout)}; woordcontrole telt.</div>`+extra}
+ klaar(it,goed,extra+modelAntwoord(it),{bijna:!goed&&L.bijna,override:true})}
+function klaar(it,goed,extraHtml="",opt={}){let oordeel=goed;
+ const teken=()=>{const cls=oordeel?"goed":(opt.bijna?"bijna":"fout");
+  $("#uitslag").innerHTML=`<div class="uitslag ${cls}"><h3>${oordeel?"Goed!":(opt.bijna?"Bijna, nog niet compleet":"Nog niet goed")}</h3>${extraHtml}<div class="uitleg">${esc(it.why)}</div>${bronHtml(it)}</div>`+fig(it,true).replace('class="fig"','class="fig" style="'+(it.fig&&Array.isArray(it.fig)&&it.fig[1]&&it.fig[1].toonNa?"":"display:none")+'"')+
+  `<div class="knoppen"><button class="knop" id="volgende">Volgende &#8594;</button>${opt.override?`<button class="knop licht klein" id="omdraaien">${oordeel?"Toch fout rekenen":"Toch goed rekenen"}</button>`:""}</div>`;
+  $("#volgende").onclick=()=>{grade(it.id,oordeel);if(examen){examen.uitslag.push({id:it.id,q:it.q,g:oordeel});examen.i++}toonOefenen()};
+  const o=$("#omdraaien");if(o)o.onclick=()=>{oordeel=!oordeel;opt.bijna=false;teken()};
+  $("#volgende").scrollIntoView({behavior:"smooth",block:"center"})};teken()}
+function startExamen(){const open=shuffle(ITEMS.filter(i=>i.type==="speak"));examen={lijst:open.slice(0,8),i:0,uitslag:[]};toonOefenen()}
+function toonExamenUitslag(){const g=examen.uitslag.filter(x=>x.g).length;app.innerHTML=`<div class="kaart"><h2 style="margin-top:0">Examinatorvragen: ${g} van ${examen.uitslag.length} goed</h2><ul>${examen.uitslag.map(x=>`<li style="color:${x.g?"var(--goed)":"var(--rood)"}">${x.g?"✓":"✗"} ${esc(x.q)}</li>`).join("")}</ul><button class="knop" id="terug">Verder drillen</button></div>`;examen=null;$("#terug").onclick=toonOefenen;kopBalk()}
+
+function toonStand(){stopSpraak();kopBalk();const t=totaal();const vandaag=new Date().toDateString();const lv=ST.log.filter(l=>new Date(l.t).toDateString()===vandaag);const okv=lv.filter(l=>l.g).length;
+ let h=`<div class="kaart"><div class="vraag" style="margin:0">Examenklaar: ${t.pct}%</div><div class="klein">${t.beheerst} van ${t.tot} vragen beheerst (3 keer goed, met tijd ertussen). Vandaag ${lv.length} antwoorden, ${lv.length?Math.round(100*okv/lv.length):0}% goed.</div></div>`;
+ h+=`<div class="kaart"><div class="meta"><b style="color:var(--tekst)">Onderwerpen</b><span>tik om alleen dat te oefenen</span></div>`;
+ TOPICS.forEach(tp=>{const s=topicStats(tp.id);const aan=ST.focus.includes(tp.id);h+=`<div class="onderwerp"><div class="naam">${esc(tp.naam)}<small>${s.beheerst}/${s.tot} beheerst · ${s.gezien} gezien</small></div><div class="mini"><i style="width:${s.pct}%"></i></div><button class="chip ${aan?"aan":""}" data-f="${tp.id}">${aan?"✓ focus":"focus"}</button></div>`});
+ h+=`<div class="knoppen"><button class="knop" id="oefenFocus">${ST.focus.length?"Oefen selectie":"Oefen alles"}</button>${ST.focus.length?`<button class="knop licht" id="wisF">Selectie wissen</button>`:""}</div></div>`;
+ const zwak=ITEMS.map(i=>({i,r:ST.items[i.id]})).filter(x=>x.r&&x.r.fout).sort((a,b)=>b.r.fout-a.r.fout||a.r.box-b.r.box).slice(0,8);
+ if(zwak.length)h+=`<div class="kaart"><b>Lastigste vragen</b><ul>${zwak.map(x=>`<li>${esc(x.i.type==="gen"?TNAAM[x.i.t]+" (rekensom)":x.i.q)} <span class="klein">${x.r.fout}× fout${x.r.box>=BEHEERST?" · nu beheerst":""}</span></li>`).join("")}</ul></div>`;
+ app.innerHTML=h;
+ app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{const f=b.dataset.f;ST.focus=ST.focus.includes(f)?ST.focus.filter(x=>x!==f):[...ST.focus,f];save();toonStand()});
+ $("#oefenFocus").onclick=()=>tab("oefen");const w=$("#wisF");if(w)w.onclick=()=>{ST.focus=[];save();toonStand()}}
+function toonLeer(){stopSpraak();let h=`<p class="klein">De kern per onderwerp, uit de video's van Verkeersopleider (instructeur Emre), aangevuld met de CBR-site en de wet. Tik een video aan om hem te bekijken.</p>`;
+ TOPICS.forEach(tp=>{h+=`<details><summary>${esc(tp.naam)}</summary><ul>${tp.leer.map(l=>`<li>${l}</li>`).join("")}</ul>${tp.v.length?`<div class="bron">Video: ${tp.v.map(v=>`<a href="https://www.youtube.com/watch?v=${v}" target="_blank" rel="noopener">${esc(VIDS[v])}</a>`).join(" · ")}</div>`:""}<div class="knoppen" style="margin-bottom:12px"><button class="knop klein" data-oef="${tp.id}">Oefen dit onderwerp</button></div></details>`});
+ h+=`<details><summary>Alle BE-video's van het kanaal</summary><ul>${Object.entries(VIDS).map(([v,n])=>`<li><a href="https://www.youtube.com/watch?v=${v}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></details>`;
+ app.innerHTML=h;app.querySelectorAll("[data-oef]").forEach(b=>b.onclick=()=>{ST.focus=[b.dataset.oef];save();tab("oefen")})}
+function toonMeer(){stopSpraak();const ai=!!ST.settings.gk;
+ app.innerHTML=`<div class="kaart"><b>Inspreken</b><p class="klein">${SR?"Je browser ondersteunt inspreken met de knop 🎤.":"Deze browser heeft geen inspreek-functie in de app. Gebruik de microfoon op je toetsenbord in het tekstvak."}</p></div>
+ <div class="kaart"><b>AI-nakijken van open vragen</b><p class="klein">${ai?"Staat aan (Gemini). Je ingesproken antwoord gaat naar Google om na te kijken.":"Staat uit. De app kijkt dan zelf na op kernwoorden en volgorde."}</p>
+ ${ai?`<button class="knop klein" id="aiTest">Test AI</button><button class="knop licht klein" id="aiUit">Zet uit</button>`:""}<div id="aiRes" class="klein"></div></div>
+ <div class="kaart"><b>Hoe werkt het drillen?</b><p class="klein">Elke vraag heeft vijf bolletjes. Goed = een bolletje erbij en de vraag komt later pas terug; fout = terug naar nul en hij komt binnen een paar vragen terug. Bij drie bolletjes (drie keer goed, met tijd ertussen) telt een vraag als beheerst. Nieuwe vragen komen er pas bij als de wankele vragen weer staan. Rekensommen krijgen steeds nieuwe getallen.</p></div>
+ <div class="kaart"><b>Voortgang</b><p class="klein">Wordt bewaard op dit toestel, in deze browser.</p><button class="knop oranje klein" id="reset">Alles op nul zetten</button></div>`;
+ const t=$("#aiTest");if(t)t.onclick=async()=>{$("#aiRes").textContent="Bezig…";const it=ITEMS.find(i=>i.id==="f2");const r=await aiNakijken(it,"motor uit en verlichting uit, aanhanger naar achteren duwen, handrem erop, neuswiel omlaag, stekker eruit, losbreekkabel eraf en dan van de kogel tillen");$("#aiRes").textContent=r&&!r.fout?`Werkt. Oordeel: ${r.goed?"goed":"fout"}. ${r.feedback||""}`:(r?r.fout:"geen sleutel")};
+ const u=$("#aiUit");if(u)u.onclick=()=>{delete ST.settings.gk;save();toonMeer()};
+ $("#reset").onclick=()=>{if(confirm("Alle voortgang wissen?")){ST={items:{},n:0,log:[],settings:ST.settings,focus:[]};save();toonMeer();kopBalk()}}}
+function tab(n){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("aan",b.dataset.tab===n));if(n!=="oefen")examen=null;({oefen:toonOefenen,stand:toonStand,leer:toonLeer,meer:toonMeer})[n]()}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+window.__be={ITEMS,TOPICS,FIG,lokaalNakijken,maakConcreet,renderVraag,kiesVolgende,grade,ST:()=>ST};
+tab("oefen");
+</script>
+</body>
+</html>
