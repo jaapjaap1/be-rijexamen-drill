@@ -8,36 +8,48 @@
 <link rel="icon" href="data:,">
 <title>Achteruit-simulator BE</title>
 <style>
-:root{--groen:#2E4A3C;--licht:#A6C284;--oranje:#E8895F;--bg:#FBFAF6;--tekst:#1f2a24;--grijs:#6b7570;--rood:#c0392b}
+:root{--groen:#2E4A3C;--licht:#A6C284;--oranje:#E8895F;--bg:#FBFAF6;--tekst:#1f2a24;--grijs:#6b7570;--rood:#c0392b;--ok:#2e7d4f}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--tekst);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-header{background:var(--groen);color:#fff;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top))}
-header .rij{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-header h1{font-size:16px;margin:0 8px 0 0}
-.tab{border:0;border-radius:16px;padding:6px 10px;font-size:13px;background:rgba(255,255,255,.18);color:#fff}
+header{background:var(--groen);color:#fff;padding:6px 8px;padding-top:max(6px,env(safe-area-inset-top))}
+header .rij{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:2px 0}
+header h1{font-size:15px;margin:0 6px 0 0}
+.tab,.modus{border:0;border-radius:16px;padding:5px 9px;font-size:13px;background:rgba(255,255,255,.18);color:#fff}
 .tab.aan{background:#fff;color:var(--groen);font-weight:700}
-main{max-width:760px;margin:0 auto;padding:8px}
-.spiegels{display:flex;gap:8px;justify-content:space-between}
-.spiegel{flex:1;position:relative}
-.spiegel canvas{width:100%;height:118px;display:block;border:5px solid #222;border-radius:18px 6px 6px 18px;background:#bcd}
-.spiegel.r canvas{border-radius:6px 18px 18px 6px}
-.spiegel span{position:absolute;top:6px;left:12px;font-size:11px;color:#fff;background:rgba(0,0,0,.45);padding:1px 6px;border-radius:6px}
-#boven{width:100%;height:38vh;min-height:220px;display:block;margin-top:8px;border-radius:12px;background:#9aa39a}
-.status{display:flex;gap:10px;align-items:center;margin:8px 0}
-#stuurwiel{width:64px;height:64px;flex:none}
-#coach{flex:1;background:#fff;border-radius:10px;padding:8px 10px;min-height:58px;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:14px}
-#coach b{color:var(--groen)}
-.knoppen{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;touch-action:none;user-select:none;-webkit-user-select:none}
-.k{border:0;border-radius:14px;padding:16px 4px;font-size:16px;font-weight:700;background:#e7ece5;color:var(--groen);touch-action:none;user-select:none;-webkit-user-select:none}
+.modus{background:rgba(0,0,0,.18)}
+.modus.aan{background:var(--oranje);color:#fff;font-weight:700}
+.modus i{font-style:normal;font-size:11px;opacity:.9}
+main{max-width:760px;margin:0 auto;padding:6px 8px}
+.cockpit{display:grid;grid-template-columns:1fr 96px 1fr;gap:6px;align-items:center}
+.spiegel{position:relative}
+.spiegel canvas{width:100%;height:92px;display:block;border:4px solid #222;border-radius:16px 6px 6px 16px;background:#bcd}
+.spiegel.r canvas{border-radius:6px 16px 16px 6px}
+.spiegel span{position:absolute;top:5px;left:9px;font-size:10px;color:#fff;background:rgba(0,0,0,.45);padding:0 5px;border-radius:6px}
+.stuur{text-align:center}
+#stuurwiel{width:92px;height:92px;display:block;margin:0 auto}
+#stuurTekst{font-size:12px;font-weight:700;color:var(--groen);line-height:1.1}
+#boven{width:100%;height:30vh;min-height:190px;max-height:420px;display:block;margin-top:6px;border-radius:12px;background:#9aa39a}
+#coach{background:#fff;border-radius:10px;padding:7px 10px;margin:6px 0;min-height:64px;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:14px}
+#coach .fase{font-weight:700;color:var(--groen);font-size:13px}
+#coach .uitleg1{font-size:13px;color:#333;margin:2px 0}
+#coach .doe{font-size:14px}
+#coach .doe b{color:var(--oranje)}
+.knoppen{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;touch-action:none;user-select:none;-webkit-user-select:none}
+.k{border:0;border-radius:14px;padding:14px 4px;font-size:16px;font-weight:700;background:#e7ece5;color:var(--groen);touch-action:none;user-select:none;-webkit-user-select:none}
 .k.gas{background:var(--groen);color:#fff}
 .k.terug{background:var(--oranje);color:#fff}
 .k.actief{filter:brightness(.8);transform:scale(.97)}
-.opties{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.opties{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;align-items:center}
 .chip{border:1px solid #cfd8cc;background:#eef3ec;color:var(--groen);border-radius:16px;padding:5px 10px;font-size:13px}
-.chip.aan{background:var(--groen);color:#fff}
-#uitslag{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);width:min(92vw,420px);background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.3);padding:18px;display:none;z-index:9}
-#uitslag h2{margin:0 0 8px}
-#uitslag.goed h2{color:#2e7d4f}#uitslag.fout h2{color:var(--rood)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;justify-content:center;align-items:flex-start;z-index:9;overflow:auto;padding:14px}
+.overlay.open{display:flex}
+.paneel{background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.3);padding:16px;width:100%;max-width:470px;margin-top:10px}
+.paneel h2{margin:0 0 8px;font-size:19px;color:var(--groen)}
+.paneel ol{padding-left:20px;margin:4px 0}.paneel li{margin:4px 0}
+#uitslag.goed h2{color:var(--ok)}#uitslag.fout h2{color:var(--rood)}
+#uitslag ul{list-style:none;padding:0}#uitslag li.ok{color:var(--ok)}#uitslag li.nok{color:var(--rood)}
+#uitslag .tip{color:#333;font-size:13px}
+.paneelknoppen{display:flex;gap:8px;margin-top:12px}.paneelknoppen .k{flex:1;padding:12px 4px;font-size:15px}
 .uitleg{background:#fff;border-radius:12px;padding:4px 14px;margin-top:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .uitleg summary{padding:10px 0;font-weight:700}
 .klein{font-size:12px;color:var(--grijs)}
@@ -45,23 +57,25 @@ a{color:var(--groen)}
 </style>
 </head>
 <body>
-<header><div class="rij"><h1>Achteruit-simulator</h1>
-<button class="tab aan" data-sc="recht">Recht achteruit</button><button class="tab" data-sc="bocht">Bocht achteruit (zijstraat)</button><button class="tab" data-sc="vrij">Vrij oefenen</button></div></header>
+<header>
+ <div class="rij"><h1>Achteruit-simulator</h1>
+  <button class="tab" data-sc="draai">Halve draai (U-turn)</button><button class="tab" data-sc="recht">Recht achteruit</button><button class="tab" data-sc="bocht">Achteruit de hoek om</button></div>
+ <div class="rij"><button class="modus" data-m="kijk">1 Voordoen <i></i></button><button class="modus" data-m="samen">2 Samen doen <i></i></button><button class="modus" data-m="zelf">3 Zelf doen <i></i></button></div>
+</header>
 <main>
- <div class="spiegels">
-  <div class="spiegel"><canvas id="spL" width="360" height="236"></canvas><span>linkerspiegel</span></div>
-  <div class="spiegel r"><canvas id="spR" width="360" height="236"></canvas><span>rechterspiegel</span></div>
+ <div class="cockpit">
+  <div class="spiegel"><canvas id="spL"></canvas><span>linkerspiegel</span></div>
+  <div class="stuur"><svg id="stuurwiel" viewBox="-50 -50 100 100" aria-label="stuur">
+   <g id="wiel"><circle r="40" fill="none" stroke="#2b2b2b" stroke-width="9"/><circle r="11" fill="#3a3a3a"/>
+    <rect x="-40" y="-4" width="29" height="8" rx="3" fill="#2b2b2b"/><rect x="11" y="-4" width="29" height="8" rx="3" fill="#2b2b2b"/><rect x="-4" y="11" width="8" height="29" rx="3" fill="#2b2b2b"/>
+    <circle cx="0" cy="-40" r="6" fill="#E8895F"/></g>
+   <g id="doelring"><circle cx="0" cy="-40" r="9.5" fill="none" stroke="#2e9d5b" stroke-width="3.5"/></g>
+  </svg><div id="stuurTekst">recht</div></div>
+  <div class="spiegel r"><canvas id="spR"></canvas><span>rechterspiegel</span></div>
  </div>
- <canvas id="boven" width="760" height="500"></canvas>
- <div class="opties">
-  <button class="chip aan" id="tHulp">Coach aan</button>
-  <button class="chip aan" id="tLijn">Voorspellingslijn aan</button>
-  <button class="chip aan" id="tBoven">Bovenaanzicht aan</button>
-  <button class="chip" id="tHand">Hand onderaan het stuur</button>
-  <span class="klein" id="score"></span>
- </div>
- <div class="status"><svg id="stuurwiel" viewBox="-50 -50 100 100"><g id="wiel"><circle r="42" fill="none" stroke="#333" stroke-width="9"/><circle r="9" fill="#333"/><line x1="-42" y1="0" x2="-9" y2="0" stroke="#333" stroke-width="6"/><line x1="9" y1="0" x2="42" y2="0" stroke="#333" stroke-width="6"/><line x1="0" y1="9" x2="0" y2="42" stroke="#333" stroke-width="6"/><circle cx="0" cy="-42" r="6" fill="#E8895F"/><circle id="hand" cx="0" cy="42" r="8" fill="#2E4A3C" style="display:none"/></g></svg><div id="coach"></div></div>
- <div class="knoppen">
+ <canvas id="boven"></canvas>
+ <div id="coach"></div>
+ <div class="knoppen" id="rijKnoppen">
   <button class="k" data-k="links">&#10226; Stuur links</button>
   <button class="k" data-k="recht">Stuur recht</button>
   <button class="k" data-k="rechts">Stuur rechts &#10227;</button>
@@ -69,224 +83,330 @@ a{color:var(--groen)}
   <button class="k" data-k="klaar">&#10003; Klaar</button>
   <button class="k gas terug" data-k="achteruit">&#9660; Achteruit</button>
  </div>
- <p class="klein">Pc: pijltjes links/rechts = sturen, omlaag = achteruit, omhoog = vooruit, spatie = stuur recht, Enter = klaar, R = opnieuw. Loslaten = stilstaan. Eén klik op sturen = 0,05 slag; vasthouden = rustig doordraaien. Het stuur blijft staan waar je het laat, net als echt.</p>
- <details class="uitleg" open><summary>Welke kant stuur je op bij achteruit?</summary>
+ <div class="knoppen" id="kijkKnoppen" style="display:none">
+  <button class="k" id="kPauze">&#10074;&#10074; Pauze</button>
+  <button class="k" id="kTempo">&#9193; 2&times; sneller</button>
+  <button class="k" id="kOpnieuw">&#8634; Opnieuw</button>
+ </div>
+ <div class="opties">
+  <button class="chip" id="tOpdracht">&#128203; Opdracht</button>
+  <button class="chip" id="tOpnieuw">&#8634; Opnieuw</button>
+  <button class="chip" id="tBoven">Bovenaanzicht aan</button>
+ </div>
+ <p class="klein">Bediening. Telefoon: knoppen. Pc: pijltjes links/rechts = sturen, omlaag = achteruit, omhoog = vooruit, spatie = stuur recht, Enter = klaar, R = opnieuw. Eén klik op sturen = 0,05 slag; vasthouden = rustig doordraaien. Het stuur blijft staan waar je het laat. Gas loslaten = stilstaan.</p>
+ <details class="uitleg"><summary>Welke kant stuur je op bij achteruit?</summary>
  <ul>
-  <li><b>Achteruit stuurt de aanhanger andersom.</b> Stuur je naar links, dan gaat de achterkant van de aanhanger naar rechts. Stuur je naar rechts, dan gaat hij naar links.</li>
-  <li><b>Trucje: hand onderaan het stuur.</b> Beweeg je hand naar de kant waar de aanhanger heen moet. (Zet "Hand onderaan het stuur" aan om het te zien.)</li>
-  <li><b>In de spiegel:</b> zie je de aanhanger in je <i>rechter</i>spiegel groter worden, dan gaat hij naar rechts. Wil je hem terug, stuur dan naar rechts, <i>naar het gevaar toe</i>; dan komt hij ervan af.</li>
-  <li><b>Kort sturen, dan terug.</b> De aanhanger reageert een paar seconden later. Stuur een beetje, en zodra hij de goede kant op beweegt het stuur terug naar het midden, anders gaat hij "scharen".</li>
+  <li><b>Achteruit stuurt de kar andersom.</b> Stuur je naar links, dan gaat de achterkant van de kar naar rechts. Stuur je naar rechts, dan gaat hij naar links.</li>
+  <li><b>In de spiegel:</b> komt de kar te dicht bij de stoeprand, stuur dan naar het gevaar toe. Dan gaat de kar ervan af.</li>
+  <li><b>Inzetten, dan meesturen.</b> Eerst stuur je de kar de goede kant op. Draait hij, dan stuur je dezelfde kant op als de kar, zodat de auto erachteraan gaat. Doe je dat niet, dan schaart hij.</li>
+  <li><b>Vroeg en klein.</b> De kar reageert een paar seconden later. Hoe eerder je stuurt, hoe makkelijker het is.</li>
   <li><b>Hoek te groot?</b> Rij een stukje vooruit om de combinatie recht te trekken. Dat mag.</li>
- </ul></details>
- <details class="uitleg"><summary>De oefeningen</summary>
- <ul>
-  <li><b>Recht achteruit:</b> rij recht achteruit tot vlak voor het hek (zoals je caravan op de camping). Je staat op 1 m van de stoeprand en net niet helemaal recht. Druk op Klaar als je stilstaat: binnen 1 m van het hek, recht en op je lijn = geslaagd.</li>
-  <li><b>Bocht achteruit:</b> je staat op de linkerweghelft, voorbij de zijstraat, 1 m van de stoep. Rij achteruit linksom de zijstraat in tot de combinatie recht in de straat staat. Niet over de stoep.</li>
-  <li><b>Vrij oefenen:</b> een leeg plein om te voelen wat het stuur doet.</li>
  </ul>
  <p class="klein">Terug naar de <a href="./">vragen-drill</a>.</p></details>
 </main>
-<div id="uitslag"><h2 id="uTitel"></h2><div id="uTekst"></div><p style="display:flex;gap:8px"><button class="k" id="uVerder" style="flex:1;display:none">Verder rijden</button><button class="k gas" id="uOpnieuw" style="flex:1">Opnieuw</button></p></div>
+<div id="kaart" class="overlay"><div class="paneel"><h2 id="kTitel"></h2><div id="kTekst"></div><div class="paneelknoppen"><button class="k gas" id="kStart">Start</button></div></div></div>
+<div id="uitslag" class="overlay"><div class="paneel"><h2 id="uTitel"></h2><div id="uTekst"></div><div class="paneelknoppen"><button class="k" id="uOpnieuw">&#8634; Opnieuw</button><button class="k gas" id="uVolgende"></button></div></div></div>
 <script>
 "use strict";
+const $=s=>document.querySelector(s),G=Math.PI/180;
 /* ===== Afmetingen (meter) ===== */
-const L=3.0,  // wielbasis auto
- ACHTEROVERHANG=1.0, VOOROVERHANG=1.0, AUTO_B=1.9,
+const L=3.0,ACHTEROVERHANG=1.0,VOOROVERHANG=1.0,AUTO_B=1.9,
  HAAK=1.1,    // trekhaak achter de achteras
- DISSEL=2.9,  // trekhaak tot as aanhanger
- BAK_HALF=1.7, AANH_B=2.0, MAXSTUUR=35*Math.PI/180, STUURSNEL=20*Math.PI/180, KLIK=0.05*360/12*Math.PI/180, VASTHOUDEN=350,
- V_ACHTER=-0.6, V_VOOR=1.0, SCHAAR=62*Math.PI/180;
-const R=5; // straal stoeprandhoek
-/* ===== Scenario's ===== */
-function blok(x1,y1,x2,y2,rc){return{x1,y1,x2,y2,rc}}
-const SC={
- recht:{naam:"Recht achteruit",
-  blokken:[blok(7,-80,40,40),blok(-40,-80,0,40)],
-  start(){const a=(Math.random()<.5?-1:1)*(1.5+Math.random()*2)*Math.PI/180;return{ax:5.0,ay:1.7,phi:Math.PI/2+a*0.6,theta:Math.PI/2+a}},
-  hek:-18, lijnX:5.0,
-  pad(){const p=[];for(let y=12;y>=-18;y-=0.5)p.push([5.0,y]);return p},
-  strepen:{x:3.5,y1:-80,y2:40}},
- bocht:{naam:"Bocht achteruit",
-  blokken:[blok(7,-60,40,80),
-   blok(-40,-60,0,20,{cx:-R,cy:20-R,R,sx:[-R,0],sy:[20-R,20],a1:0,a2:Math.PI/2}),
-   blok(-40,27,0,80,{cx:-R,cy:27+R,R,sx:[-R,0],sy:[27,27+R],a1:1.5*Math.PI,a2:2*Math.PI})],
-  start(){return{ax:2.0,ay:28.5+BAK_HALF+0.3,phi:Math.PI/2,theta:Math.PI/2}},
-  pad(){const p=[];for(let y=40;y>32;y-=0.5)p.push([2,y]);const cx=-R,cy=32,r=7;for(let a=0;a>=-Math.PI/2;a-=0.04)p.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);for(let x=-5;x>=-30;x-=0.5)p.push([x,25]);return p},
-  strepen:{x:3.5,y1:-60,y2:80}},
- vrij:{naam:"Vrij oefenen",blokken:[blok(-60,-60,-30,60),blok(30,-60,60,60),blok(-30,40,30,60),blok(-30,-60,30,-40)],
-  start(){return{ax:0,ay:0,phi:Math.PI/2,theta:Math.PI/2}},pad(){return[]},kegels:[[-6,-12],[6,-12],[-6,-20],[6,-20]]}
-};
+ DISSEL=2.9,  // trekhaak tot as kar
+ BAK_HALF=1.7,AANH_B=2.0,MAXSTUUR=35*G,
+ OVERBRENGING=12, // graden stuur per graad wiel
+ STUURSNEL=20*G,KLIK=0.05*360/OVERBRENGING*G,VASTHOUDEN=350,AUTO_STUURSNEL=30*G,
+ V_ACHTER=-0.6,V_VOOR=1.5,SCHAAR=62*G;
+const slag=d=>d/G*OVERBRENGING/360;
+const komma=(x,n=1)=>x.toFixed(n).replace(".",",");
+const slagTekst=d=>{const s=slag(d);return Math.abs(s)<0.025?"recht":`${komma(Math.abs(s),2)} slag ${s>0?"links":"rechts"}`};
+const hoekNorm=a=>{while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a};
+const klem=d=>Math.max(-MAXSTUUR,Math.min(MAXSTUUR,d));
+/* ===== Geometrie-hulp ===== */
+const rh=(x1,y1,x2,y2)=>[[x1,y1],[x2,y1],[x2,y2],[x1,y2]];
+const boog=(cx,cy,r,a1,a2,n=12)=>Array.from({length:n+1},(_,i)=>{const a=a1+(a2-a1)*i/n;return[cx+r*Math.cos(a),cy+r*Math.sin(a)]});
+const palenV=(x,y1,y2,stap=9)=>{const p=[];for(let y=y1;y<=y2;y+=stap)p.push([x,y]);return p};
+const palenH=(y,x1,x2,stap=9)=>{const p=[];for(let x=x1;x<=x2;x+=stap)p.push([x,y]);return p};
+function padBouw(){const p=[],add=(x,y)=>{const l=p[p.length-1];if(!l||Math.hypot(l[0]-x,l[1]-y)>0.05)p.push([x,y])},n=d=>Math.max(2,Math.round(d/0.4));
+ return{p,merk:()=>p.length-1,
+  lijn(x1,y1,x2,y2){const k=n(Math.hypot(x2-x1,y2-y1));for(let i=0;i<=k;i++)add(x1+(x2-x1)*i/k,y1+(y2-y1)*i/k)},
+  boog(cx,cy,r,a1,a2){const k=n(Math.abs(a2-a1)*r);for(let i=0;i<=k;i++){const a=a1+(a2-a1)*i/k;add(cx+r*Math.cos(a),cy+r*Math.sin(a))}},
+  s(x1,y1,x2,y2){const k=n(Math.hypot(x2-x1,y2-y1));for(let i=0;i<=k;i++){const t=i/k;add(x1+(x2-x1)*(1-Math.cos(Math.PI*t))/2,y1+(y2-y1)*t)}}}}
 /* ===== Toestand ===== */
-let sc="recht",S,keys={},klaarGedrukt=false,instellingen={hulp:true,lijn:true,boven:true,hand:false};
-const OPSLAG="beSim.v1";let stats={};try{stats=JSON.parse(localStorage.getItem(OPSLAG))||{}}catch(e){}
+let sc="draai",modus="kijk",S,keys={},klaarGedrukt=false,tempo=1,boven=true,laatst=performance.now(),coachTijd=0;
+const MODI={kijk:"Voordoen",samen:"Samen doen",zelf:"Zelf doen"};
+const MODUSUITLEG={
+ kijk:"Ik doe het eerst voor. Jij hoeft niets te doen: kijk naar het stuur, de spiegels en de uitleg per stap. Met &#9193; gaat het twee keer zo snel.",
+ samen:"Jij rijdt, ik zeg per stap wat je doet en waarom. Op het stuur staat een <b>groene ring</b>: draai het stuur tot de <b>oranje stip</b> in de ring staat. De groene stippellijn is de route, de oranje lijn laat zien waar de kar heen gaat als je zo doorrijdt.",
+ zelf:"Jij rijdt, zonder hulp: geen coach, geen ring, geen lijnen. Na afloop zie je wat goed ging en wat beter kan. Wil je het echt als op het examen, zet dan het bovenaanzicht uit en rijd alleen op je spiegels."};
+/* ===== De drie oefeningen ===== */
+const SC={};
+{const b=padBouw();b.lijn(5.25,-14,5.25,20);const i1=b.merk();b.s(5.25,20,8.25,26);const i2=b.merk();b.boog(3.5,26,4.75,0,Math.PI);const i3=b.merk();b.s(-1.25,26,1.75,19);b.lijn(1.75,19,1.75,-35);
+ SC.draai={naam:"Halve draai (U-turn)",richting:1,pad:b.p,
+  blokken:[[[-40,-60],[0,-60],...boog(-4,16,4,0,Math.PI/2),[-40,20]],rh(-40,20,-7,80),[[7,-60],[40,-60],[40,20],...boog(11,16,4,Math.PI/2,Math.PI)],rh(14,20,40,80),rh(-7,35,14,80)],
+  strepen:[[3.5,-60,20]],palen:[...palenV(8.2,-55,14),...palenV(-1.2,-55,14),...palenH(36.2,-5,13,6)],
+  start(){return{ax:5.25,ay:-16,phi:Math.PI/2,theta:Math.PI/2}},
+  startTekst:"Je rijdt op de rechterweghelft. Voor je ligt het lege plein van een bedrijventerrein. Er is geen ander verkeer.",
+  opdracht:"Maak hier een halve draai naar links: keer in één keer vooruit en rij terug over de rechterweghelft. Je mag het hele plein gebruiken.",
+  kort:"Halve draai naar links, in één keer vooruit, terug op de rechterweghelft.",
+  stappen:[
+   ["Aanrijden","Houd &#9650; Vooruit ingedrukt en blijf rechts. Op het examen doe je nu: tempo eruit, rechterspiegel, linkerspiegel, links naast je kijken, richting naar links, achterom kijken."],
+   ["Iets uitzwaaien","Stuur een klein beetje naar rechts. Zo maak je ruimte voor de draai."],
+   ["Draaien","Stuur ver naar links (ongeveer 1 slag) en houd het stuur zo vast. Kijk in je linkerspiegel: de kar snijdt de bocht een stukje af."],
+   ["Uitkomen","Draai het stuur terug, zodat je recht op de rechterweghelft uitkomt. Daarna weer op tempo."]],
+  fase(){const i=S.padIdx;return i<i1-2?0:i<i2-2?1:i<i3-3?2:3},
+  autoEinde(D){return D.as[1]<4&&Math.sin(S.theta)<-0.8},
+  tipBotsing:"Zwaai eerst iets naar rechts uit (stap 2) en stuur dan meteen ver genoeg naar links (stap 3).",
+  beoordeel(D){const maxX=Math.max(...D.auto.map(p=>p[0]),...D.aanh.map(p=>p[0])),r=Math.abs(hoekNorm(S.theta+Math.PI/2))/G;
+   return[[S.achteruit===0,"In één keer, zonder achteruit","Bij de halve draai rij je alleen vooruit. Zwaai eerst iets uit (stap 2) en stuur dan ver naar links (stap 3)."],
+    [maxX<=3.7,"Terug op de rechterweghelft","Draai eerder terug, zodat je rechts uitkomt (stap 4)."],
+    [r<=12,`Recht op de weg${r>12?` (${r.toFixed(0)}° scheef)`:""}`,"Draai het stuur helemaal terug als je de weg op rijdt (stap 4)."]]}};}
+{const b=padBouw();b.lijn(5,12,5,-26);
+ SC.recht={naam:"Recht achteruit",richting:-1,pad:b.p,
+  blokken:[rh(-40,-80,0,40),rh(7,-80,40,40)],strepen:[[3.5,-80,40]],hek:{y:-18,x1:0,x2:7},
+  palen:[...palenV(8.2,-75,38),...palenV(-1.2,-75,38)],
+  start(){const a=(Math.random()<.5?-1:1)*(2+Math.random()*2)*G;return{ax:5.0,ay:1.7,phi:Math.PI/2+a*0.5,theta:Math.PI/2+a}},
+  startTekst:"Je staat op de rechterweghelft, ongeveer 1 meter van de stoeprand. Auto en kar staan net niet helemaal recht. Zo'n 18 meter achter je staat een hek.",
+  opdracht:"Rijd recht achteruit tot vlak voor het hek. Stop met de achterkant van de kar binnen 1 meter van het hek, zonder het te raken. Blijf op ongeveer 1 meter van de stoeprand.",
+  kort:"Recht achteruit tot vlak voor het hek (binnen 1 meter).",
+  stappen:[
+   ["Achteruit en recht houden","Houd &#9660; Achteruit ingedrukt. Kijk in beide spiegels: de afstand van de kar tot de stoeprand moet gelijk blijven. Kleine stuurbewegingen, en meteen weer terug."],
+   ["Bijna bij het hek","Het hek komt dichtbij. De groene streep ligt 1 meter voor het hek: stop als de achterkant van de kar daar voorbij is."],
+   ["Stilstaan en melden","Laat &#9660; los. Sta je stil, druk dan op &#10003; Klaar."]],
+  fase(D){const af=afstHek(D);return af>4?0:af>1?1:2},
+  stopVoordoen(D){return afstHek(D)<0.6},
+  tipBotsing:"Kijk in beide spiegels en stuur eerder en kleiner bij (stap 1). Stop op tijd bij de groene streep (stap 2).",
+  beoordeel(D){const af=afstHek(D),dx=D.as[0]-5,h=Math.abs(hoekNorm(S.phi-Math.PI/2))/G;
+   return[[af<=1,`Afstand tot het hek: ${komma(af)} m`,"Rij door tot voorbij de groene streep (stap 2)."],
+    [Math.abs(dx)<=0.8,`Afwijking van je lijn: ${komma(Math.abs(dx))} m`,`Je bent naar ${dx>0?"rechts":"links"} weggelopen. Stuur eerder en kleiner bij (stap 1).`],
+    [h<=6,`Kar recht${h>6?` (${h.toFixed(0)}° scheef)`:""}`,"Zet de kar recht voor je stopt (stap 1)."]]}};}
+const afstHek=D=>Math.min(...D.aanh.map(p=>p[1]))-SC.recht.hek.y;
+{const R=5,b=padBouw();b.lijn(2,44,2,31);const iA=b.merk();b.boog(-5,31,7,0,-Math.PI/2);b.lijn(-5,24,-35,24);
+ SC.bocht={naam:"Achteruit de hoek om",richting:-1,pad:b.p,
+  blokken:[rh(7,-60,40,80),[[-40,-60],[0,-60],...boog(-R,20-R,R,0,Math.PI/2),[-40,20]],[[-40,27],...boog(-R,27+R,R,1.5*Math.PI,2*Math.PI),[0,80],[-40,80]]],
+  strepen:[[3.5,-60,80]],palen:[...palenV(8.2,-55,78),...palenV(-1.2,-55,13),...palenV(-1.2,35,78),...palenH(18.8,-37,-10),...palenH(28.2,-37,-10)],
+  start(){return{ax:2.0,ay:36,phi:Math.PI/2,theta:Math.PI/2}},
+  startTekst:"Je bent over het kruispunt naar de linkerweghelft gereden, voorbij de zijstraat links van je. Je staat stil op ongeveer 1 meter van de stoeprand.",
+  opdracht:"Keer met een bocht achteruit: rij achteruit linksom de zijstraat in en houd de kar op ongeveer 1 meter van de stoeprand. Stop als auto en kar recht in de zijstraat staan.",
+  kort:"Achteruit linksom de zijstraat in; stop als alles recht in de straat staat.",
+  stappen:[
+   ["Recht achteruit tot de bocht","Houd &#9660; Achteruit ingedrukt en rij recht. Nog niet sturen: wacht tot de achterkant van de kar bij het begin van de bocht is, waar de stoeprand wegdraait."],
+   ["Inzetten","Stuur naar rechts. Achteruit werkt het andersom: stuur je naar rechts, dan draait de achterkant van de kar naar links, de straat in."],
+   ["Meesturen","De kar draait de straat in. Stuur nu terug en naar links, zodat de auto achter de kar aan gaat. Doe je dat niet, dan schaart hij. Komt de kar te dicht bij de stoeprand: stuur naar het gevaar toe (naar links)."],
+   ["Rechttrekken","De kar staat bijna recht in de straat. Draai het stuur terug tot auto en kar op één lijn staan."],
+   ["Stilstaan en melden","Laat &#9660; los. Sta je stil, druk dan op &#10003; Klaar."]],
+  fase(D){if(bochtKlaar(D))return 4;const d=Math.max(0,Math.PI/2-S.phi);if(S.padIdx<iA-3&&d<8*G)return 0;if(d<20*G&&Math.abs(knik(S))<15*G)return 1;if(d<60*G)return 2;return 3},
+  stopVoordoen(D){return bochtKlaar(D)||D.as[0]<-20},
+  tipBotsing:"Kwam de kar te dicht bij de stoep? Stuur dan naar het gevaar toe (stap 3). Raakte de auto voorin de stoep? Dan stuurde je te lang naar rechts: ga eerder meesturen.",
+  beoordeel(D){const inStraat=D.as[0]<-6,r=Math.abs(hoekNorm(S.theta))/G,k=Math.abs(knik(S))/G;
+   return[[inStraat,"Kar in de zijstraat","Rij verder achteruit tot de hele combinatie de straat in staat (stap 3 en 4)."],
+    [r<=15,`Auto recht in de straat${r>15?` (nog ${r.toFixed(0)}° scheef)`:""}`,"Blijf meesturen tot de auto achter de kar staat (stap 4)."],
+    [k<=12,`Auto en kar op één lijn${k>12?` (knik ${k.toFixed(0)}°)`:""}`,"Draai het stuur op het eind terug, dan trekt de combinatie recht (stap 4)."]]}};}
+const bochtKlaar=D=>D.as[0]<-6&&Math.abs(hoekNorm(S.theta))<15*G&&Math.abs(knik(S))<12*G;
+/* ===== Voortgang ===== */
+const OPSLAG="beSim.v2";let stats={};try{stats=JSON.parse(localStorage.getItem(OPSLAG))||{}}catch(e){}
+const st=(s=sc)=>stats[s]||(stats[s]={kijk:0,samen:[0,0],zelf:[0,0]});
 function bewaar(){try{localStorage.setItem(OPSLAG,JSON.stringify(stats))}catch(e){}}
-function nieuw(){const s=SC[sc].start();
- // achteras auto volgt uit aanhanger-as, dissel en hoeken
- const hx=s.ax+DISSEL*Math.cos(s.phi),hy=s.ay+DISSEL*Math.sin(s.phi);
- S={x:hx+HAAK*Math.cos(s.theta),y:hy+HAAK*Math.sin(s.theta),theta:s.theta,phi:s.phi,delta:0,v:0,t:0,vooruit:0,uit:false,afstand:0};
- klaarGedrukt=false;vorigeRichting=0;$("#uitslag").style.display="none";}
+function ladder(){const t=st();document.querySelectorAll(".modus").forEach(b=>{const m=b.dataset.m;
+ b.querySelector("i").textContent=m==="kijk"?(t.kijk?"✓":""):(t[m][0]>=2?"✓":t[m][1]?`${t[m][0]}/2`:"");b.classList.toggle("aan",m===modus)});
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("aan",b.dataset.sc===sc))}
+function standaardModus(s){const t=st(s);return!t.kijk?"kijk":t.samen[0]<2?"samen":"zelf"}
 /* ===== Geometrie ===== */
 const dir=a=>[Math.cos(a),Math.sin(a)];
-function delen(st=S){const[cx,cy]=dir(st.theta),[px,py]=dir(st.phi);
- const hx=st.x-HAAK*cx,hy=st.y-HAAK*cy,ax=hx-DISSEL*px,ay=hy-DISSEL*py;
+function delen(st_=S){const[cx,cy]=dir(st_.theta),[px,py]=dir(st_.phi);
+ const hx=st_.x-HAAK*cx,hy=st_.y-HAAK*cy,ax=hx-DISSEL*px,ay=hy-DISSEL*py;
  const rect=(mx,my,ux,uy,lv,la,b)=>{const nx=-uy,ny=ux;return[[mx+ux*lv+nx*b/2,my+uy*lv+ny*b/2],[mx+ux*lv-nx*b/2,my+uy*lv-ny*b/2],[mx-ux*la-nx*b/2,my-uy*la-ny*b/2],[mx-ux*la+nx*b/2,my-uy*la+ny*b/2]]};
- return{auto:rect(st.x,st.y,cx,cy,L+VOOROVERHANG,ACHTEROVERHANG,AUTO_B),aanh:rect(ax,ay,px,py,BAK_HALF,BAK_HALF,AANH_B),haak:[hx,hy],as:[ax,ay],
+ return{auto:rect(st_.x,st_.y,cx,cy,L+VOOROVERHANG,ACHTEROVERHANG,AUTO_B),aanh:rect(ax,ay,px,py,BAK_HALF,BAK_HALF,AANH_B),haak:[hx,hy],as:[ax,ay],
   achter:[ax-BAK_HALF*px,ay-BAK_HALF*py],cx,cy,px,py}}
-function inBlok(b,x,y){if(x<b.x1||x>b.x2||y<b.y1||y>b.y2)return false;const r=b.rc;
- if(r&&x>=r.sx[0]&&x<=r.sx[1]&&y>=r.sy[0]&&y<=r.sy[1])return Math.hypot(x-r.cx,y-r.cy)<=r.R;return true}
-function blokPoly(b){const r=b.rc;if(!r)return[[b.x1,b.y1],[b.x2,b.y1],[b.x2,b.y2],[b.x1,b.y2]];
- const arc=[];for(let i=0;i<=12;i++){const a=r.a1+(r.a2-r.a1)*i/12;arc.push([r.cx+r.R*Math.cos(a),r.cy+r.R*Math.sin(a)])}
- if(r.a1===0)return[[b.x1,b.y1],[b.x2,b.y1],...arc,[b.x1,b.y2]];
- return[[b.x1,b.y1],...arc,[b.x2,b.y2],[b.x1,b.y2]]}
-function botsing(D){const pts=[...D.auto,...D.aanh];const sc_=SC[sc];
- for(const b of sc_.blokken)for(const[x,y]of pts)if(inBlok(b,x,y))return"Over de stoeprand! In het echt had je de stoep of iets erop geraakt.";
- if(sc_.hek!==undefined)for(const[x,y]of D.aanh)if(y<sc_.hek&&x>0&&x<7)return"Tegen het hek! Je bent te ver doorgereden.";
- if(sc_.kegels)for(const[kx,ky]of sc_.kegels)if(inPoly([kx,ky],D.aanh)||inPoly([kx,ky],D.auto))return"Pion geraakt.";
- return null}
 function inPoly(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,yi]=poly[i],[xj,yj]=poly[j];if(((yi>p[1])!==(yj>p[1]))&&(p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi))c=!c}return c}
+const rand=pl=>{const o=[...pl];for(let i=0;i<pl.length;i++){const a=pl[i],b=pl[(i+1)%pl.length];o.push([(a[0]+b[0])/2,(a[1]+b[1])/2])}return o};
+function botsing(D){const s_=SC[sc],pts=[...rand(D.auto),...rand(D.aanh)];
+ for(const b of s_.blokken)for(const p of pts)if(inPoly(p,b))return"Over de stoeprand! In het echt had je de stoep of iets erop geraakt.";
+ if(s_.hek)for(const[x,y]of rand(D.aanh))if(y<s_.hek.y&&x>s_.hek.x1&&x<s_.hek.x2)return"Tegen het hek! Je bent te ver doorgereden.";
+ return null}
 /* ===== Natuurkunde ===== */
-function stap(st,dt){const v=st.v,td=Math.tan(st.delta);const dth=v*td/L;
- const rel=st.theta-st.phi;const dph=(v*Math.sin(rel)-HAAK*dth*Math.cos(rel))/DISSEL;
- st.x+=v*Math.cos(st.theta)*dt;st.y+=v*Math.sin(st.theta)*dt;st.theta+=dth*dt;st.phi+=dph*dt;st.afstand+=Math.abs(v)*dt}
-const knik=st=>{let a=st.theta-st.phi;while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a};
-/* ===== Coach ===== */
-const CO={vk:6,k1:1.0,k2:1.6};
-function vooruitKijken(pad,px,py,afst){let bi=0,bd=1e9;pad.forEach(([x,y],i)=>{const d=Math.hypot(x-px,y-py);if(d<bd){bd=d;bi=i}});
- let s=0,i=bi;while(i<pad.length-1&&s<afst){s+=Math.hypot(pad[i+1][0]-pad[i][0],pad[i+1][1]-pad[i][1]);i++}return pad[i]}
-// Welke stuurstand is nu nodig? (het rekenwerk dat een ervaren chauffeur op gevoel doet)
-function stuurAdvies(st=S){const D=delen(st),pad=SC[sc].pad();if(!pad.length)return null;
- const[rx,ry]=D.achter,T=vooruitKijken(pad,rx,ry,CO.vk);
+function stap(st_,dt){const v=st_.v,dth=v*Math.tan(st_.delta)/L,rel=st_.theta-st_.phi;const dph=(v*Math.sin(rel)-HAAK*dth*Math.cos(rel))/DISSEL;
+ st_.x+=v*Math.cos(st_.theta)*dt;st_.y+=v*Math.sin(st_.theta)*dt;st_.theta+=dth*dt;st_.phi+=dph*dt;st_.afstand+=Math.abs(v)*dt}
+const knik=st_=>hoekNorm(st_.theta-st_.phi);
+const volgPunt=()=>SC[sc].richting<0?delen().achter:[S.x,S.y];
+function dichtste(pad,px,py,i0,venster){let bi=0,bd=1e9;const a=venster?Math.max(0,i0-10):0,b=venster?Math.min(pad.length-1,i0+venster):pad.length-1;
+ for(let i=a;i<=b;i++){const d=Math.hypot(pad[i][0]-px,pad[i][1]-py);if(d<bd){bd=d;bi=i}}return bi}
+function nieuw(){const s=SC[sc].start(),hx=s.ax+DISSEL*Math.cos(s.phi),hy=s.ay+DISSEL*Math.sin(s.phi);
+ S={x:hx+HAAK*Math.cos(s.theta),y:hy+HAAK*Math.sin(s.theta),theta:s.theta,phi:s.phi,delta:0,v:0,gas:0,afstand:0,vooruit:0,achteruit:0,vorige:0,uit:false,loopt:false,pauze:false,padIdx:0,melding:null};
+ S.padIdx=dichtste(SC[sc].pad,...volgPunt(),0,0);
+ klaarGedrukt=false;Object.keys(keys).forEach(k=>keys[k]=false);document.querySelectorAll(".k.actief").forEach(b=>b.classList.remove("actief"));
+ sluit("#uitslag");tempo=1;$("#kTempo").innerHTML="&#9193; 2&times; sneller";$("#kPauze").innerHTML="&#10074;&#10074; Pauze"}
+/* ===== Coach: welke stuurstand is nu nodig? ===== */
+const CO={vk:6,k1:1.0,k2:1.6,ld:5};
+function vooruitKijken(pad,i0,afst){let s=0,i=i0;while(i<pad.length-1&&s<afst){s+=Math.hypot(pad[i+1][0]-pad[i][0],pad[i+1][1]-pad[i][1]);i++}return pad[i]}
+function advies(){const s_=SC[sc],pad=s_.pad;
+ if(s_.richting>0){const T=vooruitKijken(pad,S.padIdx,CO.ld),a=hoekNorm(Math.atan2(T[1]-S.y,T[0]-S.x)-S.theta),ld=Math.hypot(T[0]-S.x,T[1]-S.y)||1;
+  return{dDoel:klem(Math.atan(2*L*Math.sin(a)/ld)),fout:0}}
+ const D=delen(),[rx,ry]=D.achter,T=vooruitKijken(pad,S.padIdx,CO.vk);
  let wx=T[0]-rx,wy=T[1]-ry;const wl=Math.hypot(wx,wy)||1;wx/=wl;wy/=wl;
- const mx=-D.px,my=-D.py; // rijrichting achterkant aanhanger bij achteruit
+ const mx=-D.px,my=-D.py; // rijrichting van de achterkant van de kar bij achteruit
  const fout=-Math.atan2(mx*wy-my*wx,mx*wx+my*wy); // >0: achterkant moet naar links (gezien vanaf de bestuurder)
- const k=knik(st),kDoel=Math.max(-0.7,Math.min(0.7,CO.k1*fout));
+ const k=knik(S),kDoel=Math.max(-0.7,Math.min(0.7,CO.k1*fout));
  const evenwicht=Math.atan(L*Math.sin(k)/(DISSEL+HAAK*Math.cos(k)));
- const dDoel=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,evenwicht-CO.k2*(kDoel-k)));
- return{fout,kDoel,dDoel}}
-function coach(){const k=knik(S),hand=instellingen.hand,G=Math.PI/180;
- const tegen=r=>r==="links"?"rechts":"links";
- const stuurTekst=r=>hand?`hand onderaan het stuur naar <b>${tegen(r)}</b>`:`stuur naar <b>${r}</b>`;
- if(Math.abs(k)>50*G)return`<b>Hoek wordt te groot.</b> Rij een stukje vooruit om de combinatie recht te trekken.`;
- const A=stuurAdvies();if(!A)return`Vrij oefenen. Probeer achteruit tussen de pionnen door te rijden. Kijk wat de aanhanger doet als je stuurt.`;
- const dd=A.dDoel-S.delta,aanhKant=A.fout>3*G?"links":A.fout<-3*G?"rechts":null;
- if(Math.abs(dd)<4*G)return Math.abs(A.dDoel)<4*G?`Goed zo. Stuur recht houden, de aanhanger gaat rechtdoor.`:`Goed zo. <b>Stuur zo vasthouden</b>, de aanhanger draait mooi mee.`;
- const r=dd>0?"links":"rechts",veel=Math.abs(dd)>15*G?"":" een beetje";
- if(aanhKant&&r!==aanhKant)return`Aanhanger moet naar <b>${aanhKant}</b> &#8594; ${stuurTekst(r)}${veel}${hand?"":" (andersom!)"}.`;
- if(aanhKant)return`Aanhanger draait al genoeg naar ${aanhKant} &#8594; nu ${stuurTekst(r)}${veel} om hem te <b>volgen</b>, anders schaart hij.`;
- if(Math.abs(A.dDoel)<4*G)return`Aanhanger staat goed &#8594; <b>stuur terug naar het midden</b>.`;
- return`Aanhanger staat goed &#8594; ${stuurTekst(r)}${veel} om hem zo te houden.`}
+ return{dDoel:klem(evenwicht-CO.k2*(kDoel-k)),fout}}
+function waarom(A,dd){if(SC[sc].richting>0)return"zo blijf je op de groene route";
+ const kant=A.fout>3*G?"links":A.fout<-3*G?"rechts":null,r=dd>0?"links":"rechts";
+ if(Math.abs(dd)<3*G)return kant?`de kar draait mooi naar ${kant}`:"de kar gaat goed";
+ if(kant&&r!==kant)return`de kar moet naar ${kant}, en achteruit stuur je andersom`;
+ if(kant)return`de kar draait al genoeg naar ${kant}; nu meesturen, zodat de auto de kar volgt`;
+ return"de kar staat goed; stuur terug, anders schiet hij door"}
+function coachBijwerken(){const s_=SC[sc],c=$("#coach");
+ if(S.melding&&performance.now()<S.melding.tot){c.innerHTML=`<div class="fase">Let op</div><div class="doe">${S.melding.tekst}</div>`;return}
+ if(!S.loopt){c.innerHTML=`<div class="fase">${s_.naam} · ${MODI[modus]}</div><div class="doe">Lees de opdracht en druk op Start.</div>`;return}
+ if(modus==="zelf"){c.innerHTML=`<div class="fase">${s_.naam} · zelf doen, zonder hulp</div><div class="doe">${s_.kort}</div><div class="uitleg1 klein">${s_.autoEinde?"De oefening stopt vanzelf als je terug op de weg bent.":"Klaar? Stilstaan en op &#10003; Klaar drukken."}</div>`;return}
+ const D=delen(),f=s_.fase(D),[titel,uitleg]=s_.stappen[f],A=advies(),dd=A.dDoel-S.delta;
+ const laatste=s_.richting<0&&f===s_.stappen.length-1;let nu;
+ if(Math.abs(knik(S))>50*G)nu="De hoek wordt te groot. Rij een stukje vooruit (&#9650;) om de combinatie recht te trekken.";
+ else if(laatste)nu=modus==="kijk"?"Ik laat het gas los en meld: klaar.":"Laat &#9660; los en druk op &#10003; Klaar.";
+ else{const doel=slagTekst(A.dDoel),klik=Math.max(1,Math.round(Math.abs(slag(dd))/0.05));
+  if(modus==="kijk")nu=Math.abs(dd)<3*G?`ik houd het stuur op <b>${doel}</b>`:`ik draai het stuur naar <b>${doel}</b>`;
+  else nu=Math.abs(dd)<3*G?(Math.abs(slag(A.dDoel))<0.03?"stuur <b>recht</b> houden":`stuur zo vasthouden (<b>${doel}</b>)`):`<b>${klik} klik${klik===1?"":"ken"} naar ${dd>0?"links":"rechts"}</b>, tot de oranje stip in de groene ring staat`;
+  nu+=`. <span class="klein">Waarom: ${waarom(A,dd)}.</span>`;
+  if(modus==="samen"&&S.v===0&&!keys.vooruit&&!keys.achteruit)nu=`houd <b>${s_.richting<0?"&#9660; Achteruit":"&#9650; Vooruit"}</b> ingedrukt, en ${nu}`}
+ c.innerHTML=`<div class="fase">Stap ${f+1} van ${s_.stappen.length} · ${titel}</div><div class="uitleg1">${uitleg}</div><div class="doe">${modus==="kijk"?"Nu: ":"Nu jij: "}${nu}</div>`}
 /* ===== Tekenen: bovenaanzicht ===== */
-const $=s=>document.querySelector(s);
-const cv=$("#boven"),cx=cv.getContext("2d");
 const DPR=Math.min(2,window.devicePixelRatio||1);
-function bovenaanzicht(){cx.setTransform(DPR,0,0,DPR,0,0);const W=cv.width/DPR,H=cv.height/DPR,D=delen(),sc_=SC[sc];
- const mx=(S.x+D.as[0])/2,my=(S.y+D.as[1])/2,sch=Math.min(W,H)/26;
+const cv=$("#boven"),cx=cv.getContext("2d");
+function bovenaanzicht(){cx.setTransform(DPR,0,0,DPR,0,0);const W=cv.width/DPR,H=cv.height/DPR,D=delen(),s_=SC[sc],hulp=modus!=="zelf";
+ const mx=(S.x+D.as[0])/2,my=(S.y+D.as[1])/2,sch=Math.min(W,H)/(sc==="draai"?30:26);
  const P=(x,y)=>[W/2+(x-mx)*sch,H/2-(y-my)*sch];
+ const lijn=pl=>{cx.beginPath();pl.forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)})};
  cx.fillStyle="#8f968e";cx.fillRect(0,0,W,H);
- cx.fillStyle="#d8d2c2";cx.strokeStyle="#777";cx.lineWidth=2;
- for(const b of sc_.blokken){const pl=blokPoly(b);cx.beginPath();pl.forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.closePath();cx.fill();cx.stroke()}
- if(sc_.strepen){cx.strokeStyle="#fff";cx.lineWidth=2;cx.setLineDash([3*sch,3*sch]);cx.beginPath();const[a1,b1]=P(sc_.strepen.x,sc_.strepen.y1),[a2,b2]=P(sc_.strepen.x,sc_.strepen.y2);cx.moveTo(a1,b1);cx.lineTo(a2,b2);cx.stroke();cx.setLineDash([])}
- if(sc_.hek!==undefined){const[a1,b1]=P(0,sc_.hek),[a2]=P(7,sc_.hek);cx.fillStyle="#c0392b";cx.fillRect(a1,b1-4,a2-a1,8);cx.fillStyle="#fff";for(let i=0;i<7;i+=1.4){const[q]=P(i,0);cx.fillRect(q,b1-4,0.7*sch,8)}
-  const[c1,d1]=P(0.2,sc_.hek+1);cx.strokeStyle="rgba(46,125,79,.8)";cx.setLineDash([4,4]);cx.beginPath();cx.moveTo(c1,d1);cx.lineTo(P(6.8,0)[0],d1);cx.stroke();cx.setLineDash([]);cx.fillStyle="#fff";cx.font="12px sans-serif";cx.fillText("stop binnen 1 m van het hek",c1+4,d1-4)}
- if(sc_.kegels)for(const[kx,ky]of sc_.kegels){const[a,c]=P(kx,ky);cx.fillStyle="#E8895F";cx.beginPath();cx.arc(a,c,0.35*sch,0,7);cx.fill()}
- if(instellingen.hulp&&sc_.pad().length){cx.strokeStyle="rgba(166,194,132,.9)";cx.lineWidth=2;cx.setLineDash([6,6]);cx.beginPath();sc_.pad().forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.stroke();cx.setLineDash([])}
- if(instellingen.lijn){const g={...S,v:V_ACHTER};cx.strokeStyle="#E8895F";cx.lineWidth=3;cx.beginPath();for(let i=0;i<=60;i++){if(i)stap(g,0.05);if(Math.abs(knik(g))>SCHAAR)break;const[a,c]=P(...delen(g).achter);i?cx.lineTo(a,c):cx.moveTo(a,c)}cx.stroke();
-  cx.fillStyle="#E8895F";cx.font="11px sans-serif";const[e1,e2]=P(...D.achter);cx.fillText("zo gaat de aanhanger als je nu achteruit rijdt",8,H-8)}
- const poly=(pl,f,s)=>{cx.beginPath();pl.forEach(([x,y],i)=>{const[a,c]=P(x,y);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.closePath();cx.fillStyle=f;cx.fill();cx.strokeStyle=s;cx.lineWidth=1.5;cx.stroke()};
- cx.strokeStyle="#333";cx.lineWidth=3;cx.beginPath();cx.moveTo(...P(...D.haak));const[fx,fy]=[D.as[0]+D.px*BAK_HALF,D.as[1]+D.py*BAK_HALF];cx.lineTo(...P(fx,fy));cx.stroke();
- poly(D.aanh,"#f4f4f0","#444");
- const[ax2,ay2]=D.achter;const nx=-D.py,ny=D.px;cx.fillStyle="#c0392b";[[1,0.7],[-1,0.7]].forEach(([s])=>{const[a,c]=P(ax2+nx*s*0.75,ay2+ny*s*0.75);cx.fillRect(a-3,c-3,6,6)});
- poly(D.auto,"#3b6ea5","#1d3f66");
- // voorruit en voorwielen
- const[cxx,cyy]=[D.cx,D.cy],nnx=-cyy,nny=cxx;const vr=[S.x+cxx*(L-0.2),S.y+cyy*(L-0.2)];
- cx.fillStyle="#a9c7e8";cx.beginPath();[[0.6,0.8],[0.6,-0.8],[-0.2,-0.85],[-0.2,0.85]].forEach(([f,s],i)=>{const[a,c]=P(vr[0]+cxx*f+nnx*s,vr[1]+cyy*f+nny*s);i?cx.lineTo(a,c):cx.moveTo(a,c)});cx.fill();
+ cx.fillStyle="#d8d2c2";cx.strokeStyle="#777";cx.lineWidth=2;for(const b of s_.blokken){lijn(b);cx.closePath();cx.fill();cx.stroke()}
+ cx.strokeStyle="#fff";cx.lineWidth=2;cx.setLineDash([3*sch,3*sch]);for(const[x,y1,y2]of s_.strepen){lijn([[x,y1],[x,y2]]);cx.stroke()}cx.setLineDash([]);
+ if(s_.hek){const h=s_.hek,[a1,b1]=P(h.x1,h.y),[a2]=P(h.x2,h.y);cx.fillStyle="#c0392b";cx.fillRect(a1,b1-4,a2-a1,8);cx.fillStyle="#fff";for(let i=h.x1;i<h.x2;i+=1.4){const[q]=P(i,0);cx.fillRect(q,b1-4,0.7*sch,8)}
+  if(hulp){cx.strokeStyle="#6cbf84";cx.lineWidth=3;lijn([[h.x1+.2,h.y+1],[h.x2-.2,h.y+1]]);cx.stroke();cx.fillStyle="#fff";cx.font="11px sans-serif";const[q,r]=P(h.x1+.3,h.y+1.4);cx.fillText("1 m voor het hek",q,r)}}
+ if(hulp){cx.strokeStyle="rgba(166,194,132,.95)";cx.lineWidth=2;cx.setLineDash([6,6]);lijn(s_.pad.filter(([x,y])=>!s_.hek||y>=s_.hek.y));cx.stroke();cx.setLineDash([]);
+  const v=s_.richting<0?V_ACHTER:V_VOOR,g={...S,v},n=Math.round(6/Math.abs(v)/0.05),pts=[delen(g).achter];
+  for(let i=0;i<n;i++){stap(g,0.05);if(Math.abs(knik(g))>SCHAAR)break;if(i%3==2)pts.push(delen(g).achter)}
+  cx.strokeStyle="#E8895F";cx.lineWidth=3;lijn(pts);cx.stroke()}
+ const vlak=(pl,f,s)=>{lijn(pl);cx.closePath();cx.fillStyle=f;cx.fill();cx.strokeStyle=s;cx.lineWidth=1.5;cx.stroke()};
+ cx.strokeStyle="#333";cx.lineWidth=3;lijn([D.haak,[D.as[0]+D.px*BAK_HALF,D.as[1]+D.py*BAK_HALF]]);cx.stroke();
+ vlak(D.aanh,"#f4f4f0","#444");
+ const[ax2,ay2]=D.achter,nx=-D.py,ny=D.px;cx.fillStyle="#c0392b";[1,-1].forEach(s=>{const[a,c]=P(ax2+nx*s*0.75,ay2+ny*s*0.75);cx.fillRect(a-3,c-3,6,6)});
+ vlak(D.auto,"#3b6ea5","#1d3f66");
+ const[ux,uy]=[D.cx,D.cy],qx=-uy,qy=ux,vr=[S.x+ux*(L-0.2),S.y+uy*(L-0.2)];
+ cx.fillStyle="#a9c7e8";lijn([[0.6,0.8],[0.6,-0.8],[-0.2,-0.85],[-0.2,0.85]].map(([f,s])=>[vr[0]+ux*f+qx*s,vr[1]+uy*f+qy*s]));cx.fill();
  const wiel=(px_,py_,ang)=>{const[a,c]=P(px_,py_);cx.save();cx.translate(a,c);cx.rotate(-ang);cx.fillStyle="#111";cx.fillRect(-0.35*sch,-0.12*sch,0.7*sch,0.24*sch);cx.restore()};
- [1,-1].forEach(s=>{wiel(S.x+cxx*L+nnx*s*0.8,S.y+cyy*L+nny*s*0.8,S.theta+S.delta);wiel(S.x+nnx*s*0.8,S.y+nny*s*0.8,S.theta)});
+ [1,-1].forEach(s=>{wiel(S.x+ux*L+qx*s*0.8,S.y+uy*L+qy*s*0.8,S.theta+S.delta);wiel(S.x+qx*s*0.8,S.y+qy*s*0.8,S.theta)});
  [1,-1].forEach(s=>wiel(D.as[0]+nx*s*1.05,D.as[1]+ny*s*1.05,S.phi));
- cx.fillStyle="#fff";cx.font="bold 12px sans-serif";const[n1,n2]=P(S.x+cxx*(L+1.6),S.y+cyy*(L+1.6));cx.fillText("voor",n1-12,n2+4)}
+ cx.fillStyle="#fff";cx.font="bold 12px sans-serif";const[n1,n2]=P(S.x+ux*(L+1.6),S.y+uy*(L+1.6));cx.fillText("voor",n1-12,n2+4);
+ if(hulp){cx.font="11px sans-serif";cx.fillStyle="#fff";cx.fillText("groen = route · oranje = zo gaat de kar",8,H-8)}}
 /* ===== Tekenen: spiegels (eenvoudige 3D) ===== */
-function spiegel(canvas,kant){const g=canvas.getContext("2d");g.setTransform(DPR,0,0,DPR,0,0);const W=canvas.width/DPR,H=canvas.height/DPR,D=delen(),sc_=SC[sc];
- const[cxx,cyy]=[D.cx,D.cy],nnx=-cyy,nny=cxx;const zij=kant==="L"?1:-1;
- const C=[S.x+cxx*1.9+nnx*zij*1.08,S.y+cyy*1.9+nny*zij*1.08,1.15];
- const yaw=S.theta+Math.PI-zij*9*Math.PI/180,pitch=-5*Math.PI/180;
+function spiegel(canvas,kant){const g=canvas.getContext("2d");g.setTransform(DPR,0,0,DPR,0,0);const W=canvas.width/DPR,H=canvas.height/DPR,D=delen(),s_=SC[sc];
+ const[ux,uy]=[D.cx,D.cy],qx=-uy,qy=ux,zij=kant==="L"?1:-1;
+ const C=[S.x+ux*1.9+qx*zij*1.08,S.y+uy*1.9+qy*zij*1.08,1.15];
+ const yaw=S.theta+Math.PI-zij*9*G,pitch=-5*G;
  const f=[Math.cos(yaw)*Math.cos(pitch),Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch)],r=[Math.sin(yaw),-Math.cos(yaw),0];
  const u=[r[1]*f[2]-r[2]*f[1],r[2]*f[0]-r[0]*f[2],r[0]*f[1]-r[1]*f[0]];
- const F=(W/2)/Math.tan(17*Math.PI/180);
+ const F=(W/2)/Math.tan(19*G);
  const cam=p=>{const d=[p[0]-C[0],p[1]-C[1],(p[2]||0)-C[2]];return[d[0]*r[0]+d[1]*r[1]+d[2]*r[2],d[0]*u[0]+d[1]*u[1]+d[2]*u[2],d[0]*f[0]+d[1]*f[1]+d[2]*f[2]]};
  const NEAR=0.25;
- const clip=pts=>{const o=[];for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];const ai=a[2]>=NEAR,bi=b[2]>=NEAR;if(ai)o.push(a);if(ai!==bi){const t=(NEAR-a[2])/(b[2]-a[2]);o.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,NEAR])}}return o};
+ const clip=pts=>{const o=[];for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],ai=a[2]>=NEAR,bi=b[2]>=NEAR;if(ai)o.push(a);if(ai!==bi){const t=(NEAR-a[2])/(b[2]-a[2]);o.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,NEAR])}}return o};
  const proj=c=>[W-(W/2+F*c[0]/c[2]),H/2-F*c[1]/c[2]]; // spiegelbeeld
- const vul=(pts3,kleur,lijn)=>{const c=clip(pts3.map(cam));if(c.length<3)return;g.beginPath();c.forEach((p,i)=>{const[a,b]=proj(p);i?g.lineTo(a,b):g.moveTo(a,b)});g.closePath();g.fillStyle=kleur;g.fill();if(lijn){g.strokeStyle=lijn;g.lineWidth=1;g.stroke()}};
- // lucht en weg
+ const vul=(pts3,kleur,lijnkleur)=>{const c=clip(pts3.map(cam));if(c.length<3)return;g.beginPath();c.forEach((p,i)=>{const[a,b]=proj(p);i?g.lineTo(a,b):g.moveTo(a,b)});g.closePath();g.fillStyle=kleur;g.fill();if(lijnkleur){g.strokeStyle=lijnkleur;g.lineWidth=1;g.stroke()}};
  const hor=H/2-F*Math.tan(-pitch);g.fillStyle="#bcd3e6";g.fillRect(0,0,W,H);g.fillStyle="#8f968e";g.fillRect(0,hor,W,H-hor);
- for(const b of sc_.blokken)vul(blokPoly(b).map(([x,y])=>[x,y,0]),"#d8d2c2","#777");
- if(sc_.strepen)for(let y=sc_.strepen.y1;y<sc_.strepen.y2;y+=6)vul([[3.4,y,0],[3.6,y,0],[3.6,y+3,0],[3.4,y+3,0]],"#f4f4f4");
- if(instellingen.hulp&&sc==="recht")vul([[0.2,sc_.hek+0.95,0],[6.8,sc_.hek+0.95,0],[6.8,sc_.hek+1.05,0],[0.2,sc_.hek+1.05,0]],"#6cbf84");
- // dozen (hek, palen, aanhanger), van ver naar dichtbij
- const dozen=[];const doos=(pl,z1,z2,zijkleur,topkleur)=>dozen.push({pl,z1,z2,zijkleur,topkleur});
- if(sc_.hek!==undefined)doos([[0,sc_.hek-0.15],[7,sc_.hek-0.15],[7,sc_.hek],[0,sc_.hek]],0,1.1,"#c0392b","#e57373");
- if(sc_.kegels)for(const[kx,ky]of sc_.kegels)doos([[kx-.2,ky-.2],[kx+.2,ky-.2],[kx+.2,ky+.2],[kx-.2,ky+.2]],0,0.7,"#E8895F","#f3b08f");
- for(const b of sc_.blokken){for(let y=Math.ceil(b.y1/9)*9;y<b.y2;y+=9){const x=b.x1>=0?b.x1+1.2:b.x2-1.2;if(inBlok(b,x,y))doos([[x-.12,y-.12],[x+.12,y-.12],[x+.12,y+.12],[x-.12,y+.12]],0,3.2,"#555","#555")}}
+ for(const b of s_.blokken)vul(b.map(([x,y])=>[x,y,0]),"#d8d2c2","#777");
+ for(const[x,y1,y2]of s_.strepen)for(let y=y1;y<y2;y+=6)vul([[x-.1,y,0],[x+.1,y,0],[x+.1,y+3,0],[x-.1,y+3,0]],"#f4f4f4");
+ if(s_.hek&&modus!=="zelf"){const h=s_.hek;vul([[h.x1+.2,h.y+.95,0],[h.x2-.2,h.y+.95,0],[h.x2-.2,h.y+1.05,0],[h.x1+.2,h.y+1.05,0]],"#6cbf84")}
+ const dozen=[],doos=(pl,z1,z2,zijkleur,topkleur)=>dozen.push({pl,z1,z2,zijkleur,topkleur});
+ if(s_.hek){const h=s_.hek;doos([[h.x1,h.y-0.15],[h.x2,h.y-0.15],[h.x2,h.y],[h.x1,h.y]],0,1.1,"#c0392b","#e57373")}
+ for(const[x,y]of s_.palen)doos([[x-.12,y-.12],[x+.12,y-.12],[x+.12,y+.12],[x-.12,y+.12]],0,3.2,"#555","#555");
  doos(D.aanh,0.45,2.2,"#e9e9e4","#fafafa");
- doos([[D.haak[0]-.05,D.haak[1]-.05],[D.haak[0]+.05,D.haak[1]+.05],[D.as[0]+D.px*BAK_HALF+.05,D.as[1]+D.py*BAK_HALF+.05],[D.as[0]+D.px*BAK_HALF-.05,D.as[1]+D.py*BAK_HALF-.05]],0.42,0.5,"#333","#333");
+ const vk=[D.as[0]+D.px*BAK_HALF,D.as[1]+D.py*BAK_HALF];
+ doos([[D.haak[0]-.05,D.haak[1]-.05],[D.haak[0]+.05,D.haak[1]+.05],[vk[0]+.05,vk[1]+.05],[vk[0]-.05,vk[1]-.05]],0.42,0.5,"#333","#333");
  const diepte=d=>{const m=d.pl.reduce((a,[x,y])=>[a[0]+x/d.pl.length,a[1]+y/d.pl.length],[0,0]);return cam([m[0],m[1],(d.z1+d.z2)/2])[2]};
  dozen.sort((a,b)=>diepte(b)-diepte(a));
- for(const d of dozen){const n=d.pl.length;const vlakken=[];
+ for(const d of dozen){if(diepte(d)<-2)continue;const n=d.pl.length,vlakken=[];
   for(let i=0;i<n;i++){const a=d.pl[i],b=d.pl[(i+1)%n];vlakken.push([[a[0],a[1],d.z1],[b[0],b[1],d.z1],[b[0],b[1],d.z2],[a[0],a[1],d.z2]])}
   vlakken.sort((A,B)=>{const z=v=>v.reduce((s,p)=>s+cam(p)[2],0)/4;return z(B)-z(A)});
   vlakken.forEach(v=>vul(v,d.zijkleur,"#666"));vul(d.pl.map(([x,y])=>[x,y,d.z2]),d.topkleur,"#666")}
- // achterlichten aanhanger
  const[ax2,ay2]=D.achter,nx=-D.py,ny=D.px;[1,-1].forEach(s=>vul([[ax2+nx*s*0.95,ay2+ny*s*0.95,0.6],[ax2+nx*s*0.6,ay2+ny*s*0.6,0.6],[ax2+nx*s*0.6,ay2+ny*s*0.6,0.85],[ax2+nx*s*0.95,ay2+ny*s*0.95,0.85]],"#d32f2f"));
- // eigen auto aan de binnenkant van de spiegel
  g.fillStyle="#3b6ea5";const bw=W*0.13;if(kant==="L")g.fillRect(W-bw,H*0.25,bw,H*0.75);else g.fillRect(0,H*0.25,bw,H*0.75)}
-/* ===== Uitslag ===== */
-function toonUitslag(goed,titel,tekst,verder){const u=$("#uitslag");$("#uVerder").style.display=verder?"block":"none";u.className=goed?"goed":"fout";$("#uTitel").textContent=titel;$("#uTekst").innerHTML=tekst;u.style.display="block";S.uit=true;
- const s=stats[sc]||(stats[sc]={pogingen:0,gelukt:0});s.pogingen++;if(goed)s.gelukt++;bewaar();scoreTekst()}
-function scoreTekst(){const s=stats[sc];$("#score").textContent=s?`${SC[sc].naam}: ${s.gelukt} van ${s.pogingen} gelukt`:""}
-function beoordeel(){if(S.uit)return;if(Math.abs(S.v)>0.01){return}const D=delen(),k=Math.abs(knik(S))*180/Math.PI,graden=a=>Math.abs(a)*180/Math.PI;
- if(sc==="recht"){const af=Math.min(...D.aanh.map(p=>p[1]))-SC.recht.hek,dx=D.as[0]-SC.recht.lijnX,hoek=graden(S.phi-Math.PI/2);
-  const regels=[`Afstand tot het hek: <b>${af.toFixed(1)} m</b> ${af<=1?"✓":"(moet binnen 1 m)"}`,`Afwijking van je lijn: <b>${Math.abs(dx).toFixed(1)} m</b> ${Math.abs(dx)<=0.8?"✓":"(te ver naar "+(dx>0?"rechts":"links")+")"}`,`Aanhanger scheef: <b>${hoek.toFixed(0)}°</b> ${hoek<=6?"✓":"(moet recht)"}`,`Keer vooruit gereden: ${S.vooruit}`];
-  const ok=af<=1&&Math.abs(dx)<=0.8&&hoek<=6;toonUitslag(ok,ok?"Geslaagd!":"Nog niet",regels.join("<br>"),!ok)}
- else if(sc==="bocht"){const inStraat=D.as[0]<-6,richting=graden(Math.atan2(Math.sin(S.theta),Math.cos(S.theta)));
-  const regels=[`Aanhanger in de zijstraat: ${inStraat?"✓":"nog niet ver genoeg"}`,`Auto recht in de straat: ${richting<=15?"✓":"nog "+richting.toFixed(0)+"° scheef"}`,`Combinatie recht (knik): ${k<=12?"✓":k.toFixed(0)+"°, trek hem recht"}`,`Keer vooruit gereden: ${S.vooruit}`];
-  const ok=inStraat&&richting<=15&&k<=12;toonUitslag(ok,ok?"Geslaagd!":"Nog niet",regels.join("<br>"),!ok)}
- else toonUitslag(true,"Vrij oefenen",`Knik nu ${k.toFixed(0)}°. Gereden: ${S.afstand.toFixed(0)} m.`,true)}
+/* ===== Uitslag en schermen ===== */
+const open=s=>$(s).classList.add("open"),sluit=s=>$(s).classList.remove("open");
+function volgendeStap(ok){const volg={draai:"recht",recht:"bocht",bocht:"draai"}[sc];
+ if(modus==="kijk")return{tekst:"Nu samen doen →",doe:()=>kies(sc,"samen")};
+ if(modus==="samen")return ok?{tekst:"Nu zelf doen →",doe:()=>kies(sc,"zelf")}:{tekst:"Eerst nog eens kijken",doe:()=>kies(sc,"kijk")};
+ return ok?{tekst:`Volgende: ${SC[volg].naam} →`,doe:()=>kies(volg)}:{tekst:"Terug naar samen doen",doe:()=>kies(sc,"samen")}}
+function uitslag(ok,titel,regels,tekst=""){S.uit=true;const t=st();
+ if(modus==="kijk")t.kijk++;else{t[modus][1]++;if(ok)t[modus][0]++}bewaar();ladder();
+ const lijst=regels.map(([g,txt,tip])=>`<li class="${g===null?"":g?"ok":"nok"}">${g===null?"•":g?"✓":"✗"} ${txt}${g===false&&tip?`<br><span class="tip">Tip: ${tip}</span>`:""}</li>`).join("");
+ let slot="";if(modus==="kijk")slot="<p>Dat was het voordoen. Nu jij, met de coach erbij.</p>";
+ else if(modus==="samen"&&ok)slot=`<p>Samen gelukt: ${t.samen[0]} keer. Doe het nog een keer samen (Opnieuw) of probeer het zelf.</p>`;
+ else if(modus==="zelf"&&ok)slot=`<p>Zelf gelukt: ${t.zelf[0]} keer. Op naar de volgende oefening, of oefen deze nog eens.</p>`;
+ $("#uTitel").textContent=titel;$("#uTekst").innerHTML=(tekst?`<p>${tekst}</p>`:"")+(lijst?`<ul>${lijst}</ul>`:"")+slot;
+ $("#uitslag").className="overlay "+(ok?"goed":"fout");
+ const v=volgendeStap(ok);$("#uVolgende").textContent=v.tekst;$("#uVolgende").onclick=v.doe;open("#uitslag")}
+function beoordeel(){const s_=SC[sc],regels=s_.beoordeel(delen()),ok=regels.every(r=>r[0]);
+ if(s_.richting<0)regels.push([null,`Keer vooruit gecorrigeerd: ${S.vooruit}`,""]);
+ uitslag(ok,ok?"Geslaagd!":"Nog niet",regels)}
+function toonKaart(){const s_=SC[sc];$("#kTitel").textContent=`${s_.naam} · ${MODI[modus]}`;
+ $("#kTekst").innerHTML=`<p><b>Startpositie:</b> ${s_.startTekst}</p><p><b>Opdracht van de examinator:</b> "${s_.opdracht}"</p><p><b>${MODI[modus]}:</b> ${MODUSUITLEG[modus]}</p><p><b>De stappen:</b></p><ol>${s_.stappen.map(([t,u])=>`<li><b>${t}.</b> ${u}</li>`).join("")}</ol>`;
+ $("#kStart").textContent=S.loopt?"Verder":"Start";if(S.loopt)S.pauze=true;open("#kaart")}
+function kies(s,m){sc=s;modus=m||standaardModus(s);ladder();
+ $("#rijKnoppen").style.display=modus==="kijk"?"none":"";$("#kijkKnoppen").style.display=modus==="kijk"?"":"none";
+ $("#doelring").style.display=modus==="zelf"?"none":"";nieuw();toonKaart()}
 /* ===== Lus ===== */
-let laatst=performance.now(),vorigeRichting=0;
-function lus(nu){const dt=Math.min(0.05,(nu-laatst)/1000);laatst=nu;
- if(!S.uit){let dl=0;if(keys.links)dl+=1;if(keys.rechts)dl-=1;
-  if(dl&&performance.now()-(keys.links?keys.linksT:keys.rechtsT)>VASTHOUDEN)S.delta=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,S.delta+dl*STUURSNEL*dt));
-  if(keys.recht){const s=Math.sign(S.delta);S.delta-=s*Math.min(Math.abs(S.delta),STUURSNEL*4*dt)}
-  const doel=keys.achteruit?V_ACHTER:keys.vooruit?V_VOOR:0;S.v+=(doel-S.v)*Math.min(1,dt*6);if(!doel&&Math.abs(S.v)<0.02)S.v=0;
-  const richting=Math.sign(doel);if(richting===1&&vorigeRichting!==1)S.vooruit++;if(richting)vorigeRichting=richting;
-  const n=Math.ceil(dt/0.01);for(let i=0;i<n;i++)stap(S,dt/n);
-  if(Math.abs(knik(S))>SCHAAR)toonUitslag(false,"Geschaard!","De hoek tussen auto en aanhanger werd te groot. Dat gebeurt als je te lang dezelfde kant op stuurt. Stuur korter, en draai het stuur terug zodra de aanhanger de goede kant op gaat.");
-  else{const b=botsing(delen());if(b)toonUitslag(false,"Au!",b)}
-  if(klaarGedrukt){klaarGedrukt=false;if(Math.abs(S.v)>0.05)$("#coach").innerHTML="Eerst stilstaan (laat de knop los), dan Klaar.";else beoordeel()}}
- if(instellingen.boven)bovenaanzicht();spiegel($("#spL"),"L");spiegel($("#spR"),"R");
- const graden=S.delta*180/Math.PI;$("#wiel").setAttribute("transform",`rotate(${-graden*12})`);
- if(!S.uit)$("#coach").innerHTML=(instellingen.hulp?coach():"Coach staat uit.")+`<div class="klein">Stuur: ${Math.abs(graden)<0.5?"recht":(Math.abs(graden*12/360).toFixed(2)+" slag naar "+(graden>0?"links":"rechts"))}</div>`;
+function lus(nu){const dt=Math.min(0.05,(nu-laatst)/1000);laatst=nu;const s_=SC[sc];
+ if(S.loopt&&!S.uit&&!S.pauze){const sim=dt*(modus==="kijk"?tempo:1);
+  S.padIdx=dichtste(s_.pad,...volgPunt(),S.padIdx,60);
+  if(modus==="kijk"){const D=delen(),A=advies(),stop=s_.stopVoordoen&&s_.stopVoordoen(D),dd=A.dDoel-S.delta;
+   if(!stop)S.delta+=Math.sign(dd)*Math.min(Math.abs(dd),AUTO_STUURSNEL*sim);
+   S.gas=stop?0:(s_.richting<0?V_ACHTER:V_VOOR);if(stop&&Math.abs(S.v)<0.03){S.v=0;klaarGedrukt=true}}
+  else{let dl=0;if(keys.links)dl+=1;if(keys.rechts)dl-=1;
+   if(dl&&performance.now()-(keys.links?keys.linksT:keys.rechtsT)>VASTHOUDEN)S.delta=klem(S.delta+dl*STUURSNEL*sim);
+   if(keys.recht)S.delta-=Math.sign(S.delta)*Math.min(Math.abs(S.delta),STUURSNEL*4*sim);
+   S.gas=keys.achteruit?V_ACHTER:keys.vooruit?V_VOOR:0}
+  S.v+=(S.gas-S.v)*Math.min(1,sim*6);if(!S.gas&&Math.abs(S.v)<0.03)S.v=0;
+  const r=Math.sign(S.gas);if(r&&r!==S.vorige){if(r>0)S.vooruit++;else S.achteruit++;S.vorige=r}
+  const n=Math.ceil(sim/0.01);for(let i=0;i<n;i++)stap(S,sim/n);
+  const D=delen();
+  if(Math.abs(knik(S))>SCHAAR)uitslag(false,"Geschaard!",[],"De hoek tussen auto en kar werd te groot. Dat gebeurt als je niet op tijd meestuurt: draai het stuur terug zodra de kar de goede kant op draait.");
+  else{const b=botsing(D);
+   if(b)uitslag(false,"Au!",[],`${b}<br><span class="tip">Tip: ${s_.tipBotsing}</span>`);
+   else if(s_.autoEinde&&s_.autoEinde(D))beoordeel();
+   else if(klaarGedrukt){klaarGedrukt=false;
+    if(s_.autoEinde)S.melding={tot:performance.now()+2500,tekst:"Bij de halve draai stopt de oefening vanzelf als je terug op de weg bent."};
+    else if(Math.abs(S.v)>0.05)S.melding={tot:performance.now()+2500,tekst:"Eerst stilstaan (laat de knop los), dan Klaar."};
+    else beoordeel()}}}
+ if(boven)bovenaanzicht();spiegel($("#spL"),"L");spiegel($("#spR"),"R");
+ $("#wiel").setAttribute("transform",`rotate(${-slag(S.delta)*360})`);$("#stuurTekst").textContent=slagTekst(S.delta);
+ if(modus!=="zelf"){const A=advies();$("#doelring").setAttribute("transform",`rotate(${-slag(A.dDoel)*360})`)}
+ if(nu-coachTijd>200){coachTijd=nu;coachBijwerken()}
  requestAnimationFrame(lus)}
 /* ===== Bediening ===== */
-function zet(k,aan){if(k==="klaar"){if(aan)klaarGedrukt=true;return}if(aan&&!keys[k]&&(k==="links"||k==="rechts")&&S&&!S.uit){keys[k+"T"]=performance.now();S.delta=Math.max(-MAXSTUUR,Math.min(MAXSTUUR,S.delta+(k==="links"?KLIK:-KLIK)))}keys[k]=aan;document.querySelectorAll(`[data-k="${k}"]`).forEach(b=>b.classList.toggle("actief",aan))}
+function zet(k,aan){if(k==="klaar"){if(aan)klaarGedrukt=true;return}
+ if(aan&&!keys[k]&&(k==="links"||k==="rechts")&&S&&S.loopt&&!S.uit&&modus!=="kijk"){keys[k+"T"]=performance.now();S.delta=klem(S.delta+(k==="links"?KLIK:-KLIK))}
+ keys[k]=aan;document.querySelectorAll(`[data-k="${k}"]`).forEach(b=>b.classList.toggle("actief",aan))}
 document.querySelectorAll(".k[data-k]").forEach(b=>{const k=b.dataset.k;
  b.addEventListener("pointerdown",e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);zet(k,true)});
  ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>b.addEventListener(ev,()=>zet(k,false)));
  b.addEventListener("contextmenu",e=>e.preventDefault())});
 const TOETS={ArrowLeft:"links",ArrowRight:"rechts",ArrowDown:"achteruit",ArrowUp:"vooruit"," ":"recht",Enter:"klaar"};
-addEventListener("keydown",e=>{if(e.key==="r"||e.key==="R"){nieuw();return}const k=TOETS[e.key];if(k){e.preventDefault();if(!e.repeat)zet(k,true)}});
+addEventListener("keydown",e=>{if($("#kaart").classList.contains("open")){if(e.key==="Enter"){e.preventDefault();$("#kStart").click()}return}
+ if(e.key==="r"||e.key==="R"){nieuw();toonKaart();return}const k=TOETS[e.key];if(k){e.preventDefault();if(!e.repeat&&modus!=="kijk")zet(k,true)}});
 addEventListener("keyup",e=>{const k=TOETS[e.key];if(k)zet(k,false)});
-addEventListener("blur",()=>Object.keys(keys).forEach(k=>zet(k,false)));
-$("#uOpnieuw").onclick=nieuw;
-$("#uVerder").onclick=()=>{$("#uitslag").style.display="none";S.uit=false};
-document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{sc=t.dataset.sc;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("aan",x===t));nieuw();scoreTekst()});
-const wissel=(id,veld,tekstAan,tekstUit)=>{const b=$(id);b.onclick=()=>{instellingen[veld]=!instellingen[veld];b.classList.toggle("aan",instellingen[veld]);b.textContent=instellingen[veld]?tekstAan:tekstUit;
- if(veld==="boven")$("#boven").style.display=instellingen.boven?"block":"none";if(veld==="hand")$("#hand").style.display=instellingen.hand?"block":"none"}};
-wissel("#tHulp","hulp","Coach aan","Coach uit");wissel("#tLijn","lijn","Voorspellingslijn aan","Voorspellingslijn uit");wissel("#tBoven","boven","Bovenaanzicht aan","Alleen spiegels (examen)");wissel("#tHand","hand","Hand onderaan het stuur ✓","Hand onderaan het stuur");
-function maatvoering(){const z=(c,h)=>{const r=c.getBoundingClientRect();if(r.width){c.width=Math.round(r.width*DPR);c.height=Math.round(h*DPR)}};z(cv,cv.getBoundingClientRect().height||300);z($("#spL"),118);z($("#spR"),118)}
+addEventListener("blur",()=>["links","rechts","recht","vooruit","achteruit"].forEach(k=>zet(k,false)));
+$("#kStart").onclick=()=>{sluit("#kaart");S.loopt=true;S.pauze=false};
+$("#uOpnieuw").onclick=()=>{nieuw();toonKaart()};
+$("#tOpnieuw").onclick=$("#kOpnieuw").onclick=()=>{nieuw();toonKaart()};
+$("#tOpdracht").onclick=toonKaart;
+$("#kPauze").onclick=()=>{S.pauze=!S.pauze;$("#kPauze").innerHTML=S.pauze?"&#9654; Verder":"&#10074;&#10074; Pauze"};
+$("#kTempo").onclick=()=>{tempo=tempo===1?2:1;$("#kTempo").innerHTML=tempo===1?"&#9193; 2&times; sneller":"&#9654; Gewone snelheid"};
+$("#tBoven").onclick=()=>{boven=!boven;$("#boven").style.display=boven?"block":"none";$("#tBoven").textContent=boven?"Bovenaanzicht aan":"Alleen spiegels (zoals op het examen)"};
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>kies(t.dataset.sc));
+document.querySelectorAll(".modus").forEach(t=>t.onclick=()=>kies(sc,t.dataset.m));
+function maatvoering(){const z=(c,h)=>{const r=c.getBoundingClientRect();if(r.width){c.width=Math.round(r.width*DPR);c.height=Math.round((h||r.height)*DPR)}};z(cv);z($("#spL"),92);z($("#spR"),92)}
 addEventListener("resize",maatvoering);maatvoering();
-window.__sim={get S(){return S},stap,delen,knik,beoordeel,nieuw,zet,setSc:s=>{sc=s;nieuw()},coach,stuurAdvies,botsing,CO};
-nieuw();scoreTekst();requestAnimationFrame(lus);
+window.__sim={get S(){return S},get sc(){return sc},get modus(){return modus},stap,delen,knik,advies,botsing,beoordeel,kies,CO,SC,coachBijwerken,
+ start:()=>{sluit("#kaart");S.loopt=true;S.pauze=false},fase:()=>SC[sc].fase(delen())};
+kies(sc,standaardModus(sc));requestAnimationFrame(lus);
 </script>
 </body>
 </html>
